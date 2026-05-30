@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graph Visualization - Hybrid Doc-Graph Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        #graphCanvas { width: 100%; height: 600px; border-radius: 8px; }
+        #graphCanvas svg { display: block; width: 100%; height: 100%; }
+        #graphCanvas .links line { pointer-events: none; }
+        #graphCanvas .links-inner line { pointer-events: stroke; cursor: pointer; }
+        #graphCanvas .links-inner line:hover { stroke-opacity: 1 !important; stroke-width: 4 !important; }
+        .legend-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0; }
+        .legend-color { width: 16px; height: 16px; border-radius: 50%; }
+        .partition-legend { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .partition-dot { width: 12px; height: 12px; border-radius: 50%; }
+
+        /* Heatmap Styles */
+        .heatmap-table { border-collapse: collapse; }
+        .heatmap-header {
+            background: rgba(255,255,255,0.05);
+            padding: 4px 8px;
+            font-size: 10px;
+            color: #e6edf3;
+            text-align: center;
+            max-width: 50px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .heatmap-cell {
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            font-size: 7px;
+            transition: transform 0.1s;
+            cursor: pointer;
+        }
+        .heatmap-cell:hover {
+            transform: scale(1.5);
+            z-index: 10;
+            position: relative;
+        }
+        .heatmap-value {
+            font-size: 6px;
+            font-weight: 600;
+        }
+        .disease-header {
+            writing-mode: vertical-lr;
+            transform: rotate(180deg);
+            height: 80px;
+            padding: 2px 4px;
+        }
+        .btn-group .btn {
+            transition: all 0.2s;
+        }
+        .btn-group .btn.active {
+            box-shadow: 0 0 10px rgba(255,255,255,0.2);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-heart-pulse text-danger"></i>
+                Hybrid Doc-Graph Store
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">
+                    <i class="bi bi-search"></i> Query
+                </a>
+                <a class="nav-link active" href="/graph">
+                    <i class="bi bi-diagram-3"></i> Graph
+                </a>
+                <a class="nav-link" href="/analysis">
+                    <i class="bi bi-graph-up"></i> Analysis
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+        <div class="row mb-3">
+            <div class="col-12">
+                <h4><i class="bi bi-diagram-3 text-success"></i> Disease Correlation Graph Visualization</h4>
+                <p class="text-muted mb-0">METIS Edge-Cut Partitioning with BFS/DFS Traversal from Medical Fields</p>
+            </div>
+        </div>
+
+    <!-- Visualization Type Selector -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-dark d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-grid-3x3"></i> Visualization Mode</span>
+                    <div class="btn-group btn-group-sm" role="group">
+                        <button type="button" class="btn btn-primary active" id="btn-graph" onclick="setVizMode('graph')">
+                            <i class="bi bi-diagram-3"></i> Network
+                        </button>
+                        <button type="button" class="btn btn-outline-primary" id="btn-heatmap" onclick="setVizMode('heatmap')">
+                            <i class="bi bi-grid-3x3-gap"></i> Heatmap
+                        </button>
+                        <button type="button" class="btn btn-outline-primary" id="btn-chord" onclick="setVizMode('chord')">
+                            <i class="bi bi-circle-fill"></i> Chord
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Controls -->
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="card-header bg-dark">
+                    <h6 class="mb-0"><i class="bi bi-sliders"></i> Visualization Controls</h6>
+                </div>
+                <div class="card-body">
+                    <!-- Network Controls -->
+                    <div id="networkControls">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Starting Field</label>
+                            <select id="fieldSelect" class="form-select form-select-sm">
+                                <option value="Cardiology">Cardiology</option>
+                                <option value="Neurology">Neurology</option>
+                                <option value="Oncology">Oncology</option>
+                                <option value="Pulmonology">Pulmonology</option>
+                                <option value="Gastroenterology">Gastroenterology</option>
+                                <option value="Orthopedics">Orthopedics</option>
+                                <option value="Infectious_Disease">Infectious Disease</option>
+                                <option value="Endocrinology">Endocrinology</option>
+                                <option value="Nephrology">Nephrology</option>
+                                <option value="Rheumatology">Rheumatology</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Max Depth: <span id="depthVal">3</span></label>
+                            <input type="range" class="form-range" id="traversalDepth" min="1" max="4" value="3">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Algorithm</label>
+                            <select id="algoSelect" class="form-select form-select-sm">
+                                <option value="bfs">BFS</option>
+                                <option value="dfs">DFS</option>
+                            </select>
+                        </div>
+                        <button id="runTraversal" class="btn btn-primary btn-sm w-100 mb-3">
+                            <i class="bi bi-play"></i> Run Traversal
+                        </button>
+
+                        <hr>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Show Partitions</label>
+                            <div class="partition-legend">
+                                <div class="legend-item"><span class="partition-dot" style="background:#FF6B6B"></span><small>Part 0</small></div>
+                                <div class="legend-item"><span class="partition-dot" style="background:#4ECDC4"></span><small>Part 1</small></div>
+                                <div class="legend-item"><span class="partition-dot" style="background:#45B7D1"></span><small>Part 2</small></div>
+                                <div class="legend-item"><span class="partition-dot" style="background:#96CEB4"></span><small>Part 3</small></div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Node Types</label>
+                            <div class="legend-item"><span class="legend-color" style="background:#3fb950"></span><small>Medical Field</small></div>
+                            <div class="legend-item"><span class="legend-color" style="background:#e74c3c"></span><small>Disease</small></div>
+                            <div class="legend-item"><span class="legend-color" style="background:#3498db"></span><small>Symptom</small></div>
+                            <div class="legend-item"><span class="legend-color" style="background:#9b59b6"></span><small>Drug</small></div>
+                        </div>
+
+                        <hr>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Edge Types</label>
+                            <div class="legend-item"><span class="legend-color" style="background:#ffd700; width: 20px; height: 3px; display: inline-block; border-radius: 2px;"></span><small>Disease-Disease</small></div>
+                            <div class="legend-item"><span class="legend-color" style="background:#3fb950; width: 20px; height: 2px; display: inline-block;"></span><small>Disease-Field</small></div>
+                            <div class="legend-item"><span class="legend-color" style="background:#3498db; width: 20px; height: 1px; display: inline-block; opacity: 0.7;"></span><small>Disease-Symptom</small></div>
+                            <div class="legend-item"><span class="legend-color" style="background:#9b59b6; width: 20px; height: 1px; display: inline-block; opacity: 0.7;"></span><small>Disease-Drug</small></div>
+                        </div>
+
+                        <hr>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Highlight Nodes</label>
+                            <select id="highlightType" class="form-select form-select-sm">
+                                <option value="">All</option>
+                                <option value="disease">Diseases only</option>
+                                <option value="symptom">Symptoms only</option>
+                                <option value="drug">Drugs only</option>
+                                <option value="field">Medical Fields only</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Heatmap Controls -->
+                    <div id="heatmapControls" style="display:none;">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Group by</label>
+                            <select id="heatmapGroupBy" class="form-select form-select-sm">
+                                <option value="disease">Diseases</option>
+                                <option value="field">Medical Fields</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Color Scale</label>
+                            <select id="heatmapColorScale" class="form-select form-select-sm">
+                                <option value="redblue">Red-Blue</option>
+                                <option value="greenred">Green-Red</option>
+                                <option value="purplewhite">Purple-White</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Show Values</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="heatmapShowValues" checked>
+                                <label class="form-check-label small" for="heatmapShowValues">Show correlation values</label>
+                            </div>
+                        </div>
+                        <button id="renderHeatmap" class="btn btn-info btn-sm w-100">
+                            <i class="bi bi-grid-3x3-gap"></i> Render Heatmap
+                        </button>
+                    </div>
+
+                    <!-- Chord Controls -->
+                    <div id="chordControls" style="display:none;">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Display Mode</label>
+                            <select id="chordMode" class="form-select form-select-sm">
+                                <option value="fields">Field-to-Field</option>
+                                <option value="top20">Top 20 Diseases</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Min Correlation</label>
+                            <input type="range" class="form-range" id="chordMinCorr" min="0" max="100" value="20">
+                            <small class="text-muted">Threshold: <span id="chordMinCorrVal">0.20</span></small>
+                        </div>
+                        <button id="renderChord" class="btn btn-warning btn-sm w-100">
+                            <i class="bi bi-circle-fill"></i> Render Chord
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header bg-dark">
+                    <h6 class="mb-0"><i class="bi bi-bar-chart"></i> Graph Stats</h6>
+                </div>
+                <div class="card-body" id="graphStats">
+                    <div class="d-flex justify-content-center">
+                        <span class="loading-spinner"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visualization Canvas -->
+        <div class="col-lg-9">
+            <!-- Network Graph -->
+            <div class="card" id="graphCard">
+                <div class="card-header bg-dark d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-diagram-3"></i> Disease Correlation Graph</span>
+                    <div class="d-flex gap-2">
+                        <span class="badge bg-secondary" id="nodeCount">Loading...</span>
+                        <span class="badge bg-secondary" id="edgeCount">...</span>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div id="graphCanvas"></div>
+                </div>
+            </div>
+
+            <!-- Heatmap -->
+            <div class="card" id="heatmapCard" style="display:none;">
+                <div class="card-header bg-dark d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-grid-3x3-gap"></i> Disease Correlation Heatmap</span>
+                    <div class="d-flex gap-2">
+                        <span class="badge bg-info" id="heatmapSize">-</span>
+                        <span class="badge bg-secondary" id="heatmapCorr">-</span>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div id="heatmapContainer" style="overflow: auto; max-height: 600px;"></div>
+                </div>
+            </div>
+
+            <!-- Chord Diagram -->
+            <div class="card" id="chordCard" style="display:none;">
+                <div class="card-header bg-dark d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-circle-fill"></i> Cross-Field Disease Relationships</span>
+                    <div class="d-flex gap-2">
+                        <span class="badge bg-warning" id="chordLinks">-</span>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div id="chordContainer"></div>
+                </div>
+            </div>
+
+            <!-- Traversal Results -->
+            <div class="card mt-3" id="traversalCard">
+                <div class="card-header bg-dark">
+                    <h6 class="mb-0"><i class="bi bi-list-check"></i> Traversal Results</h6>
+                </div>
+                <div class="card-body" style="max-height: 200px; overflow-y: auto;">
+                    <div id="traversalResults">
+                        <small class="text-muted">Click "Run Traversal" to see results from a medical field</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API = '';
+        const NODE_COLORS = {
+            medical_field: '#3fb950',
+            disease: '#e74c3c',
+            symptom: '#3498db',
+            drug: '#9b59b6'
+        };
+        const PARTITION_COLORS = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4'];
+        const FIELD_COLORS = {
+            'Cardiology': '#e74c3c',
+            'Neurology': '#3498db',
+            'Oncology': '#9b59b6',
+            'Pulmonology': '#1abc9c',
+            'Gastroenterology': '#f39c12',
+            'Orthopedics': '#e67e22',
+            'Infectious_Disease': '#2ecc71',
+            'Endocrinology': '#e91e63',
+            'Nephrology': '#00bcd4',
+            'Rheumatology': '#8bc34a',
+            'Other': '#95a5a6'
+        };
+        let graphData = null;
+        let correlationData = null;
+        let simulation = null;
+        let currentVizMode = 'graph';
+
+        // ============================================================
+        // Visualization Mode Switching
+        // ============================================================
+
+        function setVizMode(mode) {
+            currentVizMode = mode;
+
+            // Update button states
+            document.querySelectorAll('[id^="btn-"]').forEach(btn => btn.classList.remove('active', 'btn-primary'));
+            document.querySelectorAll('[id^="btn-"]').forEach(btn => btn.classList.add('btn-outline-primary'));
+            document.getElementById(`btn-${mode}`).classList.remove('btn-outline-primary');
+            document.getElementById(`btn-${mode}`).classList.add('btn-primary', 'active');
+
+            // Show/hide cards
+            document.getElementById('graphCard').style.display = mode === 'graph' ? 'block' : 'none';
+            document.getElementById('heatmapCard').style.display = mode === 'heatmap' ? 'block' : 'none';
+            document.getElementById('chordCard').style.display = mode === 'chord' ? 'block' : 'none';
+            document.getElementById('traversalCard').style.display = mode === 'graph' ? 'block' : 'none';
+
+            // Show/hide controls
+            document.getElementById('networkControls').style.display = mode === 'graph' ? 'block' : 'none';
+            document.getElementById('heatmapControls').style.display = mode === 'heatmap' ? 'block' : 'none';
+            document.getElementById('chordControls').style.display = mode === 'chord' ? 'block' : 'none';
+
+            // Load data if needed
+            if (mode === 'heatmap' && !correlationData) {
+                loadCorrelationData('heatmap');
+            } else if (mode === 'chord' && !correlationData) {
+                loadCorrelationData('chord');
+            } else if (mode === 'heatmap' && correlationData) {
+                renderHeatmap();
+            } else if (mode === 'chord' && correlationData) {
+                renderChord();
+            }
+        }
+
+        async function loadCorrelationData(vizType) {
+            try {
+                const res = await fetch(`${API}/api/graph/correlation-matrix`);
+                correlationData = await res.json();
+
+                if (vizType === 'heatmap') {
+                    renderHeatmap();
+                } else if (vizType === 'chord') {
+                    renderChord();
+                }
+            } catch (e) {
+                console.error('Failed to load correlation data:', e);
+            }
+        }
+
+        // ============================================================
+        // Heatmap Visualization
+        // ============================================================
+
+        function renderHeatmap() {
+            if (!correlationData) return;
+
+            const container = document.getElementById('heatmapContainer');
+            const groupBy = document.getElementById('heatmapGroupBy').value;
+            const showValues = document.getElementById('heatmapShowValues').checked;
+            const colorScale = document.getElementById('heatmapColorScale').value;
+
+            container.innerHTML = '';
+
+            if (groupBy === 'field') {
+                // Field-level heatmap
+                renderFieldHeatmap(container, showValues, colorScale);
+            } else {
+                // Disease-level heatmap (limit to top 30 for performance)
+                renderDiseaseHeatmap(container, showValues, colorScale);
+            }
+        }
+
+        function renderFieldHeatmap(container, showValues, colorScale) {
+            const fields = correlationData.fields;
+            const fieldMatrix = correlationData.field_matrix;
+            const size = fields.length;
+
+            // Calculate color scale
+            const getColor = getColorScaleFunction(colorScale);
+
+            let html = '<div class="p-3"><table class="heatmap-table" style="margin: auto;">';
+            html += '<thead><tr><th></th>';
+            fields.forEach(f => {
+                const displayName = f.replace('_', ' ');
+                html += `<th class="heatmap-header" title="${f}">${displayName.length > 10 ? displayName.substring(0, 8) + '..' : displayName}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+
+            fields.forEach((f1, i) => {
+                const displayName1 = f1.replace('_', ' ');
+                html += `<tr><th class="heatmap-header" title="${f1}">${displayName1.length > 10 ? displayName1.substring(0, 8) + '..' : displayName1}</th>`;
+
+                fields.forEach((f2, j) => {
+                    const value = fieldMatrix[f1]?.[f2] || 0;
+                    const color = getColor(value);
+                    const textColor = value > 0.5 ? '#fff' : '#000';
+                    html += `<td class="heatmap-cell" style="background: ${color}; color: ${textColor};" title="${f1} ↔ ${f2}: ${value.toFixed(3)}">`;
+                    if (showValues) {
+                        html += `<span class="heatmap-value">${value.toFixed(2)}</span>`;
+                    }
+                    html += '</td>';
+                });
+                html += '</tr>';
+            });
+
+            html += '</tbody></table></div>';
+
+            // Add color legend
+            html += `
+                <div class="d-flex justify-content-center align-items-center gap-3 mt-3">
+                    <span class="small text-muted">Low Correlation</span>
+                    <div class="d-flex gap-1">
+                        ${generateColorLegend(getColor)}
+                    </div>
+                    <span class="small text-muted">High Correlation</span>
+                </div>
+            `;
+
+            container.innerHTML = html;
+            document.getElementById('heatmapSize').textContent = `${size}x${size} fields`;
+            document.getElementById('heatmapCorr').textContent = 'Field level';
+        }
+
+        function renderDiseaseHeatmap(container, showValues, colorScale) {
+            const diseases = correlationData.diseases.slice(0, 30); // Limit for performance
+            const matrix = correlationData.matrix;
+            const size = diseases.length;
+            const getColor = getColorScaleFunction(colorScale);
+
+            let html = '<div class="p-3 overflow-auto"><table class="heatmap-table">';
+            html += '<thead><tr><th></th>';
+            diseases.forEach(d => {
+                html += `<th class="heatmap-header disease-header" title="${d.label}">${d.label.length > 8 ? d.label.substring(0, 6) + '..' : d.label}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+
+            diseases.forEach((d1, i) => {
+                const rowIdx = correlationData.diseases.findIndex(x => x.id === d1.id);
+                html += `<tr><th class="heatmap-header disease-header" title="${d1.label}">${d1.label.length > 8 ? d1.label.substring(0, 6) + '..' : d1.label}</th>`;
+
+                diseases.forEach((d2, j) => {
+                    const colIdx = correlationData.diseases.findIndex(x => x.id === d2.id);
+                    const value = matrix[rowIdx]?.[colIdx] || 0;
+                    const color = getColor(value);
+                    const textColor = value > 0.5 ? '#fff' : '#000';
+
+                    // Add field-based border color
+                    const borderColor = FIELD_COLORS[d1.field] || FIELD_COLORS['Other'];
+
+                    html += `<td class="heatmap-cell" style="background: ${color}; color: ${textColor}; border-left: 2px solid ${borderColor}40;" title="${d1.label} ↔ ${d2.label}: ${value.toFixed(3)}">`;
+                    if (showValues && value !== 0 && value !== 1) {
+                        html += `<span class="heatmap-value">${value.toFixed(1)}</span>`;
+                    }
+                    html += '</td>';
+                });
+                html += '</tr>';
+            });
+
+            html += '</tbody></table></div>';
+
+            // Add legend for field colors
+            html += '<div class="p-3">';
+            html += '<div class="small text-muted mb-2">Field Legend:</div>';
+            html += '<div class="d-flex gap-2 flex-wrap">';
+            Object.entries(FIELD_COLORS).forEach(([field, color]) => {
+                if (field !== 'Other') {
+                    html += `<div class="d-flex align-items-center gap-1"><span style="width:12px;height:12px;background:${color};border-radius:2px;"></span><small>${field.replace('_', ' ')}</small></div>`;
+                }
+            });
+            html += '</div></div>';
+
+            container.innerHTML = html;
+            document.getElementById('heatmapSize').textContent = `${size} diseases`;
+            document.getElementById('heatmapCorr').textContent = 'Disease level';
+        }
+
+        function getColorScaleFunction(scale) {
+            return function(value) {
+                if (scale === 'redblue') {
+                    // Blue (0) -> White (0.5) -> Red (1)
+                    if (value < 0.5) {
+                        const t = value * 2;
+                        return `rgb(${Math.round(255 * t)}, ${Math.round(255 * t)}, 255)`;
+                    } else {
+                        const t = (value - 0.5) * 2;
+                        return `rgb(255, ${Math.round(255 * (1 - t))}, ${Math.round(255 * (1 - t))})`;
+                    }
+                } else if (scale === 'greenred') {
+                    // Red (0) -> Yellow (0.5) -> Green (1)
+                    if (value < 0.5) {
+                        const t = value * 2;
+                        return `rgb(255, ${Math.round(255 * t)}, 0)`;
+                    } else {
+                        const t = (value - 0.5) * 2;
+                        return `rgb(${Math.round(255 * (1 - t))}, 255, 0)`;
+                    }
+                } else {
+                    // Purple (0) -> White (0.5) -> Purple (1)
+                    if (value < 0.5) {
+                        const t = value * 2;
+                        return `rgb(${Math.round(128 + 127 * t)}, ${Math.round(0 + 255 * t)}, ${Math.round(128 + 127 * t)})`;
+                    } else {
+                        const t = (value - 0.5) * 2;
+                        return `rgb(${Math.round(255 - 127 * t)}, ${Math.round(255 - 255 * t)}, ${Math.round(255 - 127 * t)})`;
+                    }
+                }
+            };
+        }
+
+        function generateColorLegend(getColor) {
+            let html = '';
+            for (let i = 0; i <= 10; i++) {
+                const value = i / 10;
+                html += `<div style="width: 20px; height: 15px; background: ${getColor(value)}; border: 1px solid #333;"></div>`;
+            }
+            return html;
+        }
+
+        document.getElementById('heatmapGroupBy').addEventListener('change', renderHeatmap);
+        document.getElementById('heatmapColorScale').addEventListener('change', renderHeatmap);
+        document.getElementById('heatmapShowValues').addEventListener('change', renderHeatmap);
+        document.getElementById('renderHeatmap')?.addEventListener('click', renderHeatmap);
+
+        // ============================================================
+        // Chord Diagram Visualization
+        // ============================================================
+
+        function renderChord() {
+            if (!correlationData) return;
+
+            const container = document.getElementById('chordContainer');
+            const mode = document.getElementById('chordMode').value;
+            const minCorr = parseInt(document.getElementById('chordMinCorr').value) / 100;
+
+            container.innerHTML = '';
+
+            if (mode === 'fields') {
+                renderFieldChord(container, minCorr);
+            } else {
+                renderDiseaseChord(container, minCorr);
+            }
+        }
+
+        function renderFieldChord(container, minCorr) {
+            const fields = correlationData.fields;
+            const fieldMatrix = correlationData.field_matrix;
+            const size = 500;
+            const outerRadius = size / 2 - 40;
+            const innerRadius = outerRadius - 30;
+
+            // Calculate field totals for sizing
+            const fieldTotals = {};
+            fields.forEach(f => {
+                let total = 0;
+                fields.forEach(f2 => {
+                    if (f !== f2) {
+                        total += fieldMatrix[f]?.[f2] || 0;
+                    }
+                });
+                fieldTotals[f] = total;
+            });
+
+            // Build SVG
+            let svg = `<svg width="${size}" height="${size}" style="display: block; margin: auto;">`;
+            svg += `<g transform="translate(${size/2}, ${size/2})">`;
+
+            // Draw outer arcs (fields)
+            let currentAngle = 0;
+            const fieldAngles = {};
+            fields.forEach(f => {
+                const total = fieldTotals[f] || 1;
+                const angle = (total / Object.values(fieldTotals).reduce((a, b) => a + b, 0)) * 2 * Math.PI;
+                fieldAngles[f] = { start: currentAngle, end: currentAngle + angle, total: total };
+                currentAngle += angle;
+            });
+
+            fields.forEach(f => {
+                const { start, end } = fieldAngles[f];
+                const midAngle = (start + end) / 2;
+                const color = FIELD_COLORS[f] || FIELD_COLORS['Other'];
+
+                // Outer arc
+                const x1 = Math.cos(start - Math.PI / 2) * outerRadius;
+                const y1 = Math.sin(start - Math.PI / 2) * outerRadius;
+                const x2 = Math.cos(end - Math.PI / 2) * outerRadius;
+                const y2 = Math.sin(end - Math.PI / 2) * outerRadius;
+                const largeArc = (end - start) > Math.PI ? 1 : 0;
+
+                svg += `<path d="M ${x1} ${y1} A ${outerRadius} ${outerRadius} 0 ${largeArc} 1 ${x2} ${y2}" fill="${color}" opacity="0.8" stroke="#1a1a2e" stroke-width="1"/>`;
+
+                // Label
+                const labelRadius = outerRadius + 20;
+                const labelX = Math.cos(midAngle - Math.PI / 2) * labelRadius;
+                const labelY = Math.sin(midAngle - Math.PI / 2) * labelRadius;
+                const displayName = f.replace('_', ' ');
+                svg += `<text x="${labelX}" y="${labelY}" text-anchor="middle" dominant-baseline="middle" fill="#e6edf3" font-size="11" font-weight="500">${displayName}</text>`;
+            });
+
+            // Draw chords (cross-field correlations)
+            let linkCount = 0;
+            fields.forEach((f1, i) => {
+                fields.forEach((f2, j) => {
+                    if (i < j) {
+                        const corr = fieldMatrix[f1]?.[f2] || 0;
+                        if (corr >= minCorr) {
+                            linkCount++;
+                            const opacity = 0.2 + corr * 0.6;
+                            const a1 = fieldAngles[f1].start + (fieldAngles[f1].end - fieldAngles[f1].start) / 2;
+                            const a2 = fieldAngles[f2].start + (fieldAngles[f2].end - fieldAngles[f2].start) / 2;
+
+                            const x1 = Math.cos(a1 - Math.PI / 2) * innerRadius;
+                            const y1 = Math.sin(a1 - Math.PI / 2) * innerRadius;
+                            const x2 = Math.cos(a2 - Math.PI / 2) * innerRadius;
+                            const y2 = Math.sin(a2 - Math.PI / 2) * innerRadius;
+
+                            // Bezier curve for chord
+                            const cx = (x1 + x2) / 2 * 0.3;
+                            const cy = (y1 + y2) / 2 * 0.3;
+
+                            svg += `<path d="M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}" fill="none" stroke="#ffd700" stroke-width="${1 + corr * 3}" opacity="${opacity}" title="${f1} ↔ ${f2}: ${corr.toFixed(3)}"/>`;
+                        }
+                    }
+                });
+            });
+
+            svg += '</g></svg>';
+            container.innerHTML = svg;
+
+            // Add info
+            container.innerHTML += `
+                <div class="p-3 text-center">
+                    <div class="small text-muted">
+                        Showing ${linkCount} cross-field relationships with correlation ≥ ${minCorr.toFixed(2)}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('chordLinks').textContent = `${linkCount} links`;
+        }
+
+        function renderDiseaseChord(container, minCorr) {
+            const diseases = correlationData.diseases.slice(0, 20);
+            const matrix = correlationData.matrix;
+            const size = 600;
+            const outerRadius = size / 2 - 50;
+            const innerRadius = outerRadius - 25;
+
+            // Calculate disease totals
+            const diseaseTotals = {};
+            diseases.forEach((d, i) => {
+                let total = 0;
+                diseases.forEach((d2, j) => {
+                    if (i !== j) {
+                        const rowIdx = correlationData.diseases.findIndex(x => x.id === d.id);
+                        total += matrix[rowIdx]?.[j] || 0;
+                    }
+                });
+                diseaseTotals[d.id] = total;
+            });
+
+            let svg = `<svg width="${size}" height="${size}" style="display: block; margin: auto;">`;
+            svg += `<g transform="translate(${size/2}, ${size/2})">`;
+
+            // Draw outer arcs
+            let currentAngle = 0;
+            const diseaseAngles = {};
+            const totalSum = Object.values(diseaseTotals).reduce((a, b) => a + b, 0) || 1;
+
+            diseases.forEach(d => {
+                const total = diseaseTotals[d.id] || 1;
+                const angle = (total / totalSum) * 2 * Math.PI;
+                diseaseAngles[d.id] = { start: currentAngle, end: currentAngle + angle, data: d };
+                currentAngle += angle;
+            });
+
+            diseases.forEach(d => {
+                const { start, end, data } = diseaseAngles[d.id];
+                const midAngle = (start + end) / 2;
+                const color = FIELD_COLORS[data.field] || FIELD_COLORS['Other'];
+
+                const x1 = Math.cos(start - Math.PI / 2) * outerRadius;
+                const y1 = Math.sin(start - Math.PI / 2) * outerRadius;
+                const x2 = Math.cos(end - Math.PI / 2) * outerRadius;
+                const y2 = Math.sin(end - Math.PI / 2) * outerRadius;
+                const largeArc = (end - start) > Math.PI ? 1 : 0;
+
+                svg += `<path d="M ${x1} ${y1} A ${outerRadius} ${outerRadius} 0 ${largeArc} 1 ${x2} ${y2}" fill="${color}" opacity="0.8" stroke="#1a1a2e" stroke-width="1" title="${data.label} (${data.field})"/>`;
+
+                // Label
+                const labelRadius = outerRadius + 15;
+                const labelX = Math.cos(midAngle - Math.PI / 2) * labelRadius;
+                const labelY = Math.sin(midAngle - Math.PI / 2) * labelRadius;
+                svg += `<text x="${labelX}" y="${labelY}" text-anchor="middle" dominant-baseline="middle" fill="#e6edf3" font-size="8">${data.label.substring(0, 8)}</text>`;
+            });
+
+            // Draw chords
+            let linkCount = 0;
+            diseases.forEach((d1, i) => {
+                diseases.forEach((d2, j) => {
+                    if (i < j) {
+                        const rowIdx = correlationData.diseases.findIndex(x => x.id === d1.id);
+                        const corr = matrix[rowIdx]?.[j] || 0;
+                        if (corr >= minCorr) {
+                            linkCount++;
+                            const opacity = 0.2 + corr * 0.6;
+                            const a1 = diseaseAngles[d1.id].start + (diseaseAngles[d1.id].end - diseaseAngles[d1.id].start) / 2;
+                            const a2 = diseaseAngles[d2.id].start + (diseaseAngles[d2.id].end - diseaseAngles[d2.id].start) / 2;
+
+                            const x1 = Math.cos(a1 - Math.PI / 2) * innerRadius;
+                            const y1 = Math.sin(a1 - Math.PI / 2) * innerRadius;
+                            const x2 = Math.cos(a2 - Math.PI / 2) * innerRadius;
+                            const y2 = Math.sin(a2 - Math.PI / 2) * innerRadius;
+
+                            const cx = (x1 + x2) / 2 * 0.4;
+                            const cy = (y1 + y2) / 2 * 0.4;
+
+                            svg += `<path d="M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}" fill="none" stroke="#ffd700" stroke-width="${0.5 + corr * 2}" opacity="${opacity}" title="${d1.label} ↔ ${d2.label}: ${corr.toFixed(3)}"/>`;
+                        }
+                    }
+                });
+            });
+
+            svg += '</g></svg>';
+            container.innerHTML = svg;
+
+            container.innerHTML += `
+                <div class="p-3 text-center">
+                    <div class="small text-muted">
+                        Top 20 diseases: ${linkCount} correlations ≥ ${minCorr.toFixed(2)}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('chordLinks').textContent = `${linkCount} correlations`;
+        }
+
+        document.getElementById('chordMinCorr').addEventListener('input', e => {
+            document.getElementById('chordMinCorrVal').textContent = (parseInt(e.target.value) / 100).toFixed(2);
+        });
+        document.getElementById('chordMinCorr').addEventListener('change', renderChord);
+        document.getElementById('chordMode').addEventListener('change', renderChord);
+        document.getElementById('renderChord')?.addEventListener('click', renderChord);
+
+        // ============================================================
+        // Network Graph (existing code)
+        // ============================================================
+
+        document.getElementById('traversalDepth').addEventListener('input', e => {
+            document.getElementById('depthVal').textContent = e.target.value;
+        });
+
+        document.getElementById('runTraversal').addEventListener('click', runTraversal);
+
+        async function loadGraph() {
+            try {
+                const res = await fetch(`${API}/api/graph/export`);
+                graphData = await res.json();
+
+                // Debug: Log data structure
+                console.log('Graph data loaded:', {
+                    totalNodes: graphData.nodes?.length,
+                    totalLinks: graphData.links?.length,
+                    sampleNode: graphData.nodes?.[0],
+                    sampleLink: graphData.links?.[0],
+                    edgeTypes: [...new Set(graphData.links?.map(l => l.type))]
+                });
+
+                // Count edges by type
+                const edgeCounts = {};
+                graphData.links?.forEach(l => {
+                    edgeCounts[l.type] = (edgeCounts[l.type] || 0) + 1;
+                });
+                console.log('Edge counts by type:', edgeCounts);
+
+                renderGraph();
+                loadStats();
+            } catch (e) {
+                console.error('Failed to load graph:', e);
+            }
+        }
+
+        function renderGraph() {
+            const container = document.getElementById('graphCanvas');
+            container.innerHTML = '';
+
+            const width = container.clientWidth;
+            const height = container.clientHeight || 600;
+
+            const svg = d3.select('#graphCanvas')
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+
+            let nodes = graphData.nodes.map(n => ({...n}));
+            let links = graphData.links.map(l => ({...l}));
+
+            // Get all disease IDs for filtering
+            const diseaseIds = new Set(nodes.filter(n => n.type === 'disease').map(n => n.id));
+            const fieldIds = new Set(nodes.filter(n => n.type === 'medical_field').map(n => n.id));
+            const showType = document.getElementById('highlightType').value;
+
+            if (showType === 'disease') {
+                // Show diseases plus their connected symptoms/drugs/fields
+                const allowedIds = diseaseIds;
+                nodes = nodes.filter(n => allowedIds.has(n.id) || fieldIds.has(n.id));
+                const allNodeIds = new Set(nodes.map(n => n.id));
+                // Keep all edges where at least one endpoint is a disease
+                links = links.filter(l => {
+                    const srcId = l.source?.id ?? l.source;
+                    const tgtId = l.target?.id ?? l.target;
+                    const srcIsDisease = diseaseIds.has(srcId);
+                    const tgtIsDisease = diseaseIds.has(tgtId);
+                    return srcIsDisease || tgtIsDisease;
+                });
+            } else if (showType === 'field') {
+                // Show only fields
+                nodes = nodes.filter(n => n.type === 'medical_field');
+                links = [];
+            } else if (showType) {
+                // Filter other types
+                nodes = nodes.filter(n => n.type === showType);
+                const nodeIds = new Set(nodes.map(n => n.id));
+                links = links.filter(l => {
+                    const srcId = l.source?.id ?? l.source;
+                    const tgtId = l.target?.id ?? l.target;
+                    return nodeIds.has(srcId) && nodeIds.has(tgtId);
+                });
+            }
+
+            console.log(`Rendering: ${nodes.length} nodes, ${links.length} links`);
+
+            // Debug: Log link details
+            if (links.length > 0) {
+                const edgeTypeCounts = {};
+                links.forEach(l => {
+                    const srcId = l.source?.id ?? l.source;
+                    const tgtId = l.target?.id ?? l.target;
+                    const key = l.type || 'unknown';
+                    edgeTypeCounts[key] = (edgeTypeCounts[key] || 0) + 1;
+                });
+                console.log('Link type distribution:', edgeTypeCounts);
+                console.log('Sample links:', links.slice(0, 3));
+            }
+
+            document.getElementById('nodeCount').textContent = `${nodes.length} nodes`;
+            document.getElementById('edgeCount').textContent = `${links.length} edges`;
+
+            const g = svg.append('g');
+            svg.call(d3.zoom()
+                .scaleExtent([0.1, 4])
+                .on('zoom', e => g.attr('transform', e.transform)));
+
+            // Define arrowhead markers for different edge types
+            const defs = svg.append('defs');
+            const arrowTypes = [
+                { id: 'arrow-dd', color: '#ffd700', size: 6 },
+                { id: 'arrow-df', color: '#3fb950', size: 5 },
+                { id: 'arrow-ds', color: '#3498db', size: 4 },
+                { id: 'arrow-ddrug', color: '#9b59b6', size: 4 },
+                { id: 'arrow-default', color: '#cccccc', size: 4 },
+            ];
+            arrowTypes.forEach(t => {
+                defs.append('marker')
+                    .attr('id', t.id)
+                    .attr('viewBox', `0 -${t.size} ${t.size * 2} ${t.size * 2}`)
+                    .attr('refX', t.size * 2 + 2)
+                    .attr('refY', 0)
+                    .attr('markerWidth', t.size)
+                    .attr('markerHeight', t.size)
+                    .attr('orient', 'auto')
+                    .append('path')
+                    .attr('d', `M 0,-${t.size} L ${t.size * 2},0 L 0,${t.size}`)
+                    .attr('fill', t.color)
+                    .attr('opacity', 0.8);
+            });
+
+            // Create node lookup for linking (used for styling)
+            const nodeMap = {};
+            nodes.forEach(n => nodeMap[n.id] = n);
+
+            // Draw edges first (behind nodes)
+            const link = g.append('g')
+                .attr('class', 'links')
+                .selectAll('line')
+                .data(links)  // Use links directly
+                .join('line')
+                // White outline for visibility on dark background
+                .attr('stroke', '#ffffff')
+                .attr('stroke-width', d => {
+                    const srcId = d.source?.id ?? d.source;
+                    const tgtId = d.target?.id ?? d.target;
+                    const srcNode = nodeMap[srcId];
+                    const tgtNode = nodeMap[tgtId];
+                    // Disease-disease edges: thickest
+                    if (srcNode?.type === 'disease' && tgtNode?.type === 'disease') return 4;
+                    // Disease-field edges
+                    if ((srcNode?.type === 'disease' && tgtNode?.type === 'medical_field') ||
+                        (srcNode?.type === 'medical_field' && tgtNode?.type === 'disease')) return 3;
+                    // Disease-Symptom or Disease-Drug
+                    if ((srcNode?.type === 'disease' && tgtNode?.type === 'symptom') ||
+                        (srcNode?.type === 'symptom' && tgtNode?.type === 'disease') ||
+                        (srcNode?.type === 'disease' && tgtNode?.type === 'drug') ||
+                        (srcNode?.type === 'drug' && tgtNode?.type === 'disease')) return 2;
+                    return 2;
+                })
+                .attr('stroke-opacity', 1)
+                // Inner colored line on top of white outline
+                .attr('x1', d => {
+                    const srcId = d.source?.id ?? d.source;
+                    const srcNode = nodeMap[srcId];
+                    return srcNode?.x || width / 2;
+                })
+                .attr('y1', d => {
+                    const srcId = d.source?.id ?? d.source;
+                    const srcNode = nodeMap[srcId];
+                    return srcNode?.y || height / 2;
+                })
+                .attr('x2', d => {
+                    const tgtId = d.target?.id ?? d.target;
+                    const tgtNode = nodeMap[tgtId];
+                    return tgtNode?.x || width / 2;
+                })
+                .attr('y2', d => {
+                    const tgtId = d.target?.id ?? d.target;
+                    const tgtNode = nodeMap[tgtId];
+                    return tgtNode?.y || height / 2;
+                });
+
+            // Apply actual edge color on top of the white outline
+            const linkInner = g.append('g')
+                .attr('class', 'links-inner')
+                .selectAll('line')
+                .data(links)
+                .join('line')
+                .attr('stroke', d => {
+                    const srcId = d.source?.id ?? d.source;
+                    const tgtId = d.target?.id ?? d.target;
+                    const srcNode = nodeMap[srcId];
+                    const tgtNode = nodeMap[tgtId];
+                    if (srcNode?.type === 'disease' && tgtNode?.type === 'disease') return '#ffd700';
+                    if ((srcNode?.type === 'disease' && tgtNode?.type === 'medical_field') ||
+                        (srcNode?.type === 'medical_field' && tgtNode?.type === 'disease')) return '#3fb950';
+                    if ((srcNode?.type === 'disease' && tgtNode?.type === 'symptom') ||
+                        (srcNode?.type === 'symptom' && tgtNode?.type === 'disease')) return '#3498db';
+                    if ((srcNode?.type === 'disease' && tgtNode?.type === 'drug') ||
+                        (srcNode?.type === 'drug' && tgtNode?.type === 'disease')) return '#9b59b6';
+                    return '#cccccc';
+                })
+                .attr('stroke-opacity', 0.9)
+                .attr('stroke-width', d => {
+                    const srcId = d.source?.id ?? d.source;
+                    const tgtId = d.target?.id ?? d.target;
+                    const srcNode = nodeMap[srcId];
+                    const tgtNode = nodeMap[tgtId];
+                    if (srcNode?.type === 'disease' && tgtNode?.type === 'disease') return 2.5;
+                    if ((srcNode?.type === 'disease' && tgtNode?.type === 'medical_field') ||
+                        (srcNode?.type === 'medical_field' && tgtNode?.type === 'disease')) return 2;
+                    if ((srcNode?.type === 'disease' && tgtNode?.type === 'symptom') ||
+                        (srcNode?.type === 'symptom' && tgtNode?.type === 'disease') ||
+                        (srcNode?.type === 'disease' && tgtNode?.type === 'drug') ||
+                        (srcNode?.type === 'drug' && tgtNode?.type === 'disease')) return 1.5;
+                    return 1.5;
+                })
+                .attr('marker-end', d => {
+                    const srcId = d.source?.id ?? d.source;
+                    const tgtId = d.target?.id ?? d.target;
+                    const srcNode = nodeMap[srcId];
+                    const tgtNode = nodeMap[tgtId];
+                    if (srcNode?.type === 'disease' && tgtNode?.type === 'disease') return 'url(#arrow-dd)';
+                    if ((srcNode?.type === 'disease' && tgtNode?.type === 'medical_field') ||
+                        (srcNode?.type === 'medical_field' && tgtNode?.type === 'disease')) return 'url(#arrow-df)';
+                    if ((srcNode?.type === 'disease' && tgtNode?.type === 'symptom') ||
+                        (srcNode?.type === 'symptom' && tgtNode?.type === 'disease')) return 'url(#arrow-ds)';
+                    if ((srcNode?.type === 'disease' && tgtNode?.type === 'drug') ||
+                        (srcNode?.type === 'drug' && tgtNode?.type === 'disease')) return 'url(#arrow-ddrug)';
+                    return 'url(#arrow-default)';
+                })
+                .attr('x1', d => {
+                    const srcId = d.source?.id ?? d.source;
+                    const srcNode = nodeMap[srcId];
+                    return srcNode?.x || width / 2;
+                })
+                .attr('y1', d => {
+                    const srcId = d.source?.id ?? d.source;
+                    const srcNode = nodeMap[srcId];
+                    return srcNode?.y || height / 2;
+                })
+                .attr('x2', d => {
+                    const tgtId = d.target?.id ?? d.target;
+                    const tgtNode = nodeMap[tgtId];
+                    return tgtNode?.x || width / 2;
+                })
+                .attr('y2', d => {
+                    const tgtId = d.target?.id ?? d.target;
+                    const tgtNode = nodeMap[tgtId];
+                    return tgtNode?.y || height / 2;
+                })
+                .append('title')
+                .text(d => {
+                    const srcId = d.source?.id ?? d.source;
+                    const tgtId = d.target?.id ?? d.target;
+                    const srcNode = nodeMap[srcId];
+                    const tgtNode = nodeMap[tgtId];
+                    return `${srcNode?.label || srcId} → ${tgtNode?.label || tgtId}`;
+                });
+
+            // Draw nodes
+            const node = g.append('g')
+                .attr('class', 'nodes')
+                .selectAll('circle')
+                .data(nodes)
+                .join('circle')
+                .attr('r', d => d.type === 'medical_field' ? 14 : d.type === 'disease' ? 9 : 6)
+                .attr('fill', d => NODE_COLORS[d.type] || '#888')
+                .attr('stroke', d => PARTITION_COLORS[d.partition] || '#fff')
+                .attr('stroke-width', d => d.type === 'medical_field' ? 3 : 2)
+                .attr('cursor', 'pointer')
+                .call(d3.drag()
+                    .on('start', dragstarted)
+                    .on('drag', dragged)
+                    .on('end', dragended));
+
+            // Draw labels
+            const labels = g.append('g')
+                .attr('class', 'labels')
+                .selectAll('text')
+                .data(nodes.filter(n => n.type === 'medical_field' || n.type === 'disease'))
+                .join('text')
+                .text(d => d.label.length > 15 ? d.label.substring(0, 12) + '..' : d.label)
+                .attr('font-size', d => d.type === 'medical_field' ? '11px' : '9px')
+                .attr('font-weight', d => d.type === 'medical_field' ? '700' : '500')
+                .attr('fill', '#e6edf3')
+                .attr('stroke', '#0d1117')
+                .attr('stroke-width', '3px')
+                .attr('paint-order', 'stroke')
+                .attr('text-anchor', 'middle')
+                .attr('dy', d => d.type === 'medical_field' ? 22 : 16)
+                .style('pointer-events', 'none');
+
+            node.append('title').text(d => `${d.label} (${d.type})`);
+
+            // Force simulation - use links directly, D3 will mutate source/target to node objects
+            simulation = d3.forceSimulation(nodes)
+                .force('link', d3.forceLink(links).id(d => d.id).distance(80).strength(0.5))
+                .force('charge', d3.forceManyBody().strength(-150))
+                .force('center', d3.forceCenter(width / 2, height / 2))
+                .force('collision', d3.forceCollide().radius(20));
+
+            simulation.on('tick', () => {
+                link
+                    .attr('x1', d => d.source.x || 0)
+                    .attr('y1', d => d.source.y || 0)
+                    .attr('x2', d => d.target.x || 0)
+                    .attr('y2', d => d.target.y || 0);
+                linkInner
+                    .attr('x1', d => d.source.x || 0)
+                    .attr('y1', d => d.source.y || 0)
+                    .attr('x2', d => d.target.x || 0)
+                    .attr('y2', d => d.target.y || 0);
+                node
+                    .attr('cx', d => d.x)
+                    .attr('cy', d => d.y);
+                labels
+                    .attr('x', d => d.x)
+                    .attr('y', d => d.y);
+            });
+
+            function dragstarted(event) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                event.subject.fx = event.subject.x;
+                event.subject.fy = event.subject.y;
+            }
+            function dragged(event) {
+                event.subject.fx = event.x;
+                event.subject.fy = event.y;
+            }
+            function dragended(event) {
+                if (!event.active) simulation.alphaTarget(0);
+                event.subject.fx = null;
+                event.subject.fy = null;
+            }
+        }
+
+        async function runTraversal() {
+            const field = document.getElementById('fieldSelect').value;
+            const depth = document.getElementById('traversalDepth').value;
+            const algo = document.getElementById('algoSelect').value;
+
+            const btn = document.getElementById('runTraversal');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading-spinner"></span>';
+
+            try {
+                const res = await fetch(`${API}/api/graph/traverse`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ field_name: field, max_depth: parseInt(depth), algorithm: algo })
+                });
+                const data = await res.json();
+
+                const visitedIds = new Set(data.nodes.map(n => n.id));
+
+                d3.selectAll('#graphCanvas svg circle')
+                    .attr('stroke-width', d => visitedIds.has(d.id) ? 3 : 1)
+                    .attr('stroke', d => {
+                        if (visitedIds.has(d.id)) {
+                            return '#ffd700';
+                        }
+                        return PARTITION_COLORS[d.partition] || '#fff';
+                    })
+                    .attr('opacity', d => visitedIds.has(d.id) ? 1 : 0.3);
+
+                const depthDist = Object.entries(data.depth_distribution)
+                    .map(([k, v]) => `<span class="badge bg-secondary mx-1">Depth ${k}: ${v}</span>`)
+                    .join('');
+
+                document.getElementById('traversalResults').innerHTML = `
+                    <div class="mb-2">
+                        <strong>${algo.toUpperCase()} from ${field}</strong> - ${data.visited_nodes} nodes visited
+                    </div>
+                    <div class="mb-2">${depthDist}</div>
+                    <div class="mb-2">
+                        <strong>Partition Coverage:</strong>
+                        ${Object.entries(data.partition_coverage).map(([p, c]) =>
+                            `<span class="badge mx-1" style="background:${PARTITION_COLORS[p]}">P${p}: ${c}</span>`
+                        ).join('')}
+                    </div>
+                `;
+            } catch (e) {
+                console.error('Traversal error:', e);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-play"></i> Run Traversal';
+            }
+        }
+
+        async function loadStats() {
+            try {
+                const res = await fetch(`${API}/api/graph/statistics`);
+                const data = await res.json();
+                const typeDist = Object.entries(data.node_type_distribution || {})
+                    .map(([k, v]) => `<div class="d-flex justify-content-between small"><span>${k}</span><strong>${v}</strong></div>`)
+                    .join('');
+                const edgeDist = Object.entries(data.edge_type_distribution || {})
+                    .map(([k, v]) => `<div class="d-flex justify-content-between small"><span>${k}</span><strong>${v}</strong></div>`)
+                    .join('');
+                document.getElementById('graphStats').innerHTML = `
+                    <div class="small">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Nodes</span><strong>${data.node_count}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Edges</span><strong>${data.edge_count}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Density</span><strong>${data.density}</strong>
+                        </div>
+                        <hr>
+                        <strong class="small">Node Types</strong>${typeDist}
+                        <hr>
+                        <strong class="small">Edge Types</strong>${edgeDist}
+                    </div>
+                `;
+            } catch (e) {
+                document.getElementById('graphStats').innerHTML = '<small class="text-muted">Stats unavailable</small>';
+            }
+        }
+
+        loadGraph();
+    </script>
+</body>
+</html>

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Cost Analysis - Hybrid Doc-Graph Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        .cost-metric { font-size: 0.85rem; }
+        .cost-bar { height: 6px; border-radius: 3px; background: var(--bg-secondary); overflow: hidden; }
+        .cost-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s; }
+        .strategy-card { cursor: pointer; transition: border-color 0.2s; }
+        .strategy-card:hover { border-color: var(--accent-blue); }
+        .strategy-card.best { border-color: var(--accent-green); border-width: 2px; }
+        .partition-stat { text-align: center; padding: 0.5rem; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-heart-pulse text-danger"></i>
+                Hybrid Doc-Graph Store
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">
+                    <i class="bi bi-search"></i> Query
+                </a>
+                <a class="nav-link" href="/graph">
+                    <i class="bi bi-diagram-3"></i> Graph
+                </a>
+                <a class="nav-link active" href="/analysis">
+                    <i class="bi bi-graph-up"></i> Analysis
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+        <div class="row mb-3">
+            <div class="col-12">
+                <h4><i class="bi bi-graph-up text-warning"></i> Join Cost Analysis</h4>
+                <p class="text-muted mb-0">Evaluate and compare join strategies between Document and Graph engines</p>
+            </div>
+        </div>
+
+        <!-- System Overview -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-dark">
+                        <h6 class="mb-0"><i class="bi bi-cpu"></i> System Architecture Overview</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-3">
+                                <div class="p-3 border rounded">
+                                    <div class="text-primary fw-bold fs-5">Whoosh BM25F</div>
+                                    <div class="text-muted small">Document Engine</div>
+                                    <div class="text-muted small">500 Patient Documents</div>
+                                </div>
+                            </div>
+                            <div class="col-md-1 d-flex align-items-center justify-content-center">
+                                <i class="bi bi-arrow-right fs-3 text-muted"></i>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-3 border rounded">
+                                    <div class="text-success fw-bold fs-5">Join Operation</div>
+                                    <div class="text-muted small">Document + Graph Join</div>
+                                    <div class="text-muted small">Combined Scoring</div>
+                                </div>
+                            </div>
+                            <div class="col-md-1 d-flex align-items-center justify-content-center">
+                                <i class="bi bi-arrow-left fs-3 text-muted"></i>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="p-3 border rounded">
+                                    <div class="text-danger fw-bold fs-5">NetworkX + METIS</div>
+                                    <div class="text-muted small">Graph Engine</div>
+                                    <div class="text-muted small">200 Nodes, 4 Partitions</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Partition Info -->
+        <div class="row mb-4" id="partitionSection">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-dark">
+                        <h6 class="mb-0"><i class="bi bi-grid-3x3-gap"></i> METIS Edge-Cut Partitioning</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3" id="partitionCards">
+                            <!-- Loaded dynamically -->
+                            <div class="text-center w-100"><span class="loading-spinner"></span> Loading partitions...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Join Strategy Comparison -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-dark">
+                        <h6 class="mb-0"><i class="bi bi-arrow-left-right"></i> Join Strategy Comparison</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="strategy-card border rounded p-3 h-100" id="strategy-filter">
+                                    <h6 class="text-primary"><i class="bi bi-funnel"></i> Filter-After-Join</h6>
+                                    <p class="small text-muted mb-2">Join document and graph results first, then apply graph distance filter. Best for balanced result sets.</p>
+                                    <div class="cost-metric">
+                                        <div class="d-flex justify-content-between"><span>Doc Cost:</span><strong id="fa-doccost">-</strong></div>
+                                        <div class="d-flex justify-content-between"><span>Graph Cost:</span><strong id="fa-graphcost">-</strong></div>
+                                        <div class="d-flex justify-content-between"><span>Join Cost:</span><strong id="fa-joincost">-</strong></div>
+                                        <div class="d-flex justify-content-between"><span>Time:</span><strong id="fa-time">-</strong></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="strategy-card border rounded p-3 h-100" id="strategy-inl">
+                                    <h6 class="text-info"><i class="bi bi-repeat"></i> Index Nested-Loop</h6>
+                                    <p class="small text-muted mb-2">For each graph node, probe the document index. Good for small graph traversal results.</p>
+                                    <div class="cost-metric">
+                                        <div class="d-flex justify-content-between"><span>Doc Cost:</span><strong id="inl-doccost">-</strong></div>
+                                        <div class="d-flex justify-content-between"><span>Graph Cost:</span><strong id="inl-graphcost">-</strong></div>
+                                        <div class="d-flex justify-content-between"><span>Join Cost:</span><strong id="inl-joincost">-</strong></div>
+                                        <div class="d-flex justify-content-between"><span>Time:</span><strong id="inl-time">-</strong></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="strategy-card border rounded p-3 h-100" id="strategy-hash">
+                                    <h6 class="text-warning"><i class="bi bi-hash"></i> Hash Join</h6>
+                                    <p class="small text-muted mb-2">Build hash table on disease names, probe with graph traversal results. Scalable for large datasets.</p>
+                                    <div class="cost-metric">
+                                        <div class="d-flex justify-content-between"><span>Doc Cost:</span><strong id="hash-doccost">-</strong></div>
+                                        <div class="d-flex justify-content-between"><span>Graph Cost:</span><strong id="hash-graphcost">-</strong></div>
+                                        <div class="d-flex justify-content-between"><span>Join Cost:</span><strong id="hash-joincost">-</strong></div>
+                                        <div class="d-flex justify-content-between"><span>Time:</span><strong id="hash-time">-</strong></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cost Breakdown Chart -->
+        <div class="row mb-4">
+            <div class="col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header bg-dark">
+                        <h6 class="mb-0"><i class="bi bi-bar-chart"></i> Join Cost Breakdown by Strategy</h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="costChart" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header bg-dark">
+                        <h6 class="mb-0"><i class="bi bi-pie-chart"></i> Component Cost Distribution</h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="pieChart" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Topology Analysis -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-dark">
+                        <h6 class="mb-0"><i class="bi bi-diagram-2"></i> Topology & Edge-Cut Analysis</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 text-center">
+                                <div class="fs-1 fw-bold text-primary" id="totalEdges">-</div>
+                                <div class="text-muted small">Total Edges</div>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <div class="fs-1 fw-bold text-danger" id="cutEdges">-</div>
+                                <div class="text-muted small">Edge-Cut Edges</div>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <div class="fs-1 fw-bold text-success" id="edgeCutRatio">-</div>
+                                <div class="text-muted small">Edge-Cut Ratio</div>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <div class="fs-1 fw-bold text-warning" id="avgDegree">-</div>
+                                <div class="text-muted small">Avg Node Degree</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Field Coverage -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-dark">
+                        <h6 class="mb-0"><i class="bi bi-hospital"></i> Medical Field Coverage</h6>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-dark table-sm mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Medical Field</th>
+                                        <th>Diseases</th>
+                                        <th>Symptoms</th>
+                                        <th>Patients</th>
+                                        <th>Sample Diseases</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="coverageTable">
+                                    <tr><td colspan="5" class="text-center">Loading...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API = '';
+        const PARTITION_COLORS = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4'];
+        let costChart, pieChart;
+
+        async function loadAnalysis() {
+            await Promise.all([
+                loadPartitions(),
+                loadFieldCoverage(),
+                runJoinAnalysis()
+            ]);
+        }
+
+        async function loadPartitions() {
+            try {
+                const res = await fetch(`${API}/api/graph/partitions`);
+                const data = await res.json();
+                document.getElementById('edgeCutRatio').textContent =
+                    `${(data.edge_cut_ratio * 100).toFixed(1)}%`;
+
+                const stats = await fetch(`${API}/api/graph/statistics`).then(r => r.json());
+                document.getElementById('totalEdges').textContent = stats.edge_count;
+                document.getElementById('cutEdges').textContent =
+                    Math.round(data.edge_cut_ratio * stats.edge_count);
+                document.getElementById('avgDegree').textContent = stats.degree_stats?.mean || '-';
+
+                const cards = data.partitions.map(p => `
+                    <div class="col-md-3">
+                        <div class="partition-stat border" style="border-color: ${PARTITION_COLORS[p.partition_id]} !important;">
+                            <div class="fw-bold" style="color: ${PARTITION_COLORS[p.partition_id]}">
+                                Partition ${p.partition_id}
+                            </div>
+                            <div class="small">Nodes: <strong>${p.node_count}</strong></div>
+                            <div class="small">Internal: <strong>${p.internal_edges}</strong></div>
+                            <div class="small">Cut Edges: <strong>${p.cut_edges}</strong></div>
+                            <div class="cost-bar mt-2">
+                                    <div class="cost-bar-fill" style="width: ${(p.cut_edges / (p.internal_edges + p.cut_edges || 1) * 100).toFixed(1)}%; background: ${PARTITION_COLORS[p.partition_id]}"></div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                document.getElementById('partitionCards').innerHTML = cards;
+            } catch (e) {
+                console.error('Partition load error:', e);
+            }
+        }
+
+        async function loadFieldCoverage() {
+            try {
+                const res = await fetch(`${API}/api/analyze/field-coverage`);
+                const data = await res.json();
+                const rows = Object.entries(data).map(([field, info]) => `
+                    <tr>
+                        <td><strong>${field.replace('_', ' ')}</strong></td>
+                        <td><span class="badge bg-danger">${info.disease_count}</span></td>
+                        <td><span class="badge bg-primary">${info.symptom_count}</span></td>
+                        <td><span class="badge bg-success">${info.patient_count}</span></td>
+                        <td><small class="text-muted">${info.diseases.join(', ')}</small></td>
+                    </tr>
+                `).join('');
+                document.getElementById('coverageTable').innerHTML = rows;
+            } catch (e) {
+                document.getElementById('coverageTable').innerHTML =
+                    '<tr><td colspan="5" class="text-danger">Failed to load coverage data</td></tr>';
+            }
+        }
+
+        async function runJoinAnalysis() {
+            try {
+                const res = await fetch(`${API}/api/analyze/join-cost`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        query_text: 'chest pain fever headache',
+                        target_field: 'Cardiology'
+                    })
+                });
+                const data = await res.json();
+
+                // Fill strategy cards
+                const strategies = data.strategy_comparison;
+                const best = Object.entries(strategies).sort(
+                    (a, b) => a[1].execution_time_ms - b[1].execution_time_ms
+                )[0][0];
+
+                fillStrategyCard('filter', strategies.filter_after_join, best === 'filter_after_join');
+                fillStrategyCard('inl', strategies.index_nested_loop, best === 'index_nested_loop');
+                fillStrategyCard('hash', strategies.hash_join, best === 'hash_join');
+
+                // Charts
+                renderCharts(data);
+            } catch (e) {
+                console.error('Join analysis error:', e);
+            }
+        }
+
+        function fillStrategyCard(prefix, strategy, isBest) {
+            if (!strategy) return;
+            const card = document.getElementById(`strategy-${prefix}`);
+            if (isBest) card.classList.add('best');
+
+            const cost = strategy.join_cost;
+            document.getElementById(`${prefix}-doccost`).textContent = cost.document_scan_cost.toFixed(4);
+            document.getElementById(`${prefix}-graphcost`).textContent = cost.graph_traversal_cost.toFixed(4);
+            document.getElementById(`${prefix}-joincost`).textContent = cost.join_operation_cost.toFixed(4);
+            document.getElementById(`${prefix}-time`).textContent =
+                `${strategy.execution_time_ms.toFixed(1)}ms`;
+        }
+
+        function renderCharts(data) {
+            const strategies = data.strategy_comparison;
+            const labels = ['Filter-After-Join', 'Index Nested-Loop', 'Hash Join'];
+
+            // Destroy existing charts
+            if (costChart) costChart.destroy();
+            if (pieChart) pieChart.destroy();
+
+            // Bar chart
+            const ctx1 = document.getElementById('costChart').getContext('2d');
+            costChart = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Doc Scan Cost',
+                            data: [
+                                strategies.filter_after_join?.join_cost.document_scan_cost || 0,
+                                strategies.index_nested_loop?.join_cost.document_scan_cost || 0,
+                                strategies.hash_join?.join_cost.document_scan_cost || 0
+                            ],
+                            backgroundColor: 'rgba(88, 166, 255, 0.7)',
+                        },
+                        {
+                            label: 'Graph Traversal Cost',
+                            data: [
+                                strategies.filter_after_join?.join_cost.graph_traversal_cost || 0,
+                                strategies.index_nested_loop?.join_cost.graph_traversal_cost || 0,
+                                strategies.hash_join?.join_cost.graph_traversal_cost || 0
+                            ],
+                            backgroundColor: 'rgba(63, 185, 80, 0.7)',
+                        },
+                        {
+                            label: 'Join Operation Cost',
+                            data: [
+                                strategies.filter_after_join?.join_cost.join_operation_cost || 0,
+                                strategies.index_nested_loop?.join_cost.join_operation_cost || 0,
+                                strategies.hash_join?.join_cost.join_operation_cost || 0
+                            ],
+                            backgroundColor: 'rgba(210, 153, 34, 0.7)',
+                        },
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { labels: { color: '#e6edf3' } } },
+                    scales: {
+                        x: { ticks: { color: '#8b949e' }, stacked: false },
+                        y: { ticks: { color: '#8b949e' }, grid: { color: '#30363d' } }
+                    }
+                }
+            });
+
+            // Pie chart - use default strategy
+            const def = strategies.filter_after_join?.join_cost || {};
+            const ctx2 = document.getElementById('pieChart').getContext('2d');
+            pieChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Doc Scan', 'Graph Traversal', 'Join Ops', 'Network Transfer'],
+                    datasets: [{
+                        data: [
+                            def.document_scan_cost || 1,
+                            def.graph_traversal_cost || 1,
+                            def.join_operation_cost || 1,
+                            def.network_transfer_cost || 0.1
+                        ],
+                        backgroundColor: [
+                            'rgba(88, 166, 255, 0.8)',
+                            'rgba(63, 185, 80, 0.8)',
+                            'rgba(210, 153, 34, 0.8)',
+                            'rgba(248, 81, 73, 0.8)',
+                        ],
+                        borderColor: '#1c2128',
+                        borderWidth: 2,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#e6edf3', padding: 12 } }
+                    }
+                }
+            });
+        }
+
+        loadAnalysis();
+    </script>
+</body>
+</html>

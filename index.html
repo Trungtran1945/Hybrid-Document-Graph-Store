@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hybrid Document-Graph Store: Medical Knowledge Base</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+:root{--bg0:#0d1117;--bg1:#161b22;--bg2:#1c2128;--bd:#30363d;--tx:#e6edf3;--tx2:#8b949e;--bl:#58a6ff;--gr:#3fb950;--pr:#a371f7;--or:#d29922;--rd:#f85149;--cy:#39c5cf;--p0:#FF6B6B;--p1:#4ECDC4;--p2:#45B7D1;--p3:#96CEB4}
+*{box-sizing:border-box}
+body{background:var(--bg0);color:var(--tx);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;margin:0}
+.navbar{background:var(--bg1)!important;border-bottom:1px solid var(--bd)!important}
+.navbar-brand{font-weight:700}
+.nav-link{color:var(--tx2)!important;font-weight:500}
+.nav-link:hover,.nav-link.active{color:var(--bl)!important}
+.nav-tabs{ border-bottom:1px solid var(--bd)}
+.nav-tabs .nav-link{color:var(--tx2);border:none;border-bottom:2px solid transparent}
+.nav-tabs .nav-link:hover{color:var(--tx);border-color:var(--bd)}
+.nav-tabs .nav-link.active{color:var(--bl);border-color:var(--bl);background:transparent}
+.card{background:var(--bg2);border:1px solid var(--bd);border-radius:12px}
+.card-header{background:var(--bg1)!important;border-bottom:1px solid var(--bd);border-radius:12px 12px 0 0!important;padding:0.75rem 1rem}
+.form-control,.form-select{background:var(--bg1);border:1px solid var(--bd);color:var(--tx)}
+.form-control:focus,.form-select:focus{border-color:var(--bl);box-shadow:0 0 0 3px rgba(88,166,255,.15);color:var(--tx)}
+.form-range{accent-color:var(--bl)}
+.form-label{color:var(--tx2);font-size:.85rem}
+.form-text{color:var(--tx2);font-size:.75rem}
+.table{color:var(--tx);font-size:.82rem}
+.table thead th{background:var(--bg1);border-bottom:2px solid var(--bd);color:var(--tx2);font-weight:600;text-transform:uppercase;font-size:.7rem;letter-spacing:.5px}
+.table td{border-color:var(--bd);vertical-align:middle;padding:.5rem}
+.table-hover tbody tr:hover td{background:rgba(88,166,255,.04)}
+.btn-primary{background:linear-gradient(135deg,#2563eb,#1d4ed8);border:none;font-weight:600}
+.btn-primary:hover{background:linear-gradient(135deg,#1d4ed8,#1e40af)}
+.btn-outline-primary{border-color:var(--bl);color:var(--bl)}
+.btn-outline-primary:hover{background:var(--bl);color:#fff}
+.btn-outline-light{border-color:var(--bd);color:var(--tx2)}
+.btn-outline-light:hover{background:var(--bd);color:var(--tx)}
+.badge{font-weight:500;font-size:.7rem}
+.stat-card{background:var(--bg2);border:1px solid var(--bd);border-radius:12px;padding:1rem;text-align:center;transition:transform .2s}
+.stat-card:hover{transform:translateY(-2px)}
+.stat-value{font-size:1.8rem;font-weight:800;line-height:1;margin-bottom:.25rem}
+.stat-label{font-size:.7rem;color:var(--tx2);text-transform:uppercase;letter-spacing:.5px}
+.s-high{background:rgba(63,185,80,.18);color:var(--gr);font-weight:600;padding:2px 8px;border-radius:4px}
+.s-med{background:rgba(210,153,34,.18);color:var(--or);font-weight:600;padding:2px 8px;border-radius:4px}
+.s-low{background:rgba(248,81,73,.1);color:var(--tx2);padding:2px 8px;border-radius:4px}
+.dist0{background:rgba(63,185,80,.2);color:var(--gr)}
+.dist1{background:rgba(88,166,255,.2);color:var(--bl)}
+.dist2{background:rgba(210,153,34,.2);color:var(--or)}
+.dist3{background:rgba(163,113,247,.2);color:var(--pr)}
+.p0{background:rgba(255,107,107,.2);color:var(--p0)}
+.p1{background:rgba(78,205,196,.2);color:var(--p1)}
+.p2{background:rgba(69,183,209,.2);color:var(--p2)}
+.p3{background:rgba(150,206,180,.2);color:var(--p3)}
+.cost-low{color:var(--gr);font-weight:700}
+.cost-med{color:var(--or);font-weight:700}
+.cost-high{color:var(--rd);font-weight:700}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg1)}
+::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--tx2)}
+.spinner{display:inline-block;width:1rem;height:1rem;border:2px solid rgba(255,255,255,.3);border-radius:50%;border-top-color:#fff;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.gradient-text{background:linear-gradient(135deg,var(--bl),var(--pr));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.partition-bar{height:6px;border-radius:3px;background:var(--bg1);overflow:hidden}
+.partition-bar-fill{height:100%;border-radius:3px;transition:width .5s}
+.ntype{width:12px;height:12px;border-radius:50%;display:inline-block}
+.legend-row{display:flex;align-items:center;gap:.5rem;padding:.15rem 0}
+#graphCanvas{background:var(--bg1);border:1px solid var(--bd);border-radius:8px;width:100%;min-height:500px}
+.tab-content{padding-top:1rem}
+.progress-bar-custom{background:linear-gradient(90deg,var(--bl),var(--pr))}
+.init-overlay{position:fixed;inset:0;background:rgba(13,17,23,.95);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:1rem}
+.init-overlay h2{font-size:1.5rem;font-weight:700}
+.init-overlay .progress{width:300px;height:4px}
+.code-font{font-family:'Cascadia Code','Fira Code',monospace;font-size:.8rem}
+.symptom-tag{display:inline-block;background:rgba(52,152,219,.15);color:#5dade2;border-radius:4px;padding:1px 6px;font-size:.7rem;margin:1px}
+.disease-tag{display:inline-block;background:rgba(231,76,60,.15);color:#e74c3c;border-radius:4px;padding:1px 6px;font-size:.7rem;margin:1px}
+.partition-legend{display:flex;gap:1rem;flex-wrap:wrap}
+.partition-dot{width:12px;height:12px;border-radius:50%}
+.tier-badge{padding:4px 12px;border-radius:20px;font-weight:700;font-size:.8rem}
+.tier-low{background:rgba(63,185,80,.2);color:var(--gr)}
+.tier-med{background:rgba(210,153,34,.2);color:var(--or)}
+.tier-high{background:rgba(248,81,73,.2);color:var(--rd)}
+.panel-section{border:1px solid var(--bd);border-radius:8px;padding:1rem;margin-bottom:1rem}
+.panel-title{font-size:.8rem;font-weight:600;color:var(--tx2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+.cost-row{display:flex;justify-content:space-between;padding:.25rem 0;border-bottom:1px solid rgba(48,54,61,.5)}
+.cost-row:last-child{border-bottom:none}
+.metric-mini{text-align:center;padding:.5rem;border:1px solid var(--bd);border-radius:8px;background:var(--bg1)}
+.metric-mini .val{font-size:1.4rem;font-weight:800}
+.metric-mini .lbl{font-size:.65rem;color:var(--tx2);text-transform:uppercase}
+    </style>
+</head>
+<body>
+<!-- Init Overlay -->
+<div class="init-overlay" id="initOverlay">
+    <i class="bi bi-heart-pulse" style="font-size:3rem;color:var(--rd)"></i>
+    <h2 class="gradient-text">Hybrid Document-Graph Store</h2>
+    <p style="color:var(--tx2)">Initializing Medical Knowledge Base...</p>
+    <div class="progress"><div class="progress-bar progress-bar-custom" id="initProgress" style="width:0%"></div></div>
+    <p class="code-font" style="color:var(--tx2);font-size:.8rem" id="initStatus">Loading...</p>
+</div>
+
+<!-- Main App -->
+<div id="mainApp" style="display:none">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-heart-pulse text-danger"></i>
+                <span class="gradient-text">Hybrid Doc-Graph Store</span>
+            </a>
+            <div class="navbar-nav ms-auto flex-row gap-2">
+                <a class="nav-link px-3" href="#" data-tab="query"><i class="bi bi-search"></i> Query</a>
+                <a class="nav-link px-3" href="#" data-tab="graph"><i class="bi bi-diagram-3"></i> Graph</a>
+                <a class="nav-link px-3" href="#" data-tab="analysis"><i class="bi bi-bar-chart"></i> Analysis</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid px-4 py-3">
+        <!-- QUERY TAB -->
+        <div id="tab-query" class="tab-content">
+            <div class="row g-4">
+                <!-- Controls -->
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header"><h6 class="mb-0"><i class="bi bi-funnel text-primary"></i> Hybrid Query</h6></div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Search Query</label>
+                                <textarea id="queryText" class="form-control" rows="2" placeholder="e.g., chest pain, fever, headache..."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Target Medical Field</label>
+                                <select id="targetField" class="form-select">
+                                    <option value="Cardiology">Cardiology</option>
+                                    <option value="Neurology">Neurology</option>
+                                    <option value="Oncology">Oncology</option>
+                                    <option value="Pulmonology">Pulmonology</option>
+                                    <option value="Gastroenterology">Gastroenterology</option>
+                                    <option value="Orthopedics">Orthopedics</option>
+                                    <option value="Infectious_Disease">Infectious Disease</option>
+                                    <option value="Endocrinology">Endocrinology</option>
+                                    <option value="Nephrology">Nephrology</option>
+                                    <option value="Rheumatology">Rheumatology</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Max Graph Distance: <strong id="distVal">3</strong></label>
+                                <input type="range" class="form-range" id="maxDist" min="1" max="4" value="3">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Traversal Algorithm</label>
+                                <select id="traversalAlgo" class="form-select">
+                                    <option value="bfs">BFS (Breadth-First Search)</option>
+                                    <option value="dfs">DFS (Depth-First Search)</option>
+                                    <option value="dijkstra">Shortest Path (Dijkstra)</option>
+                                </select>
+                            </div>
+                            <div class="row g-2 mb-3">
+                                <div class="col-6">
+                                    <label class="form-label small">Text Weight</label>
+                                    <input type="number" class="form-control" id="textWeight" value="0.5" min="0" max="1" step="0.1">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small">Graph Weight</label>
+                                    <input type="number" class="form-control" id="graphWeight" value="0.5" min="0" max="1" step="0.1">
+                                </div>
+                            </div>
+                            <div class="row g-2 mb-3">
+                                <div class="col-6">
+                                    <label class="form-label small">Min Severity</label>
+                                    <select id="minSev" class="form-select">
+                                        <option value="">Any</option>
+                                        <option value="1">1 - Mild</option>
+                                        <option value="3">3 - Moderate</option>
+                                        <option value="4">4 - High</option>
+                                        <option value="5">5 - Critical</option>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small">Max Results</label>
+                                    <select id="maxRes" class="form-select">
+                                        <option value="10">10</option>
+                                        <option value="20" selected>20</option>
+                                        <option value="50">50</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary w-100" id="execQuery">
+                                <i class="bi bi-play-fill"></i> Execute Hybrid Query
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Sample Queries -->
+                    <div class="card mt-3">
+                        <div class="card-header"><h6 class="mb-0"><i class="bi bi-lightning text-warning"></i> Sample Queries</h6></div>
+                        <div class="card-body">
+                            <div class="d-flex flex-wrap gap-1">
+                                <button class="btn btn-sm btn-outline-primary sample-q" data-q="chest pain shortness of breath" data-f="Cardiology">Cardiac</button>
+                                <button class="btn btn-sm btn-outline-primary sample-q" data-q="severe headache sensitivity to light nausea" data-f="Neurology">Neuro</button>
+                                <button class="btn btn-sm btn-outline-primary sample-q" data-q="persistent cough coughing blood weight loss fatigue" data-f="Oncology">Lung Ca.</button>
+                                <button class="btn btn-sm btn-outline-primary sample-q" data-q="fever cough shortness of breath loss of taste" data-f="Pulmonology">COVID</button>
+                                <button class="btn btn-sm btn-outline-primary sample-q" data-q="joint pain swelling stiffness decreased flexibility" data-f="Orthopedics">Arthritis</button>
+                                <button class="btn btn-sm btn-outline-primary sample-q" data-q="increased thirst frequent urination fatigue blurred vision" data-f="Endocrinology">Diabetes</button>
+                                <button class="btn btn-sm btn-outline-primary sample-q" data-q="widespread pain fatigue sleep problems mood issues" data-f="Rheumatology">Fibromyalgia</button>
+                                <button class="btn btn-sm btn-outline-primary sample-q" data-q="high fever chills sweating headache nausea" data-f="Infectious_Disease">Malaria</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results -->
+                <div class="col-lg-8">
+                    <!-- Stats -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-6 col-md-3">
+                            <div class="stat-card"><div class="stat-value text-primary" id="stResults">-</div><div class="stat-label">Results</div></div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="stat-card"><div class="stat-value text-success" id="stTime">-</div><div class="stat-label">Time (ms)</div></div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="stat-card"><div class="stat-value text-warning" id="stParts">-</div><div class="stat-label">Partitions</div></div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="stat-card"><div class="stat-value" id="stCost">-</div><div class="stat-label">Cost Tier</div></div>
+                        </div>
+                    </div>
+
+                    <!-- Results Table -->
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0"><i class="bi bi-list-ul text-success"></i> Query Results</h6>
+                            <span class="badge bg-secondary" id="resCount">0 results</span>
+                        </div>
+                        <div class="card-body p-0">
+                            <div style="max-height:450px;overflow-y:auto">
+                                <table class="table table-hover mb-0">
+                                    <thead class="sticky-top">
+                                        <tr>
+                                            <th>#</th><th>Patient</th><th>Chief Complaint</th><th>Field</th><th>Severity</th>
+                                            <th>Graph Dist.</th><th>Text Score</th><th>Graph Score</th><th>Combined</th><th>Partition</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="resultsBody">
+                                        <tr><td colspan="10" class="text-center text-muted py-5">
+                                            <i class="bi bi-arrow-left-circle fs-1 d-block mb-2 opacity-50"></i>
+                                            Configure query and click "Execute Hybrid Query"
+                                        </td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Join Cost Panel -->
+                    <div class="card mt-3" id="costPanel" style="display:none">
+                        <div class="card-header"><h6 class="mb-0"><i class="bi bi-cash-stack text-warning"></i> Join Cost Analysis</h6></div>
+                        <div class="card-body">
+                            <div class="row g-3" id="costMetrics"></div>
+                            <div class="alert alert-secondary mt-3 mb-0" id="costSummary"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GRAPH TAB -->
+        <div id="tab-graph" class="tab-content" style="display:none">
+            <div class="row g-4">
+                <div class="col-lg-3">
+                    <div class="card">
+                        <div class="card-header"><h6 class="mb-0"><i class="bi bi-sliders"></i> Graph Controls</h6></div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label small">Starting Field</label>
+                                <select id="gfField" class="form-select form-select-sm">
+                                    <option value="Cardiology">Cardiology</option>
+                                    <option value="Neurology">Neurology</option>
+                                    <option value="Oncology">Oncology</option>
+                                    <option value="Pulmonology">Pulmonology</option>
+                                    <option value="Gastroenterology">Gastroenterology</option>
+                                    <option value="Orthopedics">Orthopedics</option>
+                                    <option value="Infectious_Disease">Infectious Disease</option>
+                                    <option value="Endocrinology">Endocrinology</option>
+                                    <option value="Nephrology">Nephrology</option>
+                                    <option value="Rheumatology">Rheumatology</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small">Max Depth: <strong id="gfDepthVal">3</strong></label>
+                                <input type="range" class="form-range" id="gfDepth" min="1" max="4" value="3">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small">Algorithm</label>
+                                <select id="gfAlgo" class="form-select form-select-sm">
+                                    <option value="bfs">BFS</option>
+                                    <option value="dfs">DFS</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary btn-sm w-100 mb-3" id="runGraf">
+                                <i class="bi bi-play"></i> Run Traversal
+                            </button>
+                            <hr>
+                            <div class="mb-2"><label class="form-label small fw-bold">Node Types</label></div>
+                            <div class="legend-row"><span class="ntype" style="background:#3fb950"></span><small>Medical Field</small></div>
+                            <div class="legend-row"><span class="ntype" style="background:#e74c3c"></span><small>Disease</small></div>
+                            <div class="legend-row"><span class="ntype" style="background:#3498db"></span><small>Symptom</small></div>
+                            <div class="legend-row"><span class="ntype" style="background:#9b59b6"></span><small>Drug</small></div>
+                            <hr>
+                            <div class="mb-2"><label class="form-label small fw-bold">Partitions</label></div>
+                            <div class="partition-legend" id="graphPartitionLegend">
+                                <div class="legend-row"><span class="partition-dot" style="background:#FF6B6B"></span><small>P0</small></div>
+                                <div class="legend-row"><span class="partition-dot" style="background:#4ECDC4"></span><small>P1</small></div>
+                                <div class="legend-row"><span class="partition-dot" style="background:#45B7D1"></span><small>P2</small></div>
+                                <div class="legend-row"><span class="partition-dot" style="background:#96CEB4"></span><small>P3</small></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mt-3">
+                        <div class="card-header"><h6 class="mb-0"><i class="bi bi-bar-chart"></i> Graph Statistics</h6></div>
+                        <div class="card-body" id="graphStats">
+                            <div class="text-center"><div class="spinner"></div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <span><i class="bi bi-diagram-3"></i> Disease Correlation Graph</span>
+                            <div class="d-flex gap-2">
+                                <span class="badge bg-secondary" id="gcNodes">-</span>
+                                <span class="badge bg-secondary" id="gcEdges">-</span>
+                            </div>
+                        </div>
+                        <div class="card-body p-2">
+                            <div id="graphCanvas"></div>
+                        </div>
+                    </div>
+                    <div class="card mt-3">
+                        <div class="card-header"><h6 class="mb-0"><i class="bi bi-list-check"></i> Traversal Results</h6></div>
+                        <div class="card-body" style="max-height:180px;overflow-y:auto" id="travResults">
+                            <small class="text-muted">Run traversal from a medical field to see results</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ANALYSIS TAB -->
+        <div id="tab-analysis" class="tab-content" style="display:none">
+            <!-- System Arch -->
+            <div class="card mb-4">
+                <div class="card-header"><h6 class="mb-0"><i class="bi bi-cpu"></i> System Architecture</h6></div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <div class="p-3 border rounded">
+                                <div class="text-primary fw-bold">Whoosh BM25F</div>
+                                <div class="text-muted small">Document Engine</div>
+                                <div class="text-muted small">500 Documents</div>
+                            </div>
+                        </div>
+                        <div class="col-md-1 d-flex align-items-center"><i class="bi bi-arrow-right fs-3 text-muted"></i></div>
+                        <div class="col-md-4">
+                            <div class="p-3 border rounded">
+                                <div class="text-success fw-bold">Hybrid Join</div>
+                                <div class="text-muted small">Document + Graph Join</div>
+                                <div class="text-muted small">Combined Scoring</div>
+                            </div>
+                        </div>
+                        <div class="col-md-1 d-flex align-items-center"><i class="bi bi-arrow-left fs-3 text-muted"></i></div>
+                        <div class="col-md-3">
+                            <div class="p-3 border rounded">
+                                <div class="text-danger fw-bold">NetworkX + METIS</div>
+                                <div class="text-muted small">Graph Engine</div>
+                                <div class="text-muted small">200 Nodes, 4 Partitions</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Partition Info -->
+            <div class="card mb-4">
+                <div class="card-header"><h6 class="mb-0" id="partitionHeading"><i class="bi bi-grid-3x3-gap"></i> METIS Edge-Cut Partitioning</h6></div>
+                <div class="card-body">
+                    <div class="row g-3" id="partitionCards"></div>
+                </div>
+            </div>
+
+            <!-- Query Input for Join Analysis -->
+            <div class="card mb-4">
+                <div class="card-header"><h6 class="mb-0"><i class="bi bi-sliders2 text-primary"></i> Join Strategy Analysis Input</h6></div>
+                <div class="card-body">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-5">
+                            <label class="form-label">Query Text</label>
+                            <textarea id="analysisQueryText" class="form-control" rows="2" placeholder="e.g., chest pain, fever, headache...">chest pain fever</textarea>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Target Medical Field</label>
+                            <select id="analysisTargetField" class="form-select">
+                                <option value="Cardiology" selected>Cardiology</option>
+                                <option value="Neurology">Neurology</option>
+                                <option value="Oncology">Oncology</option>
+                                <option value="Pulmonology">Pulmonology</option>
+                                <option value="Gastroenterology">Gastroenterology</option>
+                                <option value="Orthopedics">Orthopedics</option>
+                                <option value="Infectious_Disease">Infectious Disease</option>
+                                <option value="Endocrinology">Endocrinology</option>
+                                <option value="Nephrology">Nephrology</option>
+                                <option value="Rheumatology">Rheumatology</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Partitions</label>
+                            <div class="btn-group w-100" role="group">
+                                <button class="btn btn-sm btn-outline-light part-btn" data-n="2">2</button>
+                                <button class="btn btn-sm btn-outline-light part-btn" data-n="3">3</button>
+                                <button class="btn btn-sm btn-outline-light part-btn active" data-n="4">4</button>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-primary w-100" id="execAnalysis">
+                                <i class="bi bi-bar-chart-fill"></i> So sánh chiến lược
+                            </button>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-outline-light w-100" id="resetAnalysis">
+                                <i class="bi bi-arrow-counterclockwise"></i> Mặc định
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Join Strategies -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-header"><h6 class="mb-0 text-primary"><i class="bi bi-funnel"></i> Filter-After-Join</h6></div>
+                        <div class="card-body">
+                            <p class="small text-muted">Join document and graph results first, then filter by graph distance. Best for balanced result sets.</p>
+                            <div class="cost-row"><span class="text-muted small">Doc Cost:</span><strong id="faDoc">-</strong></div>
+                            <div class="cost-row"><span class="text-muted small">Graph Cost:</span><strong id="faGraph">-</strong></div>
+                            <div class="cost-row"><span class="text-muted small">Join Cost:</span><strong id="faJoin">-</strong></div>
+                            <div class="cost-row"><span class="text-muted small">Network Cost:</span><strong id="faNet">-</strong></div>
+                            <div class="cost-row"><span class="text-muted small">Time:</span><strong id="faTime">-</strong></div>
+                            <div class="cost-row"><span class="text-muted small">Results:</span><strong id="faCount">-</strong></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-header"><h6 class="mb-0 text-info"><i class="bi bi-repeat"></i> Index Nested-Loop</h6></div>
+                        <div class="card-body">
+                            <p class="small text-muted">For each graph node, probe the document index. Good for small graph traversal results.</p>
+                            <div class="cost-row"><span class="text-muted small">Doc Cost:</span><strong id="inlDoc">-</strong></div>
+                            <div class="cost-row"><span class="text-muted small">Graph Cost:</span><strong id="inlGraph">-</strong></div>
+                            <div class="cost-row"><span class="text-muted small">Join Cost:</span><strong id="inlJoin">-</strong></div>
+                            <div class="cost-row"><span class="text-muted small">Network Cost:</span><strong id="inlNet">-</strong></div>
+                            <div class="cost-row"><span class="text-muted small">Time:</span><strong id="inlTime">-</strong></div>
+                            <div class="cost-row"><span class="text-muted small">Results:</span><strong id="inlCount">-</strong></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-header"><h6 class="mb-0 text-warning"><i class="bi bi-hash"></i> Hash Join</h6></div>
+                        <div class="card-body">
+                            <p class="small text-muted">Build hash table on disease names, probe with graph results. Scalable for large datasets.</p>
+                            <div class="cost-row"><span class="text-muted small">Doc Cost:</span><strong id="hDoc">-</strong></div>
+                            <div class="cost-row"><span class="text-muted small">Graph Cost:</span><strong id="hGraph">-</strong></div>
+                            <div class="cost-row"><span class="text-muted small">Join Cost:</span><strong id="hJoin">-</strong></div>
+                            <div class="cost-row"><span class="text-muted small">Network Cost:</span><strong id="hNet">-</strong></div>
+                            <div class="cost-row"><span class="text-muted small">Time:</span><strong id="hTime">-</strong></div>
+                            <div class="cost-row"><span class="text-muted small">Results:</span><strong id="hCount">-</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-6">
+                    <div class="card h-100">
+                        <div class="card-header"><h6 class="mb-0"><i class="bi bi-bar-chart"></i> Join Cost by Strategy</h6></div>
+                        <div class="card-body"><canvas id="costChart" height="200"></canvas></div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card h-100">
+                        <div class="card-header"><h6 class="mb-0"><i class="bi bi-pie-chart"></i> Component Distribution</h6></div>
+                        <div class="card-body"><canvas id="pieChart" height="200"></canvas></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Topology & Coverage -->
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header"><h6 class="mb-0"><i class="bi bi-diagram-2"></i> Topology Analysis</h6></div>
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-6 col-md-3 mb-2">
+                                    <div class="metric-mini"><div class="val text-primary" id="topoNodes">-</div><div class="lbl">Nodes</div></div>
+                                </div>
+                                <div class="col-6 col-md-3 mb-2">
+                                    <div class="metric-mini"><div class="val text-danger" id="topoEdges">-</div><div class="lbl">Edges</div></div>
+                                </div>
+                                <div class="col-6 col-md-3 mb-2">
+                                    <div class="metric-mini"><div class="val text-success" id="topoCut">-</div><div class="lbl">Cut Edges</div></div>
+                                </div>
+                                <div class="col-6 col-md-3 mb-2">
+                                    <div class="metric-mini"><div class="val text-warning" id="topoRatio">-</div><div class="lbl">Cut Ratio</div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header"><h6 class="mb-0"><i class="bi bi-hospital"></i> Field Coverage</h6></div>
+                        <div class="card-body p-0" style="max-height:300px;overflow-y:auto">
+                            <table class="table table-dark table-sm mb-0">
+                                <thead>
+                                    <tr><th>Field</th><th>Diseases</th><th>Patients</th><th>Top Diseases</th></tr>
+                                </thead>
+                                <tbody id="coverageTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ============================================================
+// HYBRID DOCUMENT-GRAPH STORE: MEDICAL KNOWLEDGE BASE
+// Pure JavaScript Implementation (runs in browser)
+// ============================================================
+
+const PCOLORS=['#FF6B6B','#4ECDC4','#45B7D1','#96CEB4'];
+const NCOLORS={medical_field:'#3fb950',disease:'#e74c3c',symptom:'#3498db',drug:'#9b59b6'};
+const DW={direct:1.0,depth1:.8,depth2:.5,depth3:.2};
+
+// ============================================================
+// 1. MEDICAL KNOWLEDGE DATA
+// ============================================================
+const MEDICAL_FIELDS=["Cardiology","Neurology","Oncology","Pulmonology","Gastroenterology","Orthopedics","Infectious_Disease","Endocrinology","Nephrology","Rheumatology"];
+
+const DISEASES={
+Cardiology:[["Hypertension",["headache","dizziness","shortness of breath","chest pain","fatigue"]],["Arrhythmia",["palpitations","lightheadedness","fainting","fatigue","shortness of breath"]],["Coronary_Artery_Disease",["chest pain","shortness of breath","fatigue","nausea"]],["Heart_Failure",["fatigue","shortness of breath","swelling","cough","weight gain"]],["Atrial_Fibrillation",["palpitations","fatigue","dizziness","shortness of breath"]],["Myocarditis",["chest pain","fatigue","shortness of breath","fever","joint pain"]]],
+Neurology:[["Migraine",["severe headache","nausea","sensitivity to light","visual disturbances","dizziness"]],["Epilepsy",["seizures","confusion","staring","muscle jerking","loss of consciousness"]],["Parkinson_Disease",["tremor","stiffness","slow movement","balance problems","speech changes"]],["Multiple_Sclerosis",["numbness","weakness","vision problems","fatigue","balance issues"]],["Stroke",["face drooping","arm weakness","speech difficulty","confusion","vision loss"]],["Alzheimer_Disease",["memory loss","confusion","disorientation","behavior changes","language problems"]]],
+Oncology:[["Lung_Cancer",["persistent cough","coughing blood","chest pain","weight loss","fatigue"]],["Breast_Cancer",["breast lump","skin changes","nipple discharge","breast pain","swelling"]],["Colorectal_Cancer",["rectal bleeding","abdominal pain","change in bowel habits","weight loss","fatigue"]],["Prostate_Cancer",["urinary problems","blood in urine","pelvic pain","bone pain","erectile dysfunction"]],["Leukemia",["fatigue","frequent infections","easy bruising","weight loss","night sweats"]]],
+Pulmonology:[["COPD",["chronic cough","shortness of breath","wheezing","mucus production","fatigue"]],["Asthma",["wheezing","shortness of breath","chest tightness","coughing","difficulty sleeping"]],["Pneumonia",["high fever","cough","chest pain","shortness of breath","fatigue"]],["Pulmonary_Embolism",["sudden shortness of breath","chest pain","cough","lightheadedness","rapid heartbeat"]],["Tuberculosis",["chronic cough","coughing blood","night sweats","weight loss","fever"]]],
+Gastroenterology:[["GERD",["heartburn","acid reflux","difficulty swallowing","chronic cough","chest pain"]],["Peptic_Ulcer",["stomach pain","nausea","indigestion","bloating","loss of appetite"]],["Crohn_Disease",["abdominal pain","diarrhea","weight loss","fatigue","blood in stool"]],["Hepatitis_B",["jaundice","fatigue","abdominal pain","nausea","dark urine"]],["Gallstones",["abdominal pain","jaundice","nausea","fever","back pain"]]],
+Orthopedics:[["Osteoarthritis",["joint pain","stiffness","swelling","decreased flexibility","grinding sensation"]],["Rheumatoid_Arthritis",["joint swelling","joint pain","fatigue","fever","joint deformity"]],["Osteoporosis",["bone fractures","back pain","stooped posture","loss of height","bone pain"]],["Herniated_Disc",["back pain","leg pain","numbness","muscle weakness","tingling"]],["Fracture",["severe pain","swelling","deformity","inability to move","bruising"]]],
+Infectious_Disease:[["COVID_19",["fever","cough","shortness of breath","loss of taste","fatigue"]],["Dengue_Fever",["high fever","severe headache","joint pain","rash","fatigue"]],["Malaria",["fever","chills","sweating","headache","nausea"]],["Typhoid",["high fever","abdominal pain","rash","weakness","headache"]],["HIV_AIDS",["fever","weight loss","fatigue","night sweats","opportunistic infections"]]],
+Endocrinology:[["Diabetes_Type_2",["increased thirst","frequent urination","fatigue","blurred vision","slow healing"]],["Hypothyroidism",["fatigue","weight gain","cold sensitivity","constipation","dry skin"]],["Hyperthyroidism",["weight loss","rapid heartbeat","tremor","anxiety","heat sensitivity"]],["Cushing_Syndrome",["weight gain","moon face","high blood pressure","easy bruising","fatigue"]],["Addison_Disease",["fatigue","low blood pressure","skin darkening","weight loss","salt craving"]]],
+Nephrology:[["Chronic_Kidney_Disease",["fatigue","swelling","urinary changes","back pain","nausea"]],["Kidney_Stones",["severe back pain","blood in urine","nausea","frequent urination","fever"]],["Glomerulonephritis",["blood in urine","swelling","fatigue","high blood pressure","decreased urine"]],["UTI",["burning urination","frequent urination","blood in urine","pelvic pain","fever"]]],
+Rheumatology:[["Lupus",["fatigue","joint pain","rash","fever","photosensitivity"]],["Fibromyalgia",["widespread pain","fatigue","sleep problems","mood issues","cognitive difficulties"]],["Gout",["severe joint pain","swelling","redness","heat in joint","tophi"]],["Psoriatic_Arthritis",["joint pain","skin lesions","swelling","stiffness","nail changes"]],["Vasculitis",["fever","fatigue","weight loss","skin rashes","nerve problems"]]]
+};
+
+const DRUGS={"Hypertension":["Lisinopril","Amlodipine","Metoprolol","Losartan"],"Arrhythmia":["Amiodarone","Diltiazem","Sotalol"],"Coronary_Artery_Disease":["Aspirin","Atorvastatin","Metoprolol","Nitroglycerin"],"Heart_Failure":["Furosemide","Carvedilol","Enalapril","Spironolactone"],"Diabetes_Type_2":["Metformin","Glipizide","Sitagliptin","Empagliflozin"],"COPD":["Albuterol","Tiotropium","Fluticasone","Prednisone"],"Asthma":["Albuterol","Fluticasone","Montelukast","Budesonide"],"Lung_Cancer":["Cisplatin","Pembrolizumab","Erlotinib"],"Migraine":["Sumatriptan","Propranolol","Topiramate","Amitriptyline"],"Epilepsy":["Levetiracetam","Carbamazepine","Phenytoin","Valproic_Acid"],"Osteoarthritis":["Acetaminophen","Ibuprofen","Celecoxib","Glucosamine"],"Rheumatoid_Arthritis":["Methotrexate","Hydroxychloroquine","Adalimumab"]};
+
+// ============================================================
+// 2. DATA GENERATOR
+// ============================================================
+let patients=[];
+let graphNodes=[];
+let graphEdges=[];
+let graphAdj={};
+let nodeMeta={};
+let patientByDisease={};
+let partitionMap={};
+let partitions={};
+let nParts=4;
+
+function seededRand(seed){
+    let s=seed;
+    return function(){
+        s=(s*9301+49297)%233280;
+        return s/233280;
+    };
+}
+
+function generateData(){
+    const rand=seededRand(42);
+    // Generate graph nodes
+    const nodeIds={};
+    graphNodes=[];
+    // Field nodes
+    MEDICAL_FIELDS.forEach((f,i)=>{
+        const id=`field_${f}`;
+        nodeIds[f]=id;
+        graphNodes.push({id,label:f,type:'medical_field',partition:0});
+        nodeMeta[id]={type:'medical_field',label:f,degree:0};
+    });
+    // Disease nodes
+    const diseaseIds={};
+    let diseaseIdx=0;
+    MEDICAL_FIELDS.forEach(field=>{
+        DISEASES[field].forEach(([dName])=>{
+            const id=`disease_${dName}`;
+            diseaseIds[dName]=id;
+            const p=diseaseIdx%nParts;
+            graphNodes.push({id,label:dName,type:'disease',partition:p});
+            nodeMeta[id]={type:'disease',label:dName,degree:0,field};
+            diseaseIdx++;
+        });
+    });
+    // Symptom nodes
+    const symptomIds={};
+    const allSymptoms=new Set();
+    Object.values(DISEASES).forEach(dList=>dList.forEach(([,syms])=>syms.forEach(s=>allSymptoms.add(s))));
+    let sIdx=0;
+    allSymptoms.forEach(sym=>{
+        const id=`symptom_${sym.replace(/ /g,'_')}`;
+        symptomIds[sym]=id;
+        graphNodes.push({id,label:sym,type:'symptom',partition:sIdx%nParts});
+        nodeMeta[id]={type:'symptom',label:sym,degree:0};
+        sIdx++;
+    });
+    // Drug nodes
+    const drugIds={};
+    const allDrugs=new Set();
+    Object.values(DRUGS).forEach(ds=>ds.forEach(d=>allDrugs.add(d)));
+    let drIdx=0;
+    allDrugs.forEach(drug=>{
+        const id=`drug_${drug.replace(/ /g,'_')}`;
+        drugIds[drug]=id;
+        graphNodes.push({id,label:drug,type:'drug',partition:drIdx%nParts});
+        nodeMeta[id]={type:'drug',label:drug,degree:0};
+        drIdx++;
+    });
+    // Build adjacency
+    graphAdj={};
+    graphNodes.forEach(n=>graphAdj[n.id]=new Set());
+    // Disease->Field edges
+    MEDICAL_FIELDS.forEach(field=>{
+        const diseaseList=DISEASES[field];
+        if(!diseaseList)return;
+        diseaseList.forEach(([dName])=>{
+            const did=diseaseIds[dName];
+            const fid=nodeIds[field];
+            if(did&&fid){graphAdj[did].add(fid);graphAdj[fid].add(did);}
+        });
+    });
+    // Disease->Symptom edges
+    MEDICAL_FIELDS.forEach(field=>{
+        const diseaseList=DISEASES[field];
+        if(!diseaseList)return;
+        diseaseList.forEach(([dName,syms])=>{
+            const did=diseaseIds[dName];
+            if(!did||!syms)return;
+            syms.forEach(sym=>{
+                const sid=symptomIds[sym];
+                if(sid&&did){graphAdj[did].add(sid);graphAdj[sid].add(did);}
+            });
+        });
+    });
+    // Disease->Drug edges
+    Object.entries(DRUGS).forEach(([dName,drgs])=>{
+        const did=diseaseIds[dName];
+        if(!did||!drgs)return;
+        drgs.forEach(drug=>{
+            const drid=drugIds[drug];
+            if(drid&&did){graphAdj[did].add(drid);graphAdj[drid].add(did);}
+        });
+    });
+    // Disease->Disease (comorbidities)
+    const dNames=Object.keys(diseaseIds);
+    for(let i=0;i<30;i++){
+        const a=dNames[Math.floor(rand()*dNames.length)];
+        const b=dNames[Math.floor(rand()*dNames.length)];
+        if(a!==b){graphAdj[diseaseIds[a]].add(diseaseIds[b]);graphAdj[diseaseIds[b]].add(diseaseIds[a]);}
+    }
+    // Symptom->Symptom
+    const symNames=Object.keys(symptomIds);
+    for(let i=0;i<20;i++){
+        const a=symNames[Math.floor(rand()*symNames.length)];
+        const b=symNames[Math.floor(rand()*symNames.length)];
+        if(a!==b){graphAdj[symptomIds[a]].add(symptomIds[b]);graphAdj[symptomIds[b]].add(symptomIds[a]);}
+    }
+    // Build edge list
+    graphEdges=[];
+    const edgeSet=new Set();
+    graphNodes.forEach(n=>{
+        graphAdj[n.id].forEach(nb=>{
+            const key=[n.id,nb].sort().join('|');
+            if(!edgeSet.has(key)){edgeSet.add(key);graphEdges.push({source:n.id,target:nb});}
+        });
+    });
+    // Update degrees
+    graphNodes.forEach(n=>nodeMeta[n.id].degree=graphAdj[n.id].size);
+    // METIS-style partitioning
+    partitionGraph();
+    // Generate patients
+    generatePatients(rand);
+    // Build patient by disease index
+    patientByDisease={};
+    patients.forEach(p=>{
+        const diag=p.initial_diagnosis;
+        if(!patientByDisease[diag])patientByDisease[diag]=[];
+        patientByDisease[diag].push(p);
+    });
+}
+
+function partitionGraph(){
+    // METIS recursive bisection simulation
+    const allNodes=graphNodes.map(n=>n.id);
+    const rand=seededRand(123);
+    // Shuffle
+    for(let i=allNodes.length-1;i>0;i--){
+        const j=Math.floor(rand()* (i+1));
+        [allNodes[i],allNodes[j]]=[allNodes[j],allNodes[i]];
+    }
+    // Assign to nParts partitions
+    allNodes.forEach((nid,i)=>{partitionMap[nid]=i%nParts;});
+    // Update node partitions
+    graphNodes.forEach(n=>n.partition=partitionMap[n.id]);
+    // Compute partition stats
+    partitions={};
+    Array.from({length:nParts},(_,i)=>i).forEach(p=>partitions[p]={nodes:[],internal:0,cut:0});
+    graphNodes.forEach(n=>partitions[n.partition].nodes.push(n.id));
+    console.log('[partitionGraph] edges:', graphEdges.length, 'nodes:', Object.keys(partitionMap).length, 'nParts:', nParts);
+    graphEdges.forEach(e=>{
+        const sId=typeof e.source==='object'?e.source.id:e.source;
+        const tId=typeof e.target==='object'?e.target.id:e.target;
+        const pS=partitionMap[sId],pT=partitionMap[tId];
+        if(pS===undefined||pT===undefined){
+            console.warn('[partitionGraph] skip edge with missing partition:', sId, '->', tId);
+            return;
+        }
+        if(pS===pT)partitions[pS].internal++;
+        else{partitions[pS].cut++;partitions[pT].cut++;}
+    });
+}
+
+function repartition(newN){
+    if(newN<2||newN>4||newN===nParts)return;
+    nParts=newN;
+    const allNodes=graphNodes.map(n=>n.id);
+    const rand=seededRand(123);
+    for(let i=allNodes.length-1;i>0;i--){
+        const j=Math.floor(rand()* (i+1));
+        [allNodes[i],allNodes[j]]=[allNodes[j],allNodes[i]];
+    }
+    allNodes.forEach((nid,i)=>{partitionMap[nid]=i%nParts;});
+    graphNodes.forEach(n=>n.partition=partitionMap[n.id]);
+    partitions={};
+    Array.from({length:nParts},(_,i)=>i).forEach(p=>partitions[p]={nodes:[],internal:0,cut:0});
+    graphNodes.forEach(n=>partitions[n.partition].nodes.push(n.id));
+    console.log('[repartition] edges:', graphEdges.length, 'nodes:', Object.keys(partitionMap).length, 'nParts:', nParts);
+    graphEdges.forEach(e=>{
+        const sId=typeof e.source==='object'?e.source.id:e.source;
+        const tId=typeof e.target==='object'?e.target.id:e.target;
+        const pS=partitionMap[sId],pT=partitionMap[tId];
+        if(pS===undefined||pT===undefined){
+            console.warn('[repartition] skip edge with missing partition:', sId, '->', tId);
+            return;
+        }
+        if(pS===pT)partitions[pS].internal++;
+        else{partitions[pS].cut++;partitions[pT].cut++;}
+    });
+    // Update UI heading
+    const heading=document.getElementById('partitionHeading');
+    if(heading)heading.innerHTML='<i class="bi bi-grid-3x3-gap"></i> METIS Edge-Cut Partitioning ('+nParts+' partitions)';
+    // Update graph legend
+    const legend=document.getElementById('graphPartitionLegend');
+    if(legend)legend.innerHTML=Array.from({length:nParts},(_,i)=>i).map(i=>
+        '<div class="legend-row"><span class="partition-dot" style="background:'+PCOLORS[i]+'"></span><small>P'+i+'</small></div>'
+    ).join('');
+    // Re-render
+    renderAnalysis();
+}
+
+function generatePatients(rand){
+    patients=[];
+    const genders=['Male','Female','Other'];
+    const conditions=['Type 2 Diabetes','Hypertension','Hypercholesterolemia','Asthma','GERD','Anxiety','Depression','Hypothyroidism','Obesity'];
+    const lifestyles=['Non-smoker, occasional alcohol','Smoker (10 pack-years)','Non-smoker, regular exercise','Smoker (20 pack-years), drinks regularly'];
+    let pid=1;
+    MEDICAL_FIELDS.forEach(field=>{
+        const diseaseList=DISEASES[field];
+        if(!diseaseList||diseaseList.length===0)return;
+        const count=Math.floor(50+rand()*10);
+        for(let i=0;i<count;i++){
+            const disease=diseaseList[Math.floor(rand()*diseaseList.length)];
+            if(!disease)continue;
+            const [dName,syms]=disease;
+            if(!dName||!syms)continue;
+            const nSyms=Math.min(syms.length,2+Math.floor(rand()*3));
+            const selected=[];
+            for(let j=0;j<nSyms;j++)selected.push(syms[Math.floor(rand()*syms.length)]);
+            const chief=selected[0]+' for '+['3 days','a week','2 weeks','several hours','months'][Math.floor(rand()*5)];
+            const fullSyms=selected.map(s=>s+' ('+['mild','moderate','severe'][Math.floor(rand()*3)]+')').join('; ');
+            const pastCond=conditions.slice(0,1+Math.floor(rand()*3)).join(', ');
+            const history=`Past conditions: ${pastCond}. ${['Family history: Father had Heart Disease','Family history: Mother had Diabetes','Family history: No significant history','Family history: Grandmother had Cancer'][Math.floor(rand()*4)]} ${lifestyles[Math.floor(rand()*lifestyles.length)]}.`;
+            const meds=dName in DRUGS?'Current: '+DRUGS[dName].slice(0,2).join(', ')+' daily. Occasional acetaminophen.':'Occasional acetaminophen.';
+            const severity=[1,2,3,3,3,4,4,5][Math.floor(rand()*8)];
+            const daysAgo=Math.floor(rand()*730);
+            const date=new Date(Date.now()-daysAgo*86400000).toISOString().split('T')[0];
+            patients.push({
+                patient_id:`P${String(pid).padStart(5,'0')}`,
+                age:18+Math.floor(rand()*67),
+                gender:genders[Math.floor(rand()*genders.length)],
+                chief_complaint:chief,
+                symptoms:fullSyms,
+                medical_history:history,
+                current_medications:meds,
+                initial_diagnosis:dName,
+                severity,
+                department:field,
+                admission_date:date
+            });
+            pid++;
+        }
+    });
+}
+
+// ============================================================
+// 3. DOCUMENT ENGINE (BM25-like)
+// ============================================================
+class DocumentEngine{
+    constructor(){this.documents=[];}
+    index(docs){this.documents=docs;}
+    tokenize(text){
+        return text.toLowerCase().replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(t=>t.length>1);
+    }
+    computeIDF(term){
+        const N=this.documents.length;
+        const df=this.documents.filter(d=>
+            this.tokenize(d.chief_complaint+' '+d.symptoms+' '+d.medical_history+' '+d.initial_diagnosis).includes(term)
+        ).length;
+        return Math.log((N-df+.5)/(df+.5)+1);
+    }
+    search(query,opts={}){
+        const {maxResults=20,department=null,minSeverity=null}=opts;
+        const terms=this.tokenize(query);
+        if(terms.length===0)return[];
+        const scores=this.documents.map(d=>{
+            const textFields=[d.chief_complaint,d.symptoms,d.medical_history,d.initial_diagnosis];
+            let score=0;
+            terms.forEach(term=>{
+                let tf=0,fieldLens=[],lenSum=0;
+                textFields.forEach(f=>{const t=this.tokenize(f);fieldLens.push(t.length);t.forEach(w=>{if(w.includes(term))tf++;});});
+                lenSum=fieldLens.reduce((a,b)=>a+b,0);
+                const avgdl=lenSum/textFields.length||1;
+                const k1=1.5,b=.75;
+                const BM25=tf*(k1+1)/(tf+k1*(1-b+b*(lenSum/avgdl)));
+                const idf=this.computeIDF(term);
+                score+=BM25*idf;
+            });
+            // Filter
+            if(department&&d.department!==department)return{patient:d,score:-1};
+            if(minSeverity&&d.severity<parseInt(minSeverity))return{patient:d,score:-1};
+            return{patient:d,score};
+        });
+        return scores.filter(r=>r.score>0).sort((a,b)=>b.score-a.score).slice(0,maxResults);
+    }
+}
+
+// ============================================================
+// 4. GRAPH ENGINE (METIS+BFS/DFS)
+// ============================================================
+class GraphEngine{
+    traverse(startField,maxDepth,algo='bfs'){
+        const startId=`field_${startField}`;
+        if(!graphAdj[startId])return{visited:[],distances:{},depthDist:{},partCoverage:{}};
+        const visited=new Set();
+        const distances={};
+        const parents={};
+        const depthDist={};
+        const partCoverage={};
+        if(algo==='bfs'){
+            const q=[[startId,0,null]];
+            while(q.length){
+                const[cur,depth,parent]=q.shift();
+                if(visited.has(cur)||depth>maxDepth)continue;
+                visited.add(cur);distances[cur]=depth;parents[cur]=parent;
+                depthDist[depth]=(depthDist[depth]||0)+1;
+                partCoverage[partitionMap[cur]]=(partCoverage[partitionMap[cur]]||0)+1;
+                for(const nb of graphAdj[cur]){if(!visited.has(nb))q.push([nb,depth+1,cur]);}
+            }
+        }else if(algo==='dfs'){
+            const stack=[[startId,0,null]];
+            while(stack.length){
+                const[cur,depth,parent]=stack.pop();
+                if(visited.has(cur)||depth>maxDepth)continue;
+                visited.add(cur);distances[cur]=depth;parents[cur]=parent;
+                depthDist[depth]=(depthDist[depth]||0)+1;
+                partCoverage[partitionMap[cur]]=(partCoverage[partitionMap[cur]]||0)+1;
+                for(const nb of graphAdj[cur]){if(!visited.has(nb))stack.push([nb,depth+1,cur]);}
+            }
+        }else{// Dijkstra (shortest path)
+            const pq=[[startId,0,null]];
+            while(pq.length){
+                pq.sort((a,b)=>a[1]-b[1]);
+                const[cur,dist,parent]=pq.shift();
+                if(visited.has(cur)||dist>maxDepth)continue;
+                visited.add(cur);distances[cur]=dist;parents[cur]=parent;
+                depthDist[dist]=(depthDist[dist]||0)+1;
+                partCoverage[partitionMap[cur]]=(partCoverage[partitionMap[cur]]||0)+1;
+                for(const nb of graphAdj[cur]){
+                    if(!visited.has(nb))pq.push([nb,dist+1,cur]);
+                }
+            }
+        }
+        const visitedNodes=[];
+        visited.forEach(id=>{
+            const meta=nodeMeta[id]||{label:id,type:'unknown'};
+            visitedNodes.push({id,label:meta.label||id,type:meta.type||'unknown',partition:partitionMap[id]??0,distance:distances[id]??0});
+        });
+        visitedNodes.sort((a,b)=>a.distance-b.distance);
+        return{visited:visitedNodes,distances,depthDist,partCoverage};
+    }
+    getDistFromField(nodeId,field){
+        const startId=`field_${field}`;
+        if(!graphAdj[startId]||!graphAdj[nodeId])return null;
+        const visited=new Set();
+        const q=[[startId,0]];
+        while(q.length){
+            const[cur,dist]=q.shift();
+            if(cur===nodeId)return dist;
+            if(visited.has(cur))continue;
+            visited.add(cur);
+            for(const nb of graphAdj[cur]){if(!visited.has(nb))q.push([nb,dist+1]);}
+        }
+        return null;
+    }
+    getStats(){
+        const n=graphNodes.length;
+        const e=graphEdges.length;
+        if(n===0||e===0)return{nodes:0,edges:0,avgDeg:'0',typeDist:{},edgeTypeDist:{},edgeCutRatio:'0',cutEdges:0};
+        const degs={};
+        graphNodes.forEach(nd=>{
+            const m=nodeMeta[nd.id];
+            degs[nd.id]=(m&&m.degree)||0;
+        });
+        const avgDeg=Object.values(degs).reduce((a,b)=>a+b,0)/n;
+        const typeDist={};
+        graphNodes.forEach(nd=>{typeDist[nd.type]=(typeDist[nd.type]||0)+1;});
+        const edgeTypeDist={};
+        graphEdges.forEach(er=>{
+            const sMeta=nodeMeta[er.source]||{},tMeta=nodeMeta[er.target]||{};
+            const st=sMeta.type||'unknown',tt=tMeta.type||'unknown';
+            if(st==='disease'&&tt==='symptom'||st==='symptom'&&tt==='disease'){
+                edgeTypeDist['disease_to_symptom']=(edgeTypeDist['disease_to_symptom']||0)+1;
+            }else if(st==='disease'&&tt==='medical_field'||st==='medical_field'&&tt==='disease'){
+                edgeTypeDist['disease_to_field']=(edgeTypeDist['disease_to_field']||0)+1;
+            }else if(st==='disease'&&tt==='disease'){
+                edgeTypeDist['disease_to_disease']=(edgeTypeDist['disease_to_disease']||0)+1;
+            }else if(st==='disease'&&tt==='drug'||st==='drug'&&tt==='disease'){
+                edgeTypeDist['disease_to_drug']=(edgeTypeDist['disease_to_drug']||0)+1;
+            }else{
+                edgeTypeDist['symptom_to_symptom']=(edgeTypeDist['symptom_to_symptom']||0)+1;
+            }
+        });
+        const totalCut=graphEdges.filter(er=>partitionMap[er.source]!==partitionMap[er.target]).length;
+        const ratio=e>0?totalCut/e:0;
+        return{nodes:n,edges:e,avgDeg:avgDeg.toFixed(2),typeDist,edgeTypeDist,edgeCutRatio:ratio,cutEdges:totalCut};
+    }
+    getFieldCoverage(field){
+        const trav=this.traverse(field,3,'bfs');
+        const diseases=trav.visited.filter(n=>n.type==='disease');
+        const pCount=patients.filter(p=>p.department===field).length;
+        return{diseases:diseases.length,patients:pCount,diseaseNames:diseases.slice(0,5).map(d=>d.label)};
+    }
+}
+
+// ============================================================
+// 5. HYBRID QUERY ENGINE
+// ============================================================
+class HybridEngine{
+    constructor(){
+        this.docEngine=new DocumentEngine();
+        this.graphEngine=new GraphEngine();
+    }
+    init(){
+        this.docEngine.index(patients);
+    }
+    distToWeight(d){
+        if(d===0)return DW.direct;
+        if(d===1)return DW.depth1;
+        if(d===2)return DW.depth2;
+        if(d===3)return DW.depth3;
+        return 0.1;
+    }
+    executeQuery(queryText,targetField,maxDist,textW,graphW,traversalAlgo,maxResults,minSeverity){
+        const t0=performance.now();
+        // 1. Document search
+        const docHits=this.docEngine.search(queryText,{maxResults:maxResults*3,minSeverity});
+        // 2. Graph traversal
+        const trav=this.graphEngine.traverse(targetField,maxDist,traversalAlgo);
+        // 3. Build disease distance map
+        const diseaseDist={};
+        trav.visited.forEach(n=>{if(n.type==='disease')diseaseDist[n.label]=n.distance;});
+        // 4. Join and score
+        const scored=[];
+        let joinOps=0;
+        docHits.forEach(hit=>{
+            const dist=diseaseDist[hit.patient.initial_diagnosis];
+            if(dist!==undefined&&dist>maxDist)return;
+            const gImp=dist!==undefined?this.distToWeight(dist):0.1;
+            const normText=Math.min(hit.score/20,1);
+            const combined=textW*normText+graphW*gImp;
+            const dNodeId=Object.entries(nodeMeta).find(([,m])=>m.label===hit.patient.initial_diagnosis&&m.type==='disease')?.[0];
+            scored.push({
+                patient:hit.patient,
+                textScore:hit.score,
+                graphImportance:gImp,
+                combined,
+                distance:dist??null,
+                distanceLabel:dist===0?'Direct':dist===1?'1 Hop':dist===2?'2 Hops':dist===3?'3 Hops':dist!==undefined?`${dist} Hops`:'Not in Graph',
+                partition:partitionMap[dNodeId]??0
+            });
+            joinOps++;
+        });
+        scored.sort((a,b)=>b.combined-a.combined);
+        const results=scored.slice(0,maxResults);
+        // 5. Compute join cost
+        const travNodes=trav.visited.length;
+        const travEdges=trav.visited.reduce((s,n)=>s+(graphAdj[n.id]?.size||0),0);
+        const docScanCost=docHits.length*0.1+10;
+        const graphCost=travNodes*1+travEdges*0.5;
+        const joinCost=joinOps*0.05;
+        const partAccess=Object.keys(trav.partCoverage).length;
+        const edgeCut=this.graphEngine.getStats().edgeCutRatio;
+        const netCost=partAccess*50*edgeCut;
+        const total=docScanCost+graphCost+joinCost+netCost;
+        const elapsed=performance.now()-t0;
+        return{
+            results,
+            elapsed:elapsed.toFixed(2),
+            joinCost:{
+                docScanCost:docScanCost.toFixed(4),
+                graphCost:graphCost.toFixed(4),
+                joinCost:joinCost.toFixed(4),
+                netCost:netCost.toFixed(4),
+                totalCost:total.toFixed(4),
+                costTier:total<100?'LOW':total<1000?'MEDIUM':'HIGH',
+                summary:`Doc: ${docScanCost.toFixed(1)} | Graph: ${graphCost.toFixed(1)} | Join: ${joinCost.toFixed(2)} | Total: ${elapsed.toFixed(1)}ms`,
+                docCount:docHits.length,
+                graphNodes:travNodes,
+                graphEdges:travEdges,
+                joinOps,
+                partAccess,
+                edgeCutRatio:edgeCut
+            },
+            partitions:Object.keys(trav.partCoverage),
+            travResult:trav
+        };
+    }
+    compareStrategies(queryText,targetField){
+        const strategies={};
+        ['bfs','dfs'].forEach(algo=>{
+            const r=this.executeQuery(queryText,targetField,3,.5,.5,algo,20,null);
+            strategies[algo==='bfs'?'filter_after_join':'index_nested_loop']={
+                time:r.elapsed,
+                count:r.results.length,
+                ...r.joinCost
+            };
+        });
+        // Hash join sim
+        const docHits=this.docEngine.search(queryText,{maxResults:60});
+        const hash={};
+        docHits.forEach(h=>{const d=h.patient.initial_diagnosis;if(!hash[d])hash[d]=[];hash[d].push(h);});
+        const trav=this.graphEngine.traverse(targetField,3,'bfs');
+        const hResults=[];
+        trav.visited.filter(n=>n.type==='disease').forEach(n=>{
+            if(hash[n.label]){
+                const dist=n.distance;
+                const gImp=this.distToWeight(dist);
+                hash[n.label].forEach(h=>{
+                    const normText=Math.min(h.score/20,1);
+                    const combined=.5*normText+.5*gImp;
+                    hResults.push({patient:h.patient,combined,textScore:h.score,graphImportance:gImp,distance:dist,partition:n.partition});
+                });
+            }
+        });
+        hResults.sort((a,b)=>b.combined-a.combined);
+        const hDocCost=docHits.length*0.1+10;
+        const hGraphCost=trav.visited.length*1+trav.visited.reduce((s,n)=>s+(graphAdj[n.id]?.size||0),0)*0.5;
+        const hJoinCost=Object.keys(hash).length*0.05;
+        const hNetCost=Object.keys(trav.partCoverage).length*50*this.graphEngine.getStats().edgeCutRatio;
+        strategies.hash_join={
+            time:(hDocCost+hGraphCost+hJoinCost+hNetCost+5).toFixed(2),
+            count:hResults.slice(0,20).length,
+            docScanCost:hDocCost.toFixed(4),
+            graphCost:hGraphCost.toFixed(4),
+            joinCost:hJoinCost.toFixed(4),
+            netCost:hNetCost.toFixed(4),
+            totalCost:(hDocCost+hGraphCost+hJoinCost+hNetCost+5).toFixed(4),
+            costTier:(hDocCost+hGraphCost+hJoinCost+hNetCost)<100?'LOW':(hDocCost+hGraphCost+hJoinCost+hNetCost)<1000?'MEDIUM':'HIGH',
+            partAccess:Object.keys(trav.partCoverage).length,
+            edgeCutRatio:this.graphEngine.getStats().edgeCutRatio
+        };
+        return strategies;
+    }
+}
+
+// ============================================================
+// 6. APPLICATION
+// ============================================================
+const engine=new HybridEngine();
+let costChart,pChart;
+
+function updateProgress(pct,status){
+    document.getElementById('initProgress').style.width=pct+'%';
+    document.getElementById('initStatus').textContent=status;
+}
+
+async function init(){
+    try{
+        updateProgress(10,'Generating patient documents...');
+        generateData();
+        updateProgress(60,'Indexing documents (BM25F)...');
+        engine.init();
+        updateProgress(80,'Computing METIS partitions...');
+        updateProgress(95,'Initializing visualization...');
+        updateProgress(100,'Ready!');
+        document.getElementById('initOverlay').style.display='none';
+        document.getElementById('mainApp').style.display='block';
+        engineReady = true;
+        loadGraphStats();
+        renderAnalysis();
+        initGraphViz();
+    }catch(err){
+        console.error('Init error:',err);
+        document.getElementById('initStatus').textContent='Error: '+err.message;
+    }
+}
+
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+// Tab navigation
+document.querySelectorAll('[data-tab]').forEach(link=>{
+    link.addEventListener('click',e=>{
+        e.preventDefault();
+        document.querySelectorAll('.tab-content').forEach(t=>t.style.display='none');
+        document.getElementById('tab-'+link.dataset.tab).style.display='block';
+        document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+        link.classList.add('active');
+        if(link.dataset.tab==='graph'){setTimeout(()=>renderGraphViz(graphNodes,graphEdges),100);}
+    });
+});
+
+// Query execution
+let engineReady = false;
+document.getElementById('maxDist').addEventListener('input',e=>document.getElementById('distVal').textContent=e.target.value);
+document.getElementById('gfDepth').addEventListener('input',e=>document.getElementById('gfDepthVal').textContent=e.target.value);
+document.getElementById('execQuery').addEventListener('click',()=>{
+    const qt=document.getElementById('queryText').value.trim();
+    if(!qt){alert('Enter a search query');return;}
+    if(!engineReady){alert('System not ready. Please wait for initialization to complete.');return;}
+    const tf=document.getElementById('targetField').value;
+    const md=parseInt(document.getElementById('maxDist').value);
+    const tw=parseFloat(document.getElementById('textWeight').value);
+    const gw=parseFloat(document.getElementById('graphWeight').value);
+    const algo=document.getElementById('traversalAlgo').value;
+    const mr=parseInt(document.getElementById('maxRes').value);
+    const ms=document.getElementById('minSev').value;
+    const btn=document.getElementById('execQuery');
+    btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Running...';
+    try{
+        const result=engine.executeQuery(qt,tf,md,tw,gw,algo,mr,ms||null);
+        renderResults(result);
+    }catch(err){
+        console.error('Query error:',err);
+        alert('Error executing query: '+err.message);
+        document.getElementById('resultsBody').innerHTML='<tr><td colspan="10" class="text-center text-danger py-5"><i class="bi bi-exclamation-triangle fs-1 d-block mb-2"></i>Error: '+err.message+'</td></tr>';
+    }
+    btn.disabled=false;btn.innerHTML='<i class="bi bi-play-fill"></i> Execute Hybrid Query';
+});
+document.querySelectorAll('.sample-q').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        document.getElementById('queryText').value=btn.dataset.q;
+        document.getElementById('targetField').value=btn.dataset.f;
+        document.getElementById('execQuery').click();
+    });
+});
+
+// Analysis execution
+document.getElementById('execAnalysis')?.addEventListener('click',()=>{
+    if(!engineReady){alert('System not ready. Please wait.');return;}
+    renderAnalysis();
+});
+document.getElementById('resetAnalysis')?.addEventListener('click',()=>{
+    document.getElementById('analysisQueryText').value = 'chest pain fever';
+    document.getElementById('analysisTargetField').value = 'Cardiology';
+    renderAnalysis();
+});
+document.querySelectorAll('.part-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        const n=parseInt(btn.dataset.n);
+        if(n===nParts)return;
+        document.querySelectorAll('.part-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        repartition(n);
+    });
+});
+
+function renderResults(result){
+    document.getElementById('stResults').textContent=result.results.length;
+    document.getElementById('stTime').textContent=result.elapsed;
+    document.getElementById('stParts').textContent=result.partitions.length;
+    const tier=result.joinCost.costTier;
+    document.getElementById('stCost').textContent=tier;
+    document.getElementById('stCost').className=`stat-value cost-${tier.toLowerCase()}`;
+    document.getElementById('resCount').textContent=result.results.length+' results';
+    const tbody=document.getElementById('resultsBody');
+    if(result.results.length===0){
+        tbody.innerHTML='<tr><td colspan="10" class="text-center text-muted py-5"><i class="bi bi-search fs-1 d-block mb-2 opacity-50"></i>No results found</td></tr>';
+    }else{
+        tbody.innerHTML=result.results.map((r,i)=>`
+            <tr style="cursor:pointer" onclick="toggleDetail(this,${i})">
+                <td><strong>${i+1}</strong></td>
+                <td><code class="small">${r.patient.patient_id}</code></td>
+                <td><small>${esc(r.patient.chief_complaint.slice(0,50))}${r.patient.chief_complaint.length>50?'...':''}</small></td>
+                <td><span class="badge bg-secondary">${r.patient.department}</span></td>
+                <td><span class="badge ${r.patient.severity>=4?'bg-danger':r.patient.severity>=3?'bg-warning text-dark':'bg-secondary'}">${r.patient.severity}/5</span></td>
+                <td>${r.distance!==null?`<span class="badge dist${r.distance}">${r.distance}</span>`:'<span class="text-muted">-</span>'}</td>
+                <td><span class="s-med">${r.textScore.toFixed(3)}</span></td>
+                <td><span class="s-med">${r.graphImportance.toFixed(3)}</span></td>
+                <td><span class="badge ${r.combined>=.7?'bg-success':r.combined>=.4?'bg-warning text-dark':'bg-secondary'}">${r.combined.toFixed(3)}</span></td>
+                <td><span class="badge p${r.partition}">P${r.partition}</span></td>
+            </tr>
+            <tr id="detail-${i}" style="display:none;background:var(--bg1)">
+                <td colspan="10" class="p-3">
+                    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.5rem">
+                        <div><div class="text-muted small">Patient</div><code>${r.patient.patient_id}</code></div>
+                        <div><div class="text-muted small">Age/Gender</div>${r.patient.age} / ${r.patient.gender}</div>
+                        <div><div class="text-muted small">Admission</div>${r.patient.admission_date}</div>
+                        <div><div class="text-muted small">Severity</div>${r.patient.severity}/5</div>
+                        <div><div class="text-muted small">Diagnosis</div><span class="disease-tag">${r.patient.initial_diagnosis}</span></div>
+                        <div><div class="text-muted small">Graph Distance</div>${r.distanceLabel}</div>
+                        <div><div class="text-muted small">Partition</div><span class="badge p${r.partition}">P${r.partition}</span></div>
+                    </div>
+                    <div class="mt-2"><div class="text-muted small">Symptoms</div><div>${r.patient.symptoms.split(';').map(s=>`<span class="symptom-tag">${esc(s.trim())}</span>`).join(' ')}</div></div>
+                    <div class="mt-2"><div class="text-muted small">History</div><small>${esc(r.patient.medical_history)}</small></div>
+                    <div class="mt-2"><div class="text-muted small">Medications</div><small>${esc(r.patient.current_medications)}</small></div>
+                    <div class="mt-2 border-top pt-2 d-flex gap-4">
+                        <span class="text-muted small">Text Score: <strong class="s-med">${r.textScore.toFixed(4)}</strong></span>
+                        <span class="text-muted small">Graph Score: <strong class="s-med">${r.graphImportance.toFixed(4)}</strong></span>
+                        <span class="text-muted small">Combined: <strong>${r.combined.toFixed(4)}</strong></span>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
+    // Join cost panel
+    const c=result.joinCost;
+    document.getElementById('costPanel').style.display='block';
+    document.getElementById('costMetrics').innerHTML=`
+        <div class="col-md-3"><div class="border rounded p-2"><div class="text-muted small">Doc Scan Cost</div><div class="fw-bold">${c.docScanCost} ops</div><div class="text-muted small">${c.docCount} docs</div></div></div>
+        <div class="col-md-3"><div class="border rounded p-2"><div class="text-muted small">Graph Traversal Cost</div><div class="fw-bold">${c.graphCost} ops</div><div class="text-muted small">${c.graphNodes} nodes</div></div></div>
+        <div class="col-md-3"><div class="border rounded p-2"><div class="text-muted small">Join Op Cost</div><div class="fw-bold">${c.joinCost} ops</div><div class="text-muted small">${c.joinOps} join ops</div></div></div>
+        <div class="col-md-3"><div class="border rounded p-2"><div class="text-muted small">Network Cost</div><div class="fw-bold">${c.netCost}</div><div class="text-muted small">${c.partAccess} partitions</div></div></div>
+        <div class="col-md-4 mt-2"><div class="border rounded p-2"><div class="text-muted small">Edge-Cut Ratio</div><div class="fw-bold text-warning">${((c.edgeCutRatio||0)*100).toFixed(1)}%</div></div></div>
+        <div class="col-md-4 mt-2"><div class="border rounded p-2"><div class="text-muted small">Total Latency</div><div class="fw-bold">${result.elapsed} ms</div></div></div>
+        <div class="col-md-4 mt-2"><div class="border rounded p-2"><div class="text-muted small">Cost Tier</div><div class="fw-bold cost-${c.costTier.toLowerCase()}">${c.costTier}</div></div></div>
+    `;
+    document.getElementById('costSummary').innerHTML=`<i class="bi bi-info-circle"></i> <strong>Cost Summary:</strong> ${c.summary}`;
+}
+
+window.toggleDetail=function(row,idx){
+    const detail=document.getElementById('detail-'+idx);
+    document.querySelectorAll('[id^=detail-]').forEach(d=>{if(d.id!=='detail-'+idx)d.style.display='none';});
+    detail.style.display=detail.style.display==='none'?'table-row':'none';
+};
+
+function esc(s){if(!s)return'';const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+function loadGraphStats(){
+    try{
+        if(!engineReady)return;
+        const s=engine.graphEngine.getStats();
+        const html=`
+            <div class="cost-row"><span class="text-muted small">Nodes</span><strong>${s.nodes||0}</strong></div>
+            <div class="cost-row"><span class="text-muted small">Edges</span><strong>${s.edges||0}</strong></div>
+            <div class="cost-row"><span class="text-muted small">Avg Degree</span><strong>${s.avgDeg||'0'}</strong></div>
+            <div class="cost-row"><span class="text-muted small">Edge-Cut Ratio</span><strong class="text-warning">${((s.edgeCutRatio||0)*100).toFixed(1)}%</strong></div>
+            <hr>
+            <div class="text-muted small mb-1">Node Types</div>${Object.entries(s.typeDist||{}).map(([k,v])=>`<div class="cost-row"><span class="small"><span class="ntype" style="background:${NCOLORS[k]||'#888'}"></span> ${k}</span><strong>${v}</strong></div>`).join('')}
+            <hr>
+            <div class="text-muted small mb-1">Edge Types</div>${Object.entries(s.edgeTypeDist||{}).map(([k,v])=>`<div class="cost-row"><span class="small">${k}</span><strong>${v}</strong></div>`).join('')}
+        `;
+        const el=document.getElementById('graphStats');
+        if(el)el.innerHTML=html;
+    }catch(e){console.error('loadGraphStats error:',e);}
+}
+
+// ============================================================
+// 7. GRAPH VISUALIZATION
+// ============================================================
+let svgSim=null;
+let svgContainer=null;
+
+function initGraphViz(){
+    try{
+        if(!engineReady){
+            setTimeout(()=>initGraphViz(),500);
+            return;
+        }
+        setTimeout(()=>{
+            try{
+                renderGraphViz(graphNodes,graphEdges);
+            }catch(e){
+                console.error('Graph render error:',e);
+                const canvas=document.getElementById('graphCanvas');
+                if(canvas)canvas.innerHTML='<div class="text-center text-danger p-5"><i class="bi bi-exclamation-triangle fs-1 d-block mb-2"></i>Graph render error: '+e.message+'</div>';
+            }
+        },200);
+
+        const runBtn=document.getElementById('runGraf');
+        if(runBtn){
+            runBtn.addEventListener('click',()=>{
+                try{
+                    const field=document.getElementById('gfField').value;
+                    const depth=parseInt(document.getElementById('gfDepth').value);
+                    const algo=document.getElementById('gfAlgo').value;
+                    runBtn.disabled=true;
+                    runBtn.innerHTML='<span class="spinner"></span> Running...';
+                    setTimeout(()=>{
+                        try{
+                            const trav=engine.graphEngine.traverse(field,depth,algo);
+                            highlightTraversal(trav);
+                            document.getElementById('gcNodes').textContent=trav.visited.length+' nodes';
+                            document.getElementById('gcEdges').textContent=trav.visited.reduce((s,n)=>s+(graphAdj[n.id]?.size||0),0)/2+' edges';
+                            const depthHTML=Object.entries(trav.depthDist).map(([d,c])=>`<span class="badge bg-secondary mx-1">Depth ${d}: ${c}</span>`).join('');
+                            const partHTML=Object.entries(trav.partCoverage).map(([p,c])=>`<span class="badge mx-1" style="background:${PCOLORS[p]||'#888'}">P${p}: ${c}</span>`).join('');
+                            document.getElementById('travResults').innerHTML=`
+                                <div class="mb-2"><strong>${algo.toUpperCase()} from ${field}</strong> - ${trav.visited.length} nodes</div>
+                                <div class="mb-2">${depthHTML}</div>
+                                <div>${partHTML}</div>
+                            `;
+                        }catch(e2){
+                            console.error('Traversal error:',e2);
+                            document.getElementById('travResults').innerHTML='<div class="text-danger small">Error: '+e2.message+'</div>';
+                        }
+                        runBtn.disabled=false;
+                        runBtn.innerHTML='<i class="bi bi-play"></i> Run Traversal';
+                    },50);
+                }catch(e){
+                    console.error('Graph button error:',e);
+                    runBtn.disabled=false;
+                    runBtn.innerHTML='<i class="bi bi-play"></i> Run Traversal';
+                }
+            });
+        }
+    }catch(e){
+        console.error('initGraphViz error:',e);
+    }
+}
+
+function renderGraphViz(nodes,edges){
+    const container=document.getElementById('graphCanvas');
+    if(!container){console.warn('graphCanvas not found');return;}
+    container.innerHTML='';
+
+    // Stop existing simulation
+    if(svgSim&&svgSim.sim){
+        svgSim.sim.stop();
+        svgSim=null;
+    }
+
+    // Handle empty data
+    if(!nodes||nodes.length===0){
+        container.innerHTML='<div class="text-center text-muted p-5"><i class="bi bi-diagram-3 fs-1 d-block mb-2 opacity-25"></i>No graph data to display</div>';
+        document.getElementById('gcNodes').textContent='0 nodes';
+        document.getElementById('gcEdges').textContent='0 edges';
+        return;
+    }
+
+    const w=container.clientWidth||800;
+    const h=Math.max(400,container.clientHeight||500);
+
+    try{
+        // Clear and create SVG
+        const existingSvg=container.querySelector('svg');
+        if(existingSvg)d3.select(existingSvg).remove();
+
+        console.log('[Graph] Rendering', nodes.length, 'nodes,', edges.length, 'edges');
+
+        const svg=d3.select(container).append('svg').attr('width',w).attr('height',h).attr('id','mainSvg');
+        const g=svg.append('g');
+
+        svg.call(d3.zoom().scaleExtent([.1,4]).on('zoom',e=>g.attr('transform',e.transform)));
+
+        // Use all nodes and edges (no filtering needed since all nodes are passed in)
+        const dispNodes=nodes;
+        const filtEdges=edges.map(e=>({...e}));
+        console.log('[Graph] Rendering', dispNodes.length, 'nodes,', filtEdges.length, 'edges');
+
+        document.getElementById('gcNodes').textContent=dispNodes.length+' nodes';
+        document.getElementById('gcEdges').textContent=filtEdges.length+' edges';
+
+        // Pre-position nodes randomly so edges are visible immediately
+        dispNodes.forEach(d=>{
+            if(d.x===undefined)d.x=100+Math.random()*(w-200);
+            if(d.y===undefined)d.y=50+Math.random()*(h-100);
+        });
+
+        // Draw edges FIRST (below nodes) with bright color
+        const link=g.append('g').selectAll('line')
+            .data(filtEdges).join('line')
+            .attr('stroke','#ff6b6b').attr('stroke-opacity',.9).attr('stroke-width',2.5);
+
+        // Draw nodes
+        const node=g.append('g').selectAll('circle')
+            .data(dispNodes).join('circle')
+            .attr('r',d=>d.type==='medical_field'?10:d.type==='disease'?7:4)
+            .attr('fill',d=>NCOLORS[d.type]||'#888')
+            .attr('stroke',d=>PCOLORS[d.partition]||'#fff')
+            .attr('stroke-width',d=>d.type==='medical_field'?2.5:1.5)
+            .attr('cursor','pointer')
+            .call(d3.drag()
+                .on('start',e=>{if(!e.active)sim.alphaTarget(.3).restart();e.subject.fx=e.subject.x;e.subject.fy=e.subject.y;})
+                .on('drag',e=>{e.subject.fx=e.x;e.subject.fy=e.y;})
+                .on('end',e=>{if(!e.active)sim.alphaTarget(0);e.subject.fx=null;e.subject.fy=null;}));
+
+        node.append('title').text(d=>`${d.label||d.id} (${d.type||'unknown'}) - P${d.partition??0}`);
+
+        // Labels
+        const labelData=dispNodes.filter(n=>n.type==='medical_field'||n.type==='disease');
+        const label=g.append('g').selectAll('text')
+            .data(labelData).join('text')
+            .text(d=>{
+                const lbl=d.label||d.id||'';
+                return lbl.length>12?lbl.slice(0,10)+'..':lbl;
+            })
+            .attr('font-size',d=>d.type==='medical_field'?'9px':'6px')
+            .attr('fill','#e6edf3').attr('text-anchor','middle')
+            .attr('dy',d=>d.type==='medical_field'?18:13)
+            .style('pointer-events','none');
+
+        // Create simulation (will update positions dynamically)
+        const sim=d3.forceSimulation(dispNodes)
+            .force('link',d3.forceLink(filtEdges).id(d=>d.id).distance(80).strength(.3))
+            .force('charge',d3.forceManyBody().strength(-150))
+            .force('center',d3.forceCenter(w/2,h/2))
+            .force('collision',d3.forceCollide().radius(20))
+            .alphaDecay(.03);
+
+        sim.on('tick',()=>{
+            link.attr('x1',d=>(d.source.x??0))
+                .attr('y1',d=>(d.source.y??0))
+                .attr('x2',d=>(d.target.x??0))
+                .attr('y2',d=>(d.target.y??0));
+            node.attr('cx',d=>d.x||0).attr('cy',d=>d.y||0);
+            label.attr('x',d=>d.x||0).attr('y',d=>d.y||0);
+        });
+
+        // Save references
+        svgSim={
+            sim,
+            node,
+            link,
+            label,
+            svg,
+            nodes:dispNodes,
+            distMap:{}
+        };
+    }catch(e){
+        console.error('D3 render error:',e);
+        container.innerHTML='<div class="text-center text-danger p-5"><i class="bi bi-exclamation-triangle fs-1 d-block mb-2"></i>D3 render error: '+e.message+'</div>';
+    }
+}
+
+function highlightTraversal(trav){
+    if(!svgSim||!svgSim.node){
+        console.warn('No simulation to highlight');
+        return;
+    }
+    try{
+        const visited=new Set(trav.visited.map(n=>n.id));
+        svgSim.distMap={};
+        trav.visited.forEach(n=>{svgSim.distMap[n.id]=n.distance;});
+
+        svgSim.node
+            .attr('stroke-width',d=>visited.has(d.id)?3:1)
+            .attr('stroke',d=>{
+                if(visited.has(d.id)){
+                    const dist=trav.distances[d.id]||0;
+                    const colors=['#3fb950','#58a6ff','#d29922','#a371f7'];
+                    return colors[Math.min(dist,colors.length-1)]||'#ffd700';
+                }
+                return PCOLORS[d.partition]||'#fff';
+            })
+            .attr('opacity',d=>visited.has(d.id)?1:.2);
+
+        // Update edge visibility to show traversal subgraph
+        if(svgSim.link){
+            svgSim.link
+                .attr('stroke', d => {
+                    const srcId = d.source?.id ?? d.source;
+                    const tgtId = d.target?.id ?? d.target;
+                    const srcVis = visited.has(srcId);
+                    const tgtVis = visited.has(tgtId);
+                    if (srcVis && tgtVis) {
+                        const dist = Math.max(trav.distances[srcId] ?? 0, trav.distances[tgtId] ?? 0);
+                        const colors = ['#3fb950','#58a6ff','#d29922','#a371f7'];
+                        return colors[Math.min(dist, colors.length - 1)] ?? '#ffd700';
+                    }
+                    if (srcVis || tgtVis) return '#666';
+                    return '#ff6b6b';
+                })
+                .attr('stroke-opacity', d => {
+                    const srcId = d.source?.id ?? d.source;
+                    const tgtId = d.target?.id ?? d.target;
+                    const srcVis = visited.has(srcId);
+                    const tgtVis = visited.has(tgtId);
+                    if (srcVis && tgtVis) return 0.9;
+                    if (srcVis || tgtVis) return 0.2;
+                    return 0.06;
+                })
+                .attr('stroke-width', d => {
+                    const srcId = d.source?.id ?? d.source;
+                    const tgtId = d.target?.id ?? d.target;
+                    const srcVis = visited.has(srcId);
+                    const tgtVis = visited.has(tgtId);
+                    return (srcVis && tgtVis) ? 3 : 0.8;
+                });
+        }
+
+        // Pulse effect on start node
+        svgSim.node.filter(d=>d.type==='medical_field')
+            .attr('r',d=>{
+                const fid=`field_${document.getElementById('gfField')?.value||''}`;
+                return d.id===fid||d.id.includes('field_')&&visited.has(d.id)?12:10;
+            });
+    }catch(e){
+        console.error('Highlight error:',e);
+    }
+}
+
+// ============================================================
+// 8. ANALYSIS PAGE
+// ============================================================
+function renderAnalysis(){
+    try{
+        if(!engineReady){
+            setTimeout(()=>renderAnalysis(),500);
+            return;
+        }
+        // Update heading
+        const heading=document.getElementById('partitionHeading');
+        if(heading)heading.innerHTML='<i class="bi bi-grid-3x3-gap"></i> METIS Edge-Cut Partitioning ('+nParts+' partitions)';
+        // Update graph legend
+        const legend=document.getElementById('graphPartitionLegend');
+        if(legend)legend.innerHTML=Array.from({length:nParts},(_,i)=>i).map(i=>
+            '<div class="legend-row"><span class="partition-dot" style="background:'+PCOLORS[i]+'"></span><small>P'+i+'</small></div>'
+        ).join('');
+        // Highlight active partition button
+        document.querySelectorAll('.part-btn').forEach(b=>b.classList.toggle('active',parseInt(b.dataset.n)===nParts));
+        // Partitions
+        const pCards=Object.entries(partitions).map(([pid,p])=>{
+            const cutRatio=p.internal+p.cut>0?((p.cut/(p.internal+p.cut))*100).toFixed(1):'0.0';
+            return `<div class="col-md-3"><div class="border rounded p-3" style="border-color:${PCOLORS[pid]||'#888'}!important">
+                <div class="fw-bold" style="color:${PCOLORS[pid]||'#888'}">Partition ${pid}</div>
+                <div class="small">Nodes: <strong>${p.nodes?.length||0}</strong></div>
+                <div class="small">Internal: <strong>${p.internal||0}</strong></div>
+                <div class="small">Cut Edges: <strong>${p.cut||0}</strong></div>
+                <div class="partition-bar mt-2"><div class="partition-bar-fill" style="width:${cutRatio}%;background:${PCOLORS[pid]||'#888'}"></div></div>
+                <div class="small text-muted">${cutRatio}% cut ratio</div>
+            </div></div>`;
+        }).join('');
+        const partEl=document.getElementById('partitionCards');
+        if(partEl)partEl.innerHTML=pCards;
+
+        // Coverage
+        const covRows=MEDICAL_FIELDS.map(f=>{
+            try{
+                const cov=engine.graphEngine.getFieldCoverage(f);
+                const names=cov.diseaseNames?.slice(0,3)?.join(', ')||'';
+                return `<tr><td>${f.replace('_',' ')}</td><td><span class="badge bg-danger">${cov.diseases||0}</span></td><td><span class="badge bg-success">${cov.patients||0}</span></td><td><small>${names}</small></td></tr>`;
+            }catch(e){
+                return `<tr><td>${f.replace('_',' ')}</td><td><span class="badge bg-secondary">-</span></td><td><span class="badge bg-secondary">-</span></td><td><small>Error</small></td></tr>`;
+            }
+        }).join('');
+        const covEl=document.getElementById('coverageTable');
+        if(covEl)covEl.innerHTML=covRows;
+
+        // Topology
+        try{
+            const s=engine.graphEngine.getStats();
+            const el=id=>({nodes:'topoNodes',edges:'topoEdges',cutEdges:'topoCut'})[id];
+            if(document.getElementById('topoNodes'))document.getElementById('topoNodes').textContent=s.nodes||0;
+            if(document.getElementById('topoEdges'))document.getElementById('topoEdges').textContent=s.edges||0;
+            if(document.getElementById('topoCut'))document.getElementById('topoCut').textContent=s.cutEdges||0;
+            if(document.getElementById('topoRatio'))document.getElementById('topoRatio').textContent=((s.edgeCutRatio||0)*100).toFixed(1)+'%';
+        }catch(e){console.error('Topology error:',e);}
+
+        // Strategy comparison
+        try{
+            const qt = document.getElementById('analysisQueryText')?.value?.trim() || 'chest pain fever';
+            const tf = document.getElementById('analysisTargetField')?.value || 'Cardiology';
+            const strats=engine.compareStrategies(qt, tf);
+            const fillStrat=(prefix,s)=>{
+                if(!s)return;
+                const setIfExists=(id,v)=>{const el=document.getElementById(prefix+id);if(el)el.textContent=v;};
+                setIfExists('Doc',s.docScanCost||'0');
+                setIfExists('Graph',s.graphCost||'0');
+                setIfExists('Join',s.joinCost||'0');
+                setIfExists('Net',s.netCost||'0');
+                setIfExists('Time',(s.time||'0')+' ms');
+                setIfExists('Count',s.count||0);
+            };
+            fillStrat('fa',strats.filter_after_join);
+            fillStrat('inl',strats.index_nested_loop);
+            fillStrat('h',strats.hash_join);
+            renderCharts(strats);
+        }catch(e){console.error('Strategy comparison error:',e);}
+    }catch(e){console.error('renderAnalysis error:',e);}
+}
+
+function renderCharts(strats){
+    if(costChart)costChart.destroy();
+    if(pChart)pChart.destroy();
+    const labels=['Filter-After-Join','Index Nested-Loop','Hash Join'];
+    const sFA=strats.filter_after_join||{};
+    const sINL=strats.index_nested_loop||{};
+    const sH=strats.hash_join||{};
+    const ctx1=document.getElementById('costChart').getContext('2d');
+    costChart=new Chart(ctx1,{
+        type:'bar',
+        data:{
+            labels,
+            datasets:[
+                {label:'Doc Scan Cost',data:[parseFloat(sFA.docScanCost)||0,parseFloat(sINL.docScanCost)||0,parseFloat(sH.docScanCost)||0],backgroundColor:'rgba(88,166,255,.7)'},
+                {label:'Graph Cost',data:[parseFloat(sFA.graphCost)||0,parseFloat(sINL.graphCost)||0,parseFloat(sH.graphCost)||0],backgroundColor:'rgba(63,185,80,.7)'},
+                {label:'Join Cost',data:[parseFloat(sFA.joinCost)||0,parseFloat(sINL.joinCost)||0,parseFloat(sH.joinCost)||0],backgroundColor:'rgba(210,153,34,.7)'},
+                {label:'Network Cost',data:[parseFloat(sFA.netCost)||0,parseFloat(sINL.netCost)||0,parseFloat(sH.netCost)||0],backgroundColor:'rgba(248,81,73,.7)'},
+            ]
+        },
+        options:{responsive:true,plugins:{legend:{labels:{color:'#e6edf3',padding:10}}},scales:{x:{ticks:{color:'#8b949e'},grid:{color:'#30363d'}},y:{ticks:{color:'#8b949e'},grid:{color:'#30363d'}}}}
+    });
+    const ctx2=document.getElementById('pieChart').getContext('2d');
+    pChart=new Chart(ctx2,{
+        type:'doughnut',
+        data:{
+            labels:['Doc Scan','Graph Traversal','Join Ops','Network Transfer'],
+            datasets:[{
+                data:[parseFloat(sFA.docScanCost)||1,parseFloat(sFA.graphCost)||1,parseFloat(sFA.joinCost)||1,parseFloat(sFA.netCost)||0.1],
+                backgroundColor:['rgba(88,166,255,.8)','rgba(63,185,80,.8)','rgba(210,153,34,.8)','rgba(248,81,73,.8)'],
+                borderColor:'#1c2128',borderWidth:2
+            }]
+        },
+        options:{responsive:true,plugins:{legend:{position:'bottom',labels:{color:'#e6edf3',padding:10}}}}
+    });
+}
+
+// Start
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,6735 @@
+{
+  "nodes": [
+    {
+      "node_id": "field_Cardiology",
+      "node_type": "medical_field",
+      "label": "Cardiology",
+      "properties": {
+        "description": "Medical specialty: Cardiology"
+      },
+      "degree": 12
+    },
+    {
+      "node_id": "field_Neurology",
+      "node_type": "medical_field",
+      "label": "Neurology",
+      "properties": {
+        "description": "Medical specialty: Neurology"
+      },
+      "degree": 12
+    },
+    {
+      "node_id": "field_Oncology",
+      "node_type": "medical_field",
+      "label": "Oncology",
+      "properties": {
+        "description": "Medical specialty: Oncology"
+      },
+      "degree": 10
+    },
+    {
+      "node_id": "field_Pulmonology",
+      "node_type": "medical_field",
+      "label": "Pulmonology",
+      "properties": {
+        "description": "Medical specialty: Pulmonology"
+      },
+      "degree": 10
+    },
+    {
+      "node_id": "field_Gastroenterology",
+      "node_type": "medical_field",
+      "label": "Gastroenterology",
+      "properties": {
+        "description": "Medical specialty: Gastroenterology"
+      },
+      "degree": 10
+    },
+    {
+      "node_id": "field_Orthopedics",
+      "node_type": "medical_field",
+      "label": "Orthopedics",
+      "properties": {
+        "description": "Medical specialty: Orthopedics"
+      },
+      "degree": 10
+    },
+    {
+      "node_id": "field_Infectious_Disease",
+      "node_type": "medical_field",
+      "label": "Infectious_Disease",
+      "properties": {
+        "description": "Medical specialty: Infectious Disease"
+      },
+      "degree": 10
+    },
+    {
+      "node_id": "field_Endocrinology",
+      "node_type": "medical_field",
+      "label": "Endocrinology",
+      "properties": {
+        "description": "Medical specialty: Endocrinology"
+      },
+      "degree": 10
+    },
+    {
+      "node_id": "field_Nephrology",
+      "node_type": "medical_field",
+      "label": "Nephrology",
+      "properties": {
+        "description": "Medical specialty: Nephrology"
+      },
+      "degree": 8
+    },
+    {
+      "node_id": "field_Rheumatology",
+      "node_type": "medical_field",
+      "label": "Rheumatology",
+      "properties": {
+        "description": "Medical specialty: Rheumatology"
+      },
+      "degree": 10
+    },
+    {
+      "node_id": "disease_Hypertension",
+      "node_type": "disease",
+      "label": "Hypertension",
+      "properties": {
+        "medical_field": "Cardiology"
+      },
+      "degree": 22
+    },
+    {
+      "node_id": "disease_Arrhythmia",
+      "node_type": "disease",
+      "label": "Arrhythmia",
+      "properties": {
+        "medical_field": "Cardiology"
+      },
+      "degree": 22
+    },
+    {
+      "node_id": "disease_Coronary_Artery_Disease",
+      "node_type": "disease",
+      "label": "Coronary_Artery_Disease",
+      "properties": {
+        "medical_field": "Cardiology"
+      },
+      "degree": 20
+    },
+    {
+      "node_id": "disease_Heart_Failure",
+      "node_type": "disease",
+      "label": "Heart_Failure",
+      "properties": {
+        "medical_field": "Cardiology"
+      },
+      "degree": 22
+    },
+    {
+      "node_id": "disease_Atrial_Fibrillation",
+      "node_type": "disease",
+      "label": "Atrial_Fibrillation",
+      "properties": {
+        "medical_field": "Cardiology"
+      },
+      "degree": 17
+    },
+    {
+      "node_id": "disease_Myocarditis",
+      "node_type": "disease",
+      "label": "Myocarditis",
+      "properties": {
+        "medical_field": "Cardiology"
+      },
+      "degree": 17
+    },
+    {
+      "node_id": "disease_Migraine",
+      "node_type": "disease",
+      "label": "Migraine",
+      "properties": {
+        "medical_field": "Neurology"
+      },
+      "degree": 17
+    },
+    {
+      "node_id": "disease_Epilepsy",
+      "node_type": "disease",
+      "label": "Epilepsy",
+      "properties": {
+        "medical_field": "Neurology"
+      },
+      "degree": 22
+    },
+    {
+      "node_id": "disease_Parkinson_Disease",
+      "node_type": "disease",
+      "label": "Parkinson_Disease",
+      "properties": {
+        "medical_field": "Neurology"
+      },
+      "degree": 13
+    },
+    {
+      "node_id": "disease_Multiple_Sclerosis",
+      "node_type": "disease",
+      "label": "Multiple_Sclerosis",
+      "properties": {
+        "medical_field": "Neurology"
+      },
+      "degree": 14
+    },
+    {
+      "node_id": "disease_Stroke",
+      "node_type": "disease",
+      "label": "Stroke",
+      "properties": {
+        "medical_field": "Neurology"
+      },
+      "degree": 15
+    },
+    {
+      "node_id": "disease_Alzheimer_Disease",
+      "node_type": "disease",
+      "label": "Alzheimer_Disease",
+      "properties": {
+        "medical_field": "Neurology"
+      },
+      "degree": 17
+    },
+    {
+      "node_id": "disease_Lung_Cancer",
+      "node_type": "disease",
+      "label": "Lung_Cancer",
+      "properties": {
+        "medical_field": "Oncology"
+      },
+      "degree": 19
+    },
+    {
+      "node_id": "disease_Breast_Cancer",
+      "node_type": "disease",
+      "label": "Breast_Cancer",
+      "properties": {
+        "medical_field": "Oncology"
+      },
+      "degree": 14
+    },
+    {
+      "node_id": "disease_Colorectal_Cancer",
+      "node_type": "disease",
+      "label": "Colorectal_Cancer",
+      "properties": {
+        "medical_field": "Oncology"
+      },
+      "degree": 14
+    },
+    {
+      "node_id": "disease_Prostate_Cancer",
+      "node_type": "disease",
+      "label": "Prostate_Cancer",
+      "properties": {
+        "medical_field": "Oncology"
+      },
+      "degree": 14
+    },
+    {
+      "node_id": "disease_Leukemia",
+      "node_type": "disease",
+      "label": "Leukemia",
+      "properties": {
+        "medical_field": "Oncology"
+      },
+      "degree": 16
+    },
+    {
+      "node_id": "disease_COPD",
+      "node_type": "disease",
+      "label": "COPD",
+      "properties": {
+        "medical_field": "Pulmonology"
+      },
+      "degree": 20
+    },
+    {
+      "node_id": "disease_Asthma",
+      "node_type": "disease",
+      "label": "Asthma",
+      "properties": {
+        "medical_field": "Pulmonology"
+      },
+      "degree": 19
+    },
+    {
+      "node_id": "disease_Pneumonia",
+      "node_type": "disease",
+      "label": "Pneumonia",
+      "properties": {
+        "medical_field": "Pulmonology"
+      },
+      "degree": 19
+    },
+    {
+      "node_id": "disease_Pulmonary_Embolism",
+      "node_type": "disease",
+      "label": "Pulmonary_Embolism",
+      "properties": {
+        "medical_field": "Pulmonology"
+      },
+      "degree": 17
+    },
+    {
+      "node_id": "disease_Tuberculosis",
+      "node_type": "disease",
+      "label": "Tuberculosis",
+      "properties": {
+        "medical_field": "Pulmonology"
+      },
+      "degree": 14
+    },
+    {
+      "node_id": "disease_GERD",
+      "node_type": "disease",
+      "label": "GERD",
+      "properties": {
+        "medical_field": "Gastroenterology"
+      },
+      "degree": 13
+    },
+    {
+      "node_id": "disease_Peptic_Ulcer",
+      "node_type": "disease",
+      "label": "Peptic_Ulcer",
+      "properties": {
+        "medical_field": "Gastroenterology"
+      },
+      "degree": 14
+    },
+    {
+      "node_id": "disease_Crohn_Disease",
+      "node_type": "disease",
+      "label": "Crohn_Disease",
+      "properties": {
+        "medical_field": "Gastroenterology"
+      },
+      "degree": 16
+    },
+    {
+      "node_id": "disease_Hepatitis_B",
+      "node_type": "disease",
+      "label": "Hepatitis_B",
+      "properties": {
+        "medical_field": "Gastroenterology"
+      },
+      "degree": 17
+    },
+    {
+      "node_id": "disease_Gallstones",
+      "node_type": "disease",
+      "label": "Gallstones",
+      "properties": {
+        "medical_field": "Gastroenterology"
+      },
+      "degree": 15
+    },
+    {
+      "node_id": "disease_Osteoarthritis",
+      "node_type": "disease",
+      "label": "Osteoarthritis",
+      "properties": {
+        "medical_field": "Orthopedics"
+      },
+      "degree": 22
+    },
+    {
+      "node_id": "disease_Rheumatoid_Arthritis",
+      "node_type": "disease",
+      "label": "Rheumatoid_Arthritis",
+      "properties": {
+        "medical_field": "Orthopedics"
+      },
+      "degree": 15
+    },
+    {
+      "node_id": "disease_Osteoporosis",
+      "node_type": "disease",
+      "label": "Osteoporosis",
+      "properties": {
+        "medical_field": "Orthopedics"
+      },
+      "degree": 17
+    },
+    {
+      "node_id": "disease_Herniated_Disc",
+      "node_type": "disease",
+      "label": "Herniated_Disc",
+      "properties": {
+        "medical_field": "Orthopedics"
+      },
+      "degree": 15
+    },
+    {
+      "node_id": "disease_Fracture",
+      "node_type": "disease",
+      "label": "Fracture",
+      "properties": {
+        "medical_field": "Orthopedics"
+      },
+      "degree": 13
+    },
+    {
+      "node_id": "disease_COVID_19",
+      "node_type": "disease",
+      "label": "COVID_19",
+      "properties": {
+        "medical_field": "Infectious_Disease"
+      },
+      "degree": 19
+    },
+    {
+      "node_id": "disease_Dengue_Fever",
+      "node_type": "disease",
+      "label": "Dengue_Fever",
+      "properties": {
+        "medical_field": "Infectious_Disease"
+      },
+      "degree": 15
+    },
+    {
+      "node_id": "disease_Malaria",
+      "node_type": "disease",
+      "label": "Malaria",
+      "properties": {
+        "medical_field": "Infectious_Disease"
+      },
+      "degree": 16
+    },
+    {
+      "node_id": "disease_Typhoid",
+      "node_type": "disease",
+      "label": "Typhoid",
+      "properties": {
+        "medical_field": "Infectious_Disease"
+      },
+      "degree": 19
+    },
+    {
+      "node_id": "disease_HIV_AIDS",
+      "node_type": "disease",
+      "label": "HIV_AIDS",
+      "properties": {
+        "medical_field": "Infectious_Disease"
+      },
+      "degree": 17
+    },
+    {
+      "node_id": "disease_Diabetes_Type_2",
+      "node_type": "disease",
+      "label": "Diabetes_Type_2",
+      "properties": {
+        "medical_field": "Endocrinology"
+      },
+      "degree": 19
+    },
+    {
+      "node_id": "disease_Hypothyroidism",
+      "node_type": "disease",
+      "label": "Hypothyroidism",
+      "properties": {
+        "medical_field": "Endocrinology"
+      },
+      "degree": 16
+    },
+    {
+      "node_id": "disease_Hyperthyroidism",
+      "node_type": "disease",
+      "label": "Hyperthyroidism",
+      "properties": {
+        "medical_field": "Endocrinology"
+      },
+      "degree": 17
+    },
+    {
+      "node_id": "disease_Cushing_Syndrome",
+      "node_type": "disease",
+      "label": "Cushing_Syndrome",
+      "properties": {
+        "medical_field": "Endocrinology"
+      },
+      "degree": 17
+    },
+    {
+      "node_id": "disease_Addison_Disease",
+      "node_type": "disease",
+      "label": "Addison_Disease",
+      "properties": {
+        "medical_field": "Endocrinology"
+      },
+      "degree": 16
+    },
+    {
+      "node_id": "disease_Chronic_Kidney_Disease",
+      "node_type": "disease",
+      "label": "Chronic_Kidney_Disease",
+      "properties": {
+        "medical_field": "Nephrology"
+      },
+      "degree": 18
+    },
+    {
+      "node_id": "disease_Kidney_Stones",
+      "node_type": "disease",
+      "label": "Kidney_Stones",
+      "properties": {
+        "medical_field": "Nephrology"
+      },
+      "degree": 17
+    },
+    {
+      "node_id": "disease_Glomerulonephritis",
+      "node_type": "disease",
+      "label": "Glomerulonephritis",
+      "properties": {
+        "medical_field": "Nephrology"
+      },
+      "degree": 17
+    },
+    {
+      "node_id": "disease_UTI",
+      "node_type": "disease",
+      "label": "UTI",
+      "properties": {
+        "medical_field": "Nephrology"
+      },
+      "degree": 15
+    },
+    {
+      "node_id": "disease_Lupus",
+      "node_type": "disease",
+      "label": "Lupus",
+      "properties": {
+        "medical_field": "Rheumatology"
+      },
+      "degree": 17
+    },
+    {
+      "node_id": "disease_Fibromyalgia",
+      "node_type": "disease",
+      "label": "Fibromyalgia",
+      "properties": {
+        "medical_field": "Rheumatology"
+      },
+      "degree": 16
+    },
+    {
+      "node_id": "disease_Gout",
+      "node_type": "disease",
+      "label": "Gout",
+      "properties": {
+        "medical_field": "Rheumatology"
+      },
+      "degree": 16
+    },
+    {
+      "node_id": "disease_Psoriatic_Arthritis",
+      "node_type": "disease",
+      "label": "Psoriatic_Arthritis",
+      "properties": {
+        "medical_field": "Rheumatology"
+      },
+      "degree": 15
+    },
+    {
+      "node_id": "disease_Vasculitis",
+      "node_type": "disease",
+      "label": "Vasculitis",
+      "properties": {
+        "medical_field": "Rheumatology"
+      },
+      "degree": 14
+    },
+    {
+      "node_id": "symptom_chest_pain",
+      "node_type": "symptom",
+      "label": "chest pain",
+      "properties": {
+        "frequency": 2
+      },
+      "degree": 14
+    },
+    {
+      "node_id": "symptom_low_blood_pressure",
+      "node_type": "symptom",
+      "label": "low blood pressure",
+      "properties": {
+        "frequency": 1
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_nipple_discharge",
+      "node_type": "symptom",
+      "label": "nipple discharge",
+      "properties": {
+        "frequency": 5
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_rash",
+      "node_type": "symptom",
+      "label": "rash",
+      "properties": {
+        "frequency": 4
+      },
+      "degree": 6
+    },
+    {
+      "node_id": "symptom_blood_in_urine",
+      "node_type": "symptom",
+      "label": "blood in urine",
+      "properties": {
+        "frequency": 4
+      },
+      "degree": 8
+    },
+    {
+      "node_id": "symptom_tophi",
+      "node_type": "symptom",
+      "label": "tophi",
+      "properties": {
+        "frequency": 3
+      },
+      "degree": 3
+    },
+    {
+      "node_id": "symptom_severe_back_pain",
+      "node_type": "symptom",
+      "label": "severe back pain",
+      "properties": {
+        "frequency": 2
+      },
+      "degree": 4
+    },
+    {
+      "node_id": "symptom_back_pain",
+      "node_type": "symptom",
+      "label": "back pain",
+      "properties": {
+        "frequency": 9
+      },
+      "degree": 8
+    },
+    {
+      "node_id": "symptom_change_in_bowel_habits",
+      "node_type": "symptom",
+      "label": "change in bowel habits",
+      "properties": {
+        "frequency": 2
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_moon_face",
+      "node_type": "symptom",
+      "label": "moon face",
+      "properties": {
+        "frequency": 10
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_decreased_urine",
+      "node_type": "symptom",
+      "label": "decreased urine",
+      "properties": {
+        "frequency": 7
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_easy_bruising",
+      "node_type": "symptom",
+      "label": "easy bruising",
+      "properties": {
+        "frequency": 1
+      },
+      "degree": 4
+    },
+    {
+      "node_id": "symptom_breast_pain",
+      "node_type": "symptom",
+      "label": "breast pain",
+      "properties": {
+        "frequency": 1
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_joint_pain",
+      "node_type": "symptom",
+      "label": "joint pain",
+      "properties": {
+        "frequency": 2
+      },
+      "degree": 12
+    },
+    {
+      "node_id": "symptom_balance_issues",
+      "node_type": "symptom",
+      "label": "balance issues",
+      "properties": {
+        "frequency": 4
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_stomach_pain",
+      "node_type": "symptom",
+      "label": "stomach pain",
+      "properties": {
+        "frequency": 4
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_speech_changes",
+      "node_type": "symptom",
+      "label": "speech changes",
+      "properties": {
+        "frequency": 9
+      },
+      "degree": 3
+    },
+    {
+      "node_id": "symptom_leg_pain",
+      "node_type": "symptom",
+      "label": "leg pain",
+      "properties": {
+        "frequency": 10
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_vision_problems",
+      "node_type": "symptom",
+      "label": "vision problems",
+      "properties": {
+        "frequency": 1
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_difficulty_swallowing",
+      "node_type": "symptom",
+      "label": "difficulty swallowing",
+      "properties": {
+        "frequency": 9
+      },
+      "degree": 3
+    },
+    {
+      "node_id": "symptom_cold_sensitivity",
+      "node_type": "symptom",
+      "label": "cold sensitivity",
+      "properties": {
+        "frequency": 4
+      },
+      "degree": 3
+    },
+    {
+      "node_id": "symptom_vision_loss",
+      "node_type": "symptom",
+      "label": "vision loss",
+      "properties": {
+        "frequency": 9
+      },
+      "degree": 3
+    },
+    {
+      "node_id": "symptom_swelling",
+      "node_type": "symptom",
+      "label": "swelling",
+      "properties": {
+        "frequency": 7
+      },
+      "degree": 16
+    },
+    {
+      "node_id": "symptom_behavior_changes",
+      "node_type": "symptom",
+      "label": "behavior changes",
+      "properties": {
+        "frequency": 4
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_tremor",
+      "node_type": "symptom",
+      "label": "tremor",
+      "properties": {
+        "frequency": 8
+      },
+      "degree": 4
+    },
+    {
+      "node_id": "symptom_bone_fractures",
+      "node_type": "symptom",
+      "label": "bone fractures",
+      "properties": {
+        "frequency": 10
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_coughing",
+      "node_type": "symptom",
+      "label": "coughing",
+      "properties": {
+        "frequency": 5
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_staring",
+      "node_type": "symptom",
+      "label": "staring",
+      "properties": {
+        "frequency": 1
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_shortness_of_breath",
+      "node_type": "symptom",
+      "label": "shortness of breath",
+      "properties": {
+        "frequency": 3
+      },
+      "degree": 20
+    },
+    {
+      "node_id": "symptom_weight_gain",
+      "node_type": "symptom",
+      "label": "weight gain",
+      "properties": {
+        "frequency": 7
+      },
+      "degree": 6
+    },
+    {
+      "node_id": "symptom_mucus_production",
+      "node_type": "symptom",
+      "label": "mucus production",
+      "properties": {
+        "frequency": 6
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_loss_of_height",
+      "node_type": "symptom",
+      "label": "loss of height",
+      "properties": {
+        "frequency": 5
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_rectal_bleeding",
+      "node_type": "symptom",
+      "label": "rectal bleeding",
+      "properties": {
+        "frequency": 3
+      },
+      "degree": 3
+    },
+    {
+      "node_id": "symptom_balance_problems",
+      "node_type": "symptom",
+      "label": "balance problems",
+      "properties": {
+        "frequency": 4
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_salt_craving",
+      "node_type": "symptom",
+      "label": "salt craving",
+      "properties": {
+        "frequency": 6
+      },
+      "degree": 3
+    },
+    {
+      "node_id": "symptom_numbness",
+      "node_type": "symptom",
+      "label": "numbness",
+      "properties": {
+        "frequency": 2
+      },
+      "degree": 5
+    },
+    {
+      "node_id": "symptom_diarrhea",
+      "node_type": "symptom",
+      "label": "diarrhea",
+      "properties": {
+        "frequency": 2
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_anxiety",
+      "node_type": "symptom",
+      "label": "anxiety",
+      "properties": {
+        "frequency": 7
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_confusion",
+      "node_type": "symptom",
+      "label": "confusion",
+      "properties": {
+        "frequency": 2
+      },
+      "degree": 6
+    },
+    {
+      "node_id": "symptom_indigestion",
+      "node_type": "symptom",
+      "label": "indigestion",
+      "properties": {
+        "frequency": 6
+      },
+      "degree": 3
+    },
+    {
+      "node_id": "symptom_chills",
+      "node_type": "symptom",
+      "label": "chills",
+      "properties": {
+        "frequency": 6
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_wheezing",
+      "node_type": "symptom",
+      "label": "wheezing",
+      "properties": {
+        "frequency": 10
+      },
+      "degree": 4
+    },
+    {
+      "node_id": "symptom_headache",
+      "node_type": "symptom",
+      "label": "headache",
+      "properties": {
+        "frequency": 5
+      },
+      "degree": 7
+    },
+    {
+      "node_id": "symptom_redness",
+      "node_type": "symptom",
+      "label": "redness",
+      "properties": {
+        "frequency": 1
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_difficulty_sleeping",
+      "node_type": "symptom",
+      "label": "difficulty sleeping",
+      "properties": {
+        "frequency": 8
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_acid_reflux",
+      "node_type": "symptom",
+      "label": "acid reflux",
+      "properties": {
+        "frequency": 9
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_coughing_blood",
+      "node_type": "symptom",
+      "label": "coughing blood",
+      "properties": {
+        "frequency": 2
+      },
+      "degree": 4
+    },
+    {
+      "node_id": "symptom_opportunistic_infections",
+      "node_type": "symptom",
+      "label": "opportunistic infections",
+      "properties": {
+        "frequency": 7
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_skin_rashes",
+      "node_type": "symptom",
+      "label": "skin rashes",
+      "properties": {
+        "frequency": 2
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_dark_urine",
+      "node_type": "symptom",
+      "label": "dark urine",
+      "properties": {
+        "frequency": 9
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_sweating",
+      "node_type": "symptom",
+      "label": "sweating",
+      "properties": {
+        "frequency": 5
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_fatigue",
+      "node_type": "symptom",
+      "label": "fatigue",
+      "properties": {
+        "frequency": 10
+      },
+      "degree": 54
+    },
+    {
+      "node_id": "symptom_language_problems",
+      "node_type": "symptom",
+      "label": "language problems",
+      "properties": {
+        "frequency": 6
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_chest_tightness",
+      "node_type": "symptom",
+      "label": "chest tightness",
+      "properties": {
+        "frequency": 10
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_weight_loss",
+      "node_type": "symptom",
+      "label": "weight loss",
+      "properties": {
+        "frequency": 4
+      },
+      "degree": 18
+    },
+    {
+      "node_id": "symptom_widespread_pain",
+      "node_type": "symptom",
+      "label": "widespread pain",
+      "properties": {
+        "frequency": 2
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_visual_disturbances",
+      "node_type": "symptom",
+      "label": "visual disturbances",
+      "properties": {
+        "frequency": 1
+      },
+      "degree": 3
+    },
+    {
+      "node_id": "symptom_nail_changes",
+      "node_type": "symptom",
+      "label": "nail changes",
+      "properties": {
+        "frequency": 4
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_deformity",
+      "node_type": "symptom",
+      "label": "deformity",
+      "properties": {
+        "frequency": 5
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_loss_of_consciousness",
+      "node_type": "symptom",
+      "label": "loss of consciousness",
+      "properties": {
+        "frequency": 2
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_dry_skin",
+      "node_type": "symptom",
+      "label": "dry skin",
+      "properties": {
+        "frequency": 4
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_breast_lump",
+      "node_type": "symptom",
+      "label": "breast lump",
+      "properties": {
+        "frequency": 2
+      },
+      "degree": 3
+    },
+    {
+      "node_id": "symptom_slow_movement",
+      "node_type": "symptom",
+      "label": "slow movement",
+      "properties": {
+        "frequency": 7
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_heartburn",
+      "node_type": "symptom",
+      "label": "heartburn",
+      "properties": {
+        "frequency": 5
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_loss_of_appetite",
+      "node_type": "symptom",
+      "label": "loss of appetite",
+      "properties": {
+        "frequency": 8
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_loss_of_taste",
+      "node_type": "symptom",
+      "label": "loss of taste",
+      "properties": {
+        "frequency": 6
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_persistent_cough",
+      "node_type": "symptom",
+      "label": "persistent cough",
+      "properties": {
+        "frequency": 3
+      },
+      "degree": 3
+    },
+    {
+      "node_id": "symptom_blood_in_stool",
+      "node_type": "symptom",
+      "label": "blood in stool",
+      "properties": {
+        "frequency": 6
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_cognitive_difficulties",
+      "node_type": "symptom",
+      "label": "cognitive difficulties",
+      "properties": {
+        "frequency": 6
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_arm_weakness",
+      "node_type": "symptom",
+      "label": "arm weakness",
+      "properties": {
+        "frequency": 4
+      },
+      "degree": 3
+    },
+    {
+      "node_id": "symptom_constipation",
+      "node_type": "symptom",
+      "label": "constipation",
+      "properties": {
+        "frequency": 5
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_slow_healing",
+      "node_type": "symptom",
+      "label": "slow healing",
+      "properties": {
+        "frequency": 2
+      },
+      "degree": 3
+    },
+    {
+      "node_id": "symptom_bruising",
+      "node_type": "symptom",
+      "label": "bruising",
+      "properties": {
+        "frequency": 10
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_face_drooping",
+      "node_type": "symptom",
+      "label": "face drooping",
+      "properties": {
+        "frequency": 3
+      },
+      "degree": 3
+    },
+    {
+      "node_id": "symptom_disorientation",
+      "node_type": "symptom",
+      "label": "disorientation",
+      "properties": {
+        "frequency": 9
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_abdominal_pain",
+      "node_type": "symptom",
+      "label": "abdominal pain",
+      "properties": {
+        "frequency": 4
+      },
+      "degree": 10
+    },
+    {
+      "node_id": "symptom_urinary_problems",
+      "node_type": "symptom",
+      "label": "urinary problems",
+      "properties": {
+        "frequency": 3
+      },
+      "degree": 3
+    },
+    {
+      "node_id": "symptom_frequent_infections",
+      "node_type": "symptom",
+      "label": "frequent infections",
+      "properties": {
+        "frequency": 8
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_increased_thirst",
+      "node_type": "symptom",
+      "label": "increased thirst",
+      "properties": {
+        "frequency": 7
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_pelvic_pain",
+      "node_type": "symptom",
+      "label": "pelvic pain",
+      "properties": {
+        "frequency": 5
+      },
+      "degree": 4
+    },
+    {
+      "node_id": "symptom_severe_joint_pain",
+      "node_type": "symptom",
+      "label": "severe joint pain",
+      "properties": {
+        "frequency": 9
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_skin_lesions",
+      "node_type": "symptom",
+      "label": "skin lesions",
+      "properties": {
+        "frequency": 4
+      },
+      "degree": 3
+    },
+    {
+      "node_id": "symptom_mood_issues",
+      "node_type": "symptom",
+      "label": "mood issues",
+      "properties": {
+        "frequency": 6
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_memory_loss",
+      "node_type": "symptom",
+      "label": "memory loss",
+      "properties": {
+        "frequency": 1
+      },
+      "degree": 3
+    },
+    {
+      "node_id": "symptom_severe_headache",
+      "node_type": "symptom",
+      "label": "severe headache",
+      "properties": {
+        "frequency": 4
+      },
+      "degree": 4
+    },
+    {
+      "node_id": "symptom_weakness",
+      "node_type": "symptom",
+      "label": "weakness",
+      "properties": {
+        "frequency": 1
+      },
+      "degree": 5
+    },
+    {
+      "node_id": "symptom_jaundice",
+      "node_type": "symptom",
+      "label": "jaundice",
+      "properties": {
+        "frequency": 6
+      },
+      "degree": 5
+    },
+    {
+      "node_id": "symptom_sleep_problems",
+      "node_type": "symptom",
+      "label": "sleep problems",
+      "properties": {
+        "frequency": 7
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_seizures",
+      "node_type": "symptom",
+      "label": "seizures",
+      "properties": {
+        "frequency": 5
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_dizziness",
+      "node_type": "symptom",
+      "label": "dizziness",
+      "properties": {
+        "frequency": 2
+      },
+      "degree": 6
+    },
+    {
+      "node_id": "symptom_urinary_changes",
+      "node_type": "symptom",
+      "label": "urinary changes",
+      "properties": {
+        "frequency": 4
+      },
+      "degree": 3
+    },
+    {
+      "node_id": "symptom_grinding_sensation",
+      "node_type": "symptom",
+      "label": "grinding sensation",
+      "properties": {
+        "frequency": 10
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_fever",
+      "node_type": "symptom",
+      "label": "fever",
+      "properties": {
+        "frequency": 6
+      },
+      "degree": 22
+    },
+    {
+      "node_id": "symptom_fainting",
+      "node_type": "symptom",
+      "label": "fainting",
+      "properties": {
+        "frequency": 4
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_chronic_cough",
+      "node_type": "symptom",
+      "label": "chronic cough",
+      "properties": {
+        "frequency": 8
+      },
+      "degree": 6
+    },
+    {
+      "node_id": "symptom_rapid_heartbeat",
+      "node_type": "symptom",
+      "label": "rapid heartbeat",
+      "properties": {
+        "frequency": 7
+      },
+      "degree": 4
+    },
+    {
+      "node_id": "symptom_severe_pain",
+      "node_type": "symptom",
+      "label": "severe pain",
+      "properties": {
+        "frequency": 8
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_heat_sensitivity",
+      "node_type": "symptom",
+      "label": "heat sensitivity",
+      "properties": {
+        "frequency": 3
+      },
+      "degree": 5
+    },
+    {
+      "node_id": "symptom_decreased_flexibility",
+      "node_type": "symptom",
+      "label": "decreased flexibility",
+      "properties": {
+        "frequency": 5
+      },
+      "degree": 3
+    },
+    {
+      "node_id": "symptom_stooped_posture",
+      "node_type": "symptom",
+      "label": "stooped posture",
+      "properties": {
+        "frequency": 3
+      },
+      "degree": 4
+    },
+    {
+      "node_id": "symptom_night_sweats",
+      "node_type": "symptom",
+      "label": "night sweats",
+      "properties": {
+        "frequency": 4
+      },
+      "degree": 6
+    },
+    {
+      "node_id": "symptom_burning_urination",
+      "node_type": "symptom",
+      "label": "burning urination",
+      "properties": {
+        "frequency": 9
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_heat_in_joint",
+      "node_type": "symptom",
+      "label": "heat in joint",
+      "properties": {
+        "frequency": 9
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_cough",
+      "node_type": "symptom",
+      "label": "cough",
+      "properties": {
+        "frequency": 5
+      },
+      "degree": 9
+    },
+    {
+      "node_id": "symptom_speech_difficulty",
+      "node_type": "symptom",
+      "label": "speech difficulty",
+      "properties": {
+        "frequency": 10
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_muscle_jerking",
+      "node_type": "symptom",
+      "label": "muscle jerking",
+      "properties": {
+        "frequency": 7
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_sudden_shortness_of_breath",
+      "node_type": "symptom",
+      "label": "sudden shortness of breath",
+      "properties": {
+        "frequency": 10
+      },
+      "degree": 4
+    },
+    {
+      "node_id": "symptom_tingling",
+      "node_type": "symptom",
+      "label": "tingling",
+      "properties": {
+        "frequency": 7
+      },
+      "degree": 4
+    },
+    {
+      "node_id": "symptom_palpitations",
+      "node_type": "symptom",
+      "label": "palpitations",
+      "properties": {
+        "frequency": 6
+      },
+      "degree": 4
+    },
+    {
+      "node_id": "symptom_nausea",
+      "node_type": "symptom",
+      "label": "nausea",
+      "properties": {
+        "frequency": 4
+      },
+      "degree": 16
+    },
+    {
+      "node_id": "symptom_muscle_weakness",
+      "node_type": "symptom",
+      "label": "muscle weakness",
+      "properties": {
+        "frequency": 3
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_stiffness",
+      "node_type": "symptom",
+      "label": "stiffness",
+      "properties": {
+        "frequency": 9
+      },
+      "degree": 7
+    },
+    {
+      "node_id": "symptom_sensitivity_to_light",
+      "node_type": "symptom",
+      "label": "sensitivity to light",
+      "properties": {
+        "frequency": 8
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_photosensitivity",
+      "node_type": "symptom",
+      "label": "photosensitivity",
+      "properties": {
+        "frequency": 2
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_bloating",
+      "node_type": "symptom",
+      "label": "bloating",
+      "properties": {
+        "frequency": 1
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_joint_swelling",
+      "node_type": "symptom",
+      "label": "joint swelling",
+      "properties": {
+        "frequency": 2
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_high_fever",
+      "node_type": "symptom",
+      "label": "high fever",
+      "properties": {
+        "frequency": 3
+      },
+      "degree": 7
+    },
+    {
+      "node_id": "symptom_high_blood_pressure",
+      "node_type": "symptom",
+      "label": "high blood pressure",
+      "properties": {
+        "frequency": 3
+      },
+      "degree": 4
+    },
+    {
+      "node_id": "symptom_nerve_problems",
+      "node_type": "symptom",
+      "label": "nerve problems",
+      "properties": {
+        "frequency": 7
+      },
+      "degree": 3
+    },
+    {
+      "node_id": "symptom_erectile_dysfunction",
+      "node_type": "symptom",
+      "label": "erectile dysfunction",
+      "properties": {
+        "frequency": 10
+      },
+      "degree": 3
+    },
+    {
+      "node_id": "symptom_skin_changes",
+      "node_type": "symptom",
+      "label": "skin changes",
+      "properties": {
+        "frequency": 2
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_bone_pain",
+      "node_type": "symptom",
+      "label": "bone pain",
+      "properties": {
+        "frequency": 7
+      },
+      "degree": 4
+    },
+    {
+      "node_id": "symptom_inability_to_move",
+      "node_type": "symptom",
+      "label": "inability to move",
+      "properties": {
+        "frequency": 7
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_lightheadedness",
+      "node_type": "symptom",
+      "label": "lightheadedness",
+      "properties": {
+        "frequency": 10
+      },
+      "degree": 4
+    },
+    {
+      "node_id": "symptom_joint_deformity",
+      "node_type": "symptom",
+      "label": "joint deformity",
+      "properties": {
+        "frequency": 8
+      },
+      "degree": 3
+    },
+    {
+      "node_id": "symptom_frequent_urination",
+      "node_type": "symptom",
+      "label": "frequent urination",
+      "properties": {
+        "frequency": 9
+      },
+      "degree": 6
+    },
+    {
+      "node_id": "symptom_blurred_vision",
+      "node_type": "symptom",
+      "label": "blurred vision",
+      "properties": {
+        "frequency": 5
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "symptom_skin_darkening",
+      "node_type": "symptom",
+      "label": "skin darkening",
+      "properties": {
+        "frequency": 9
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "drug_Metoprolol",
+      "node_type": "drug",
+      "label": "Metoprolol",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "drug_Diltiazem",
+      "node_type": "drug",
+      "label": "Diltiazem",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Levetiracetam",
+      "node_type": "drug",
+      "label": "Levetiracetam",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Carvedilol",
+      "node_type": "drug",
+      "label": "Carvedilol",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Tiotropium",
+      "node_type": "drug",
+      "label": "Tiotropium",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Pembrolizumab",
+      "node_type": "drug",
+      "label": "Pembrolizumab",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Sumatriptan",
+      "node_type": "drug",
+      "label": "Sumatriptan",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Empagliflozin",
+      "node_type": "drug",
+      "label": "Empagliflozin",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Amitriptyline",
+      "node_type": "drug",
+      "label": "Amitriptyline",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Spironolactone",
+      "node_type": "drug",
+      "label": "Spironolactone",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Erlotinib",
+      "node_type": "drug",
+      "label": "Erlotinib",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Aspirin",
+      "node_type": "drug",
+      "label": "Aspirin",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Amoxicillin",
+      "node_type": "drug",
+      "label": "Amoxicillin",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Valproic_Acid",
+      "node_type": "drug",
+      "label": "Valproic_Acid",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Montelukast",
+      "node_type": "drug",
+      "label": "Montelukast",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Fluticasone",
+      "node_type": "drug",
+      "label": "Fluticasone",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "drug_Enalapril",
+      "node_type": "drug",
+      "label": "Enalapril",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Azithromycin",
+      "node_type": "drug",
+      "label": "Azithromycin",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Atorvastatin",
+      "node_type": "drug",
+      "label": "Atorvastatin",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Celecoxib",
+      "node_type": "drug",
+      "label": "Celecoxib",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Metformin",
+      "node_type": "drug",
+      "label": "Metformin",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Levofloxacin",
+      "node_type": "drug",
+      "label": "Levofloxacin",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Cisplatin",
+      "node_type": "drug",
+      "label": "Cisplatin",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Acetaminophen",
+      "node_type": "drug",
+      "label": "Acetaminophen",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Carbamazepine",
+      "node_type": "drug",
+      "label": "Carbamazepine",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Amlodipine",
+      "node_type": "drug",
+      "label": "Amlodipine",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Phenytoin",
+      "node_type": "drug",
+      "label": "Phenytoin",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Glucosamine",
+      "node_type": "drug",
+      "label": "Glucosamine",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Albuterol",
+      "node_type": "drug",
+      "label": "Albuterol",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 2
+    },
+    {
+      "node_id": "drug_Lisinopril",
+      "node_type": "drug",
+      "label": "Lisinopril",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Furosemide",
+      "node_type": "drug",
+      "label": "Furosemide",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Sitagliptin",
+      "node_type": "drug",
+      "label": "Sitagliptin",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Nitroglycerin",
+      "node_type": "drug",
+      "label": "Nitroglycerin",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Amiodarone",
+      "node_type": "drug",
+      "label": "Amiodarone",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Prednisone",
+      "node_type": "drug",
+      "label": "Prednisone",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Propranolol",
+      "node_type": "drug",
+      "label": "Propranolol",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Ibuprofen",
+      "node_type": "drug",
+      "label": "Ibuprofen",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Glipizide",
+      "node_type": "drug",
+      "label": "Glipizide",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Sotalol",
+      "node_type": "drug",
+      "label": "Sotalol",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Topiramate",
+      "node_type": "drug",
+      "label": "Topiramate",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Budesonide",
+      "node_type": "drug",
+      "label": "Budesonide",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    },
+    {
+      "node_id": "drug_Losartan",
+      "node_type": "drug",
+      "label": "Losartan",
+      "properties": {
+        "category": "medication"
+      },
+      "degree": 1
+    }
+  ],
+  "edges": [
+    {
+      "source_id": "disease_Hypertension",
+      "target_id": "field_Cardiology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Cardiology",
+      "target_id": "disease_Hypertension",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Arrhythmia",
+      "target_id": "field_Cardiology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Cardiology",
+      "target_id": "disease_Arrhythmia",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Coronary_Artery_Disease",
+      "target_id": "field_Cardiology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Cardiology",
+      "target_id": "disease_Coronary_Artery_Disease",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Heart_Failure",
+      "target_id": "field_Cardiology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Cardiology",
+      "target_id": "disease_Heart_Failure",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Atrial_Fibrillation",
+      "target_id": "field_Cardiology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Cardiology",
+      "target_id": "disease_Atrial_Fibrillation",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Myocarditis",
+      "target_id": "field_Cardiology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Cardiology",
+      "target_id": "disease_Myocarditis",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Migraine",
+      "target_id": "field_Neurology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Neurology",
+      "target_id": "disease_Migraine",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Epilepsy",
+      "target_id": "field_Neurology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Neurology",
+      "target_id": "disease_Epilepsy",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Parkinson_Disease",
+      "target_id": "field_Neurology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Neurology",
+      "target_id": "disease_Parkinson_Disease",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Multiple_Sclerosis",
+      "target_id": "field_Neurology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Neurology",
+      "target_id": "disease_Multiple_Sclerosis",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Stroke",
+      "target_id": "field_Neurology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Neurology",
+      "target_id": "disease_Stroke",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Alzheimer_Disease",
+      "target_id": "field_Neurology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Neurology",
+      "target_id": "disease_Alzheimer_Disease",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Lung_Cancer",
+      "target_id": "field_Oncology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Oncology",
+      "target_id": "disease_Lung_Cancer",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Breast_Cancer",
+      "target_id": "field_Oncology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Oncology",
+      "target_id": "disease_Breast_Cancer",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Colorectal_Cancer",
+      "target_id": "field_Oncology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Oncology",
+      "target_id": "disease_Colorectal_Cancer",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Prostate_Cancer",
+      "target_id": "field_Oncology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Oncology",
+      "target_id": "disease_Prostate_Cancer",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Leukemia",
+      "target_id": "field_Oncology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Oncology",
+      "target_id": "disease_Leukemia",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_COPD",
+      "target_id": "field_Pulmonology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Pulmonology",
+      "target_id": "disease_COPD",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Asthma",
+      "target_id": "field_Pulmonology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Pulmonology",
+      "target_id": "disease_Asthma",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Pneumonia",
+      "target_id": "field_Pulmonology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Pulmonology",
+      "target_id": "disease_Pneumonia",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Pulmonary_Embolism",
+      "target_id": "field_Pulmonology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Pulmonology",
+      "target_id": "disease_Pulmonary_Embolism",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Tuberculosis",
+      "target_id": "field_Pulmonology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Pulmonology",
+      "target_id": "disease_Tuberculosis",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_GERD",
+      "target_id": "field_Gastroenterology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Gastroenterology",
+      "target_id": "disease_GERD",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Peptic_Ulcer",
+      "target_id": "field_Gastroenterology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Gastroenterology",
+      "target_id": "disease_Peptic_Ulcer",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Crohn_Disease",
+      "target_id": "field_Gastroenterology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Gastroenterology",
+      "target_id": "disease_Crohn_Disease",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Hepatitis_B",
+      "target_id": "field_Gastroenterology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Gastroenterology",
+      "target_id": "disease_Hepatitis_B",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Gallstones",
+      "target_id": "field_Gastroenterology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Gastroenterology",
+      "target_id": "disease_Gallstones",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Osteoarthritis",
+      "target_id": "field_Orthopedics",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Orthopedics",
+      "target_id": "disease_Osteoarthritis",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Rheumatoid_Arthritis",
+      "target_id": "field_Orthopedics",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Orthopedics",
+      "target_id": "disease_Rheumatoid_Arthritis",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Osteoporosis",
+      "target_id": "field_Orthopedics",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Orthopedics",
+      "target_id": "disease_Osteoporosis",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Herniated_Disc",
+      "target_id": "field_Orthopedics",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Orthopedics",
+      "target_id": "disease_Herniated_Disc",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Fracture",
+      "target_id": "field_Orthopedics",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Orthopedics",
+      "target_id": "disease_Fracture",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_COVID_19",
+      "target_id": "field_Infectious_Disease",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Infectious_Disease",
+      "target_id": "disease_COVID_19",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Dengue_Fever",
+      "target_id": "field_Infectious_Disease",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Infectious_Disease",
+      "target_id": "disease_Dengue_Fever",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Malaria",
+      "target_id": "field_Infectious_Disease",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Infectious_Disease",
+      "target_id": "disease_Malaria",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Typhoid",
+      "target_id": "field_Infectious_Disease",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Infectious_Disease",
+      "target_id": "disease_Typhoid",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_HIV_AIDS",
+      "target_id": "field_Infectious_Disease",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Infectious_Disease",
+      "target_id": "disease_HIV_AIDS",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Diabetes_Type_2",
+      "target_id": "field_Endocrinology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Endocrinology",
+      "target_id": "disease_Diabetes_Type_2",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Hypothyroidism",
+      "target_id": "field_Endocrinology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Endocrinology",
+      "target_id": "disease_Hypothyroidism",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Hyperthyroidism",
+      "target_id": "field_Endocrinology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Endocrinology",
+      "target_id": "disease_Hyperthyroidism",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Cushing_Syndrome",
+      "target_id": "field_Endocrinology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Endocrinology",
+      "target_id": "disease_Cushing_Syndrome",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Addison_Disease",
+      "target_id": "field_Endocrinology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Endocrinology",
+      "target_id": "disease_Addison_Disease",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Chronic_Kidney_Disease",
+      "target_id": "field_Nephrology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Nephrology",
+      "target_id": "disease_Chronic_Kidney_Disease",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Kidney_Stones",
+      "target_id": "field_Nephrology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Nephrology",
+      "target_id": "disease_Kidney_Stones",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Glomerulonephritis",
+      "target_id": "field_Nephrology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Nephrology",
+      "target_id": "disease_Glomerulonephritis",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_UTI",
+      "target_id": "field_Nephrology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Nephrology",
+      "target_id": "disease_UTI",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Lupus",
+      "target_id": "field_Rheumatology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Rheumatology",
+      "target_id": "disease_Lupus",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Fibromyalgia",
+      "target_id": "field_Rheumatology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Rheumatology",
+      "target_id": "disease_Fibromyalgia",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Gout",
+      "target_id": "field_Rheumatology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Rheumatology",
+      "target_id": "disease_Gout",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Psoriatic_Arthritis",
+      "target_id": "field_Rheumatology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Rheumatology",
+      "target_id": "disease_Psoriatic_Arthritis",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Vasculitis",
+      "target_id": "field_Rheumatology",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "field_Rheumatology",
+      "target_id": "disease_Vasculitis",
+      "edge_type": "disease_to_field",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Hypertension",
+      "target_id": "symptom_headache",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.9
+    },
+    {
+      "source_id": "symptom_headache",
+      "target_id": "disease_Hypertension",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.9
+    },
+    {
+      "source_id": "disease_Hypertension",
+      "target_id": "symptom_dizziness",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.31
+    },
+    {
+      "source_id": "symptom_dizziness",
+      "target_id": "disease_Hypertension",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.31
+    },
+    {
+      "source_id": "disease_Hypertension",
+      "target_id": "symptom_shortness_of_breath",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.8
+    },
+    {
+      "source_id": "symptom_shortness_of_breath",
+      "target_id": "disease_Hypertension",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.8
+    },
+    {
+      "source_id": "disease_Hypertension",
+      "target_id": "symptom_chest_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.78
+    },
+    {
+      "source_id": "symptom_chest_pain",
+      "target_id": "disease_Hypertension",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.78
+    },
+    {
+      "source_id": "disease_Hypertension",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.68
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_Hypertension",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.68
+    },
+    {
+      "source_id": "disease_Arrhythmia",
+      "target_id": "symptom_palpitations",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.49
+    },
+    {
+      "source_id": "symptom_palpitations",
+      "target_id": "disease_Arrhythmia",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.49
+    },
+    {
+      "source_id": "disease_Arrhythmia",
+      "target_id": "symptom_lightheadedness",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.75
+    },
+    {
+      "source_id": "symptom_lightheadedness",
+      "target_id": "disease_Arrhythmia",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.75
+    },
+    {
+      "source_id": "disease_Arrhythmia",
+      "target_id": "symptom_fainting",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.38
+    },
+    {
+      "source_id": "symptom_fainting",
+      "target_id": "disease_Arrhythmia",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.38
+    },
+    {
+      "source_id": "disease_Arrhythmia",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.6
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_Arrhythmia",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Arrhythmia",
+      "target_id": "symptom_shortness_of_breath",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.62
+    },
+    {
+      "source_id": "symptom_shortness_of_breath",
+      "target_id": "disease_Arrhythmia",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.62
+    },
+    {
+      "source_id": "disease_Coronary_Artery_Disease",
+      "target_id": "symptom_chest_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.97
+    },
+    {
+      "source_id": "symptom_chest_pain",
+      "target_id": "disease_Coronary_Artery_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.97
+    },
+    {
+      "source_id": "disease_Coronary_Artery_Disease",
+      "target_id": "symptom_shortness_of_breath",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.91
+    },
+    {
+      "source_id": "symptom_shortness_of_breath",
+      "target_id": "disease_Coronary_Artery_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.91
+    },
+    {
+      "source_id": "disease_Coronary_Artery_Disease",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.48
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_Coronary_Artery_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.48
+    },
+    {
+      "source_id": "disease_Coronary_Artery_Disease",
+      "target_id": "symptom_nausea",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.65
+    },
+    {
+      "source_id": "symptom_nausea",
+      "target_id": "disease_Coronary_Artery_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.65
+    },
+    {
+      "source_id": "disease_Heart_Failure",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.43
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_Heart_Failure",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.43
+    },
+    {
+      "source_id": "disease_Heart_Failure",
+      "target_id": "symptom_shortness_of_breath",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.94
+    },
+    {
+      "source_id": "symptom_shortness_of_breath",
+      "target_id": "disease_Heart_Failure",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.94
+    },
+    {
+      "source_id": "disease_Heart_Failure",
+      "target_id": "symptom_swelling",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.91
+    },
+    {
+      "source_id": "symptom_swelling",
+      "target_id": "disease_Heart_Failure",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.91
+    },
+    {
+      "source_id": "disease_Heart_Failure",
+      "target_id": "symptom_cough",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.51
+    },
+    {
+      "source_id": "symptom_cough",
+      "target_id": "disease_Heart_Failure",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.51
+    },
+    {
+      "source_id": "disease_Heart_Failure",
+      "target_id": "symptom_weight_gain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.75
+    },
+    {
+      "source_id": "symptom_weight_gain",
+      "target_id": "disease_Heart_Failure",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.75
+    },
+    {
+      "source_id": "disease_Atrial_Fibrillation",
+      "target_id": "symptom_palpitations",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.73
+    },
+    {
+      "source_id": "symptom_palpitations",
+      "target_id": "disease_Atrial_Fibrillation",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.73
+    },
+    {
+      "source_id": "disease_Atrial_Fibrillation",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.41
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_Atrial_Fibrillation",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.41
+    },
+    {
+      "source_id": "disease_Atrial_Fibrillation",
+      "target_id": "symptom_dizziness",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.83
+    },
+    {
+      "source_id": "symptom_dizziness",
+      "target_id": "disease_Atrial_Fibrillation",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.83
+    },
+    {
+      "source_id": "disease_Atrial_Fibrillation",
+      "target_id": "symptom_shortness_of_breath",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.68
+    },
+    {
+      "source_id": "symptom_shortness_of_breath",
+      "target_id": "disease_Atrial_Fibrillation",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.68
+    },
+    {
+      "source_id": "disease_Myocarditis",
+      "target_id": "symptom_chest_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.85
+    },
+    {
+      "source_id": "symptom_chest_pain",
+      "target_id": "disease_Myocarditis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.85
+    },
+    {
+      "source_id": "disease_Myocarditis",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.67
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_Myocarditis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.67
+    },
+    {
+      "source_id": "disease_Myocarditis",
+      "target_id": "symptom_shortness_of_breath",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.3
+    },
+    {
+      "source_id": "symptom_shortness_of_breath",
+      "target_id": "disease_Myocarditis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.3
+    },
+    {
+      "source_id": "disease_Myocarditis",
+      "target_id": "symptom_fever",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.53
+    },
+    {
+      "source_id": "symptom_fever",
+      "target_id": "disease_Myocarditis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.53
+    },
+    {
+      "source_id": "disease_Myocarditis",
+      "target_id": "symptom_joint_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.31
+    },
+    {
+      "source_id": "symptom_joint_pain",
+      "target_id": "disease_Myocarditis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.31
+    },
+    {
+      "source_id": "disease_Migraine",
+      "target_id": "symptom_severe_headache",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.95
+    },
+    {
+      "source_id": "symptom_severe_headache",
+      "target_id": "disease_Migraine",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.95
+    },
+    {
+      "source_id": "disease_Migraine",
+      "target_id": "symptom_nausea",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.92
+    },
+    {
+      "source_id": "symptom_nausea",
+      "target_id": "disease_Migraine",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.92
+    },
+    {
+      "source_id": "disease_Migraine",
+      "target_id": "symptom_sensitivity_to_light",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.88
+    },
+    {
+      "source_id": "symptom_sensitivity_to_light",
+      "target_id": "disease_Migraine",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.88
+    },
+    {
+      "source_id": "disease_Migraine",
+      "target_id": "symptom_visual_disturbances",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.52
+    },
+    {
+      "source_id": "symptom_visual_disturbances",
+      "target_id": "disease_Migraine",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.52
+    },
+    {
+      "source_id": "disease_Migraine",
+      "target_id": "symptom_dizziness",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.34
+    },
+    {
+      "source_id": "symptom_dizziness",
+      "target_id": "disease_Migraine",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.34
+    },
+    {
+      "source_id": "disease_Epilepsy",
+      "target_id": "symptom_seizures",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.91
+    },
+    {
+      "source_id": "symptom_seizures",
+      "target_id": "disease_Epilepsy",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.91
+    },
+    {
+      "source_id": "disease_Epilepsy",
+      "target_id": "symptom_confusion",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.96
+    },
+    {
+      "source_id": "symptom_confusion",
+      "target_id": "disease_Epilepsy",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.96
+    },
+    {
+      "source_id": "disease_Epilepsy",
+      "target_id": "symptom_staring",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.36
+    },
+    {
+      "source_id": "symptom_staring",
+      "target_id": "disease_Epilepsy",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.36
+    },
+    {
+      "source_id": "disease_Epilepsy",
+      "target_id": "symptom_muscle_jerking",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.64
+    },
+    {
+      "source_id": "symptom_muscle_jerking",
+      "target_id": "disease_Epilepsy",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.64
+    },
+    {
+      "source_id": "disease_Epilepsy",
+      "target_id": "symptom_loss_of_consciousness",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.35
+    },
+    {
+      "source_id": "symptom_loss_of_consciousness",
+      "target_id": "disease_Epilepsy",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.35
+    },
+    {
+      "source_id": "disease_Parkinson_Disease",
+      "target_id": "symptom_tremor",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.83
+    },
+    {
+      "source_id": "symptom_tremor",
+      "target_id": "disease_Parkinson_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.83
+    },
+    {
+      "source_id": "disease_Parkinson_Disease",
+      "target_id": "symptom_stiffness",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.84
+    },
+    {
+      "source_id": "symptom_stiffness",
+      "target_id": "disease_Parkinson_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.84
+    },
+    {
+      "source_id": "disease_Parkinson_Disease",
+      "target_id": "symptom_slow_movement",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.39
+    },
+    {
+      "source_id": "symptom_slow_movement",
+      "target_id": "disease_Parkinson_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.39
+    },
+    {
+      "source_id": "disease_Parkinson_Disease",
+      "target_id": "symptom_balance_problems",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.63
+    },
+    {
+      "source_id": "symptom_balance_problems",
+      "target_id": "disease_Parkinson_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.63
+    },
+    {
+      "source_id": "disease_Parkinson_Disease",
+      "target_id": "symptom_speech_changes",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.68
+    },
+    {
+      "source_id": "symptom_speech_changes",
+      "target_id": "disease_Parkinson_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.68
+    },
+    {
+      "source_id": "disease_Multiple_Sclerosis",
+      "target_id": "symptom_numbness",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.49
+    },
+    {
+      "source_id": "symptom_numbness",
+      "target_id": "disease_Multiple_Sclerosis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.49
+    },
+    {
+      "source_id": "disease_Multiple_Sclerosis",
+      "target_id": "symptom_weakness",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.91
+    },
+    {
+      "source_id": "symptom_weakness",
+      "target_id": "disease_Multiple_Sclerosis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.91
+    },
+    {
+      "source_id": "disease_Multiple_Sclerosis",
+      "target_id": "symptom_vision_problems",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.6
+    },
+    {
+      "source_id": "symptom_vision_problems",
+      "target_id": "disease_Multiple_Sclerosis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Multiple_Sclerosis",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.45
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_Multiple_Sclerosis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Multiple_Sclerosis",
+      "target_id": "symptom_balance_issues",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.68
+    },
+    {
+      "source_id": "symptom_balance_issues",
+      "target_id": "disease_Multiple_Sclerosis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.68
+    },
+    {
+      "source_id": "disease_Stroke",
+      "target_id": "symptom_face_drooping",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.81
+    },
+    {
+      "source_id": "symptom_face_drooping",
+      "target_id": "disease_Stroke",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.81
+    },
+    {
+      "source_id": "disease_Stroke",
+      "target_id": "symptom_arm_weakness",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.44
+    },
+    {
+      "source_id": "symptom_arm_weakness",
+      "target_id": "disease_Stroke",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.44
+    },
+    {
+      "source_id": "disease_Stroke",
+      "target_id": "symptom_speech_difficulty",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.52
+    },
+    {
+      "source_id": "symptom_speech_difficulty",
+      "target_id": "disease_Stroke",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.52
+    },
+    {
+      "source_id": "disease_Stroke",
+      "target_id": "symptom_confusion",
+      "edge_type": "disease_to_symptom",
+      "weight": 1.0
+    },
+    {
+      "source_id": "symptom_confusion",
+      "target_id": "disease_Stroke",
+      "edge_type": "disease_to_symptom",
+      "weight": 1.0
+    },
+    {
+      "source_id": "disease_Stroke",
+      "target_id": "symptom_vision_loss",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.75
+    },
+    {
+      "source_id": "symptom_vision_loss",
+      "target_id": "disease_Stroke",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.75
+    },
+    {
+      "source_id": "disease_Alzheimer_Disease",
+      "target_id": "symptom_memory_loss",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.61
+    },
+    {
+      "source_id": "symptom_memory_loss",
+      "target_id": "disease_Alzheimer_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.61
+    },
+    {
+      "source_id": "disease_Alzheimer_Disease",
+      "target_id": "symptom_confusion",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.66
+    },
+    {
+      "source_id": "symptom_confusion",
+      "target_id": "disease_Alzheimer_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.66
+    },
+    {
+      "source_id": "disease_Alzheimer_Disease",
+      "target_id": "symptom_disorientation",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.38
+    },
+    {
+      "source_id": "symptom_disorientation",
+      "target_id": "disease_Alzheimer_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.38
+    },
+    {
+      "source_id": "disease_Alzheimer_Disease",
+      "target_id": "symptom_behavior_changes",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.46
+    },
+    {
+      "source_id": "symptom_behavior_changes",
+      "target_id": "disease_Alzheimer_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.46
+    },
+    {
+      "source_id": "disease_Alzheimer_Disease",
+      "target_id": "symptom_language_problems",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.54
+    },
+    {
+      "source_id": "symptom_language_problems",
+      "target_id": "disease_Alzheimer_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.54
+    },
+    {
+      "source_id": "disease_Lung_Cancer",
+      "target_id": "symptom_persistent_cough",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.71
+    },
+    {
+      "source_id": "symptom_persistent_cough",
+      "target_id": "disease_Lung_Cancer",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.71
+    },
+    {
+      "source_id": "disease_Lung_Cancer",
+      "target_id": "symptom_coughing_blood",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.46
+    },
+    {
+      "source_id": "symptom_coughing_blood",
+      "target_id": "disease_Lung_Cancer",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.46
+    },
+    {
+      "source_id": "disease_Lung_Cancer",
+      "target_id": "symptom_chest_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.45
+    },
+    {
+      "source_id": "symptom_chest_pain",
+      "target_id": "disease_Lung_Cancer",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Lung_Cancer",
+      "target_id": "symptom_weight_loss",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.35
+    },
+    {
+      "source_id": "symptom_weight_loss",
+      "target_id": "disease_Lung_Cancer",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.35
+    },
+    {
+      "source_id": "disease_Lung_Cancer",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.74
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_Lung_Cancer",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.74
+    },
+    {
+      "source_id": "disease_Breast_Cancer",
+      "target_id": "symptom_breast_lump",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.46
+    },
+    {
+      "source_id": "symptom_breast_lump",
+      "target_id": "disease_Breast_Cancer",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.46
+    },
+    {
+      "source_id": "disease_Breast_Cancer",
+      "target_id": "symptom_skin_changes",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.93
+    },
+    {
+      "source_id": "symptom_skin_changes",
+      "target_id": "disease_Breast_Cancer",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.93
+    },
+    {
+      "source_id": "disease_Breast_Cancer",
+      "target_id": "symptom_nipple_discharge",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.9
+    },
+    {
+      "source_id": "symptom_nipple_discharge",
+      "target_id": "disease_Breast_Cancer",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.9
+    },
+    {
+      "source_id": "disease_Breast_Cancer",
+      "target_id": "symptom_breast_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.35
+    },
+    {
+      "source_id": "symptom_breast_pain",
+      "target_id": "disease_Breast_Cancer",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.35
+    },
+    {
+      "source_id": "disease_Breast_Cancer",
+      "target_id": "symptom_swelling",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.47
+    },
+    {
+      "source_id": "symptom_swelling",
+      "target_id": "disease_Breast_Cancer",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.47
+    },
+    {
+      "source_id": "disease_Colorectal_Cancer",
+      "target_id": "symptom_rectal_bleeding",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.77
+    },
+    {
+      "source_id": "symptom_rectal_bleeding",
+      "target_id": "disease_Colorectal_Cancer",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.77
+    },
+    {
+      "source_id": "disease_Colorectal_Cancer",
+      "target_id": "symptom_abdominal_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.45
+    },
+    {
+      "source_id": "symptom_abdominal_pain",
+      "target_id": "disease_Colorectal_Cancer",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Colorectal_Cancer",
+      "target_id": "symptom_change_in_bowel_habits",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.39
+    },
+    {
+      "source_id": "symptom_change_in_bowel_habits",
+      "target_id": "disease_Colorectal_Cancer",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.39
+    },
+    {
+      "source_id": "disease_Colorectal_Cancer",
+      "target_id": "symptom_weight_loss",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.95
+    },
+    {
+      "source_id": "symptom_weight_loss",
+      "target_id": "disease_Colorectal_Cancer",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.95
+    },
+    {
+      "source_id": "disease_Colorectal_Cancer",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.7
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_Colorectal_Cancer",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Prostate_Cancer",
+      "target_id": "symptom_urinary_problems",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.63
+    },
+    {
+      "source_id": "symptom_urinary_problems",
+      "target_id": "disease_Prostate_Cancer",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.63
+    },
+    {
+      "source_id": "disease_Prostate_Cancer",
+      "target_id": "symptom_blood_in_urine",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.85
+    },
+    {
+      "source_id": "symptom_blood_in_urine",
+      "target_id": "disease_Prostate_Cancer",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.85
+    },
+    {
+      "source_id": "disease_Prostate_Cancer",
+      "target_id": "symptom_pelvic_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.87
+    },
+    {
+      "source_id": "symptom_pelvic_pain",
+      "target_id": "disease_Prostate_Cancer",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.87
+    },
+    {
+      "source_id": "disease_Prostate_Cancer",
+      "target_id": "symptom_bone_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.43
+    },
+    {
+      "source_id": "symptom_bone_pain",
+      "target_id": "disease_Prostate_Cancer",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.43
+    },
+    {
+      "source_id": "disease_Prostate_Cancer",
+      "target_id": "symptom_erectile_dysfunction",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.37
+    },
+    {
+      "source_id": "symptom_erectile_dysfunction",
+      "target_id": "disease_Prostate_Cancer",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.37
+    },
+    {
+      "source_id": "disease_Leukemia",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.6
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_Leukemia",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Leukemia",
+      "target_id": "symptom_frequent_infections",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.6
+    },
+    {
+      "source_id": "symptom_frequent_infections",
+      "target_id": "disease_Leukemia",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Leukemia",
+      "target_id": "symptom_easy_bruising",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.63
+    },
+    {
+      "source_id": "symptom_easy_bruising",
+      "target_id": "disease_Leukemia",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.63
+    },
+    {
+      "source_id": "disease_Leukemia",
+      "target_id": "symptom_weight_loss",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.81
+    },
+    {
+      "source_id": "symptom_weight_loss",
+      "target_id": "disease_Leukemia",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.81
+    },
+    {
+      "source_id": "disease_Leukemia",
+      "target_id": "symptom_night_sweats",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.77
+    },
+    {
+      "source_id": "symptom_night_sweats",
+      "target_id": "disease_Leukemia",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.77
+    },
+    {
+      "source_id": "disease_COPD",
+      "target_id": "symptom_chronic_cough",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.99
+    },
+    {
+      "source_id": "symptom_chronic_cough",
+      "target_id": "disease_COPD",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.99
+    },
+    {
+      "source_id": "disease_COPD",
+      "target_id": "symptom_shortness_of_breath",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.37
+    },
+    {
+      "source_id": "symptom_shortness_of_breath",
+      "target_id": "disease_COPD",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.37
+    },
+    {
+      "source_id": "disease_COPD",
+      "target_id": "symptom_wheezing",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.58
+    },
+    {
+      "source_id": "symptom_wheezing",
+      "target_id": "disease_COPD",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.58
+    },
+    {
+      "source_id": "disease_COPD",
+      "target_id": "symptom_mucus_production",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.54
+    },
+    {
+      "source_id": "symptom_mucus_production",
+      "target_id": "disease_COPD",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.54
+    },
+    {
+      "source_id": "disease_COPD",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.9
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_COPD",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.9
+    },
+    {
+      "source_id": "disease_Asthma",
+      "target_id": "symptom_wheezing",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.47
+    },
+    {
+      "source_id": "symptom_wheezing",
+      "target_id": "disease_Asthma",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.47
+    },
+    {
+      "source_id": "disease_Asthma",
+      "target_id": "symptom_shortness_of_breath",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.43
+    },
+    {
+      "source_id": "symptom_shortness_of_breath",
+      "target_id": "disease_Asthma",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.43
+    },
+    {
+      "source_id": "disease_Asthma",
+      "target_id": "symptom_chest_tightness",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.61
+    },
+    {
+      "source_id": "symptom_chest_tightness",
+      "target_id": "disease_Asthma",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.61
+    },
+    {
+      "source_id": "disease_Asthma",
+      "target_id": "symptom_coughing",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.6
+    },
+    {
+      "source_id": "symptom_coughing",
+      "target_id": "disease_Asthma",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Asthma",
+      "target_id": "symptom_difficulty_sleeping",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.49
+    },
+    {
+      "source_id": "symptom_difficulty_sleeping",
+      "target_id": "disease_Asthma",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.49
+    },
+    {
+      "source_id": "disease_Pneumonia",
+      "target_id": "symptom_high_fever",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.47
+    },
+    {
+      "source_id": "symptom_high_fever",
+      "target_id": "disease_Pneumonia",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.47
+    },
+    {
+      "source_id": "disease_Pneumonia",
+      "target_id": "symptom_cough",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.95
+    },
+    {
+      "source_id": "symptom_cough",
+      "target_id": "disease_Pneumonia",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.95
+    },
+    {
+      "source_id": "disease_Pneumonia",
+      "target_id": "symptom_chest_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.61
+    },
+    {
+      "source_id": "symptom_chest_pain",
+      "target_id": "disease_Pneumonia",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.61
+    },
+    {
+      "source_id": "disease_Pneumonia",
+      "target_id": "symptom_shortness_of_breath",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.9
+    },
+    {
+      "source_id": "symptom_shortness_of_breath",
+      "target_id": "disease_Pneumonia",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.9
+    },
+    {
+      "source_id": "disease_Pneumonia",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.69
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_Pneumonia",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.69
+    },
+    {
+      "source_id": "disease_Pulmonary_Embolism",
+      "target_id": "symptom_sudden_shortness_of_breath",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.34
+    },
+    {
+      "source_id": "symptom_sudden_shortness_of_breath",
+      "target_id": "disease_Pulmonary_Embolism",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.34
+    },
+    {
+      "source_id": "disease_Pulmonary_Embolism",
+      "target_id": "symptom_chest_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 1.0
+    },
+    {
+      "source_id": "symptom_chest_pain",
+      "target_id": "disease_Pulmonary_Embolism",
+      "edge_type": "disease_to_symptom",
+      "weight": 1.0
+    },
+    {
+      "source_id": "disease_Pulmonary_Embolism",
+      "target_id": "symptom_cough",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.89
+    },
+    {
+      "source_id": "symptom_cough",
+      "target_id": "disease_Pulmonary_Embolism",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.89
+    },
+    {
+      "source_id": "disease_Pulmonary_Embolism",
+      "target_id": "symptom_lightheadedness",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.98
+    },
+    {
+      "source_id": "symptom_lightheadedness",
+      "target_id": "disease_Pulmonary_Embolism",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.98
+    },
+    {
+      "source_id": "disease_Pulmonary_Embolism",
+      "target_id": "symptom_rapid_heartbeat",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.95
+    },
+    {
+      "source_id": "symptom_rapid_heartbeat",
+      "target_id": "disease_Pulmonary_Embolism",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.95
+    },
+    {
+      "source_id": "disease_Tuberculosis",
+      "target_id": "symptom_chronic_cough",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.89
+    },
+    {
+      "source_id": "symptom_chronic_cough",
+      "target_id": "disease_Tuberculosis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.89
+    },
+    {
+      "source_id": "disease_Tuberculosis",
+      "target_id": "symptom_coughing_blood",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.42
+    },
+    {
+      "source_id": "symptom_coughing_blood",
+      "target_id": "disease_Tuberculosis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.42
+    },
+    {
+      "source_id": "disease_Tuberculosis",
+      "target_id": "symptom_night_sweats",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.64
+    },
+    {
+      "source_id": "symptom_night_sweats",
+      "target_id": "disease_Tuberculosis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.64
+    },
+    {
+      "source_id": "disease_Tuberculosis",
+      "target_id": "symptom_weight_loss",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.45
+    },
+    {
+      "source_id": "symptom_weight_loss",
+      "target_id": "disease_Tuberculosis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Tuberculosis",
+      "target_id": "symptom_fever",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.58
+    },
+    {
+      "source_id": "symptom_fever",
+      "target_id": "disease_Tuberculosis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.58
+    },
+    {
+      "source_id": "disease_GERD",
+      "target_id": "symptom_heartburn",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.34
+    },
+    {
+      "source_id": "symptom_heartburn",
+      "target_id": "disease_GERD",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.34
+    },
+    {
+      "source_id": "disease_GERD",
+      "target_id": "symptom_acid_reflux",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.57
+    },
+    {
+      "source_id": "symptom_acid_reflux",
+      "target_id": "disease_GERD",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.57
+    },
+    {
+      "source_id": "disease_GERD",
+      "target_id": "symptom_difficulty_swallowing",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.99
+    },
+    {
+      "source_id": "symptom_difficulty_swallowing",
+      "target_id": "disease_GERD",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.99
+    },
+    {
+      "source_id": "disease_GERD",
+      "target_id": "symptom_chronic_cough",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.49
+    },
+    {
+      "source_id": "symptom_chronic_cough",
+      "target_id": "disease_GERD",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.49
+    },
+    {
+      "source_id": "disease_GERD",
+      "target_id": "symptom_chest_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.85
+    },
+    {
+      "source_id": "symptom_chest_pain",
+      "target_id": "disease_GERD",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.85
+    },
+    {
+      "source_id": "disease_Peptic_Ulcer",
+      "target_id": "symptom_stomach_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.62
+    },
+    {
+      "source_id": "symptom_stomach_pain",
+      "target_id": "disease_Peptic_Ulcer",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.62
+    },
+    {
+      "source_id": "disease_Peptic_Ulcer",
+      "target_id": "symptom_nausea",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.6
+    },
+    {
+      "source_id": "symptom_nausea",
+      "target_id": "disease_Peptic_Ulcer",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Peptic_Ulcer",
+      "target_id": "symptom_indigestion",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.97
+    },
+    {
+      "source_id": "symptom_indigestion",
+      "target_id": "disease_Peptic_Ulcer",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.97
+    },
+    {
+      "source_id": "disease_Peptic_Ulcer",
+      "target_id": "symptom_bloating",
+      "edge_type": "disease_to_symptom",
+      "weight": 1.0
+    },
+    {
+      "source_id": "symptom_bloating",
+      "target_id": "disease_Peptic_Ulcer",
+      "edge_type": "disease_to_symptom",
+      "weight": 1.0
+    },
+    {
+      "source_id": "disease_Peptic_Ulcer",
+      "target_id": "symptom_loss_of_appetite",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.69
+    },
+    {
+      "source_id": "symptom_loss_of_appetite",
+      "target_id": "disease_Peptic_Ulcer",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.69
+    },
+    {
+      "source_id": "disease_Crohn_Disease",
+      "target_id": "symptom_abdominal_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.8
+    },
+    {
+      "source_id": "symptom_abdominal_pain",
+      "target_id": "disease_Crohn_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.8
+    },
+    {
+      "source_id": "disease_Crohn_Disease",
+      "target_id": "symptom_diarrhea",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.41
+    },
+    {
+      "source_id": "symptom_diarrhea",
+      "target_id": "disease_Crohn_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.41
+    },
+    {
+      "source_id": "disease_Crohn_Disease",
+      "target_id": "symptom_weight_loss",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.51
+    },
+    {
+      "source_id": "symptom_weight_loss",
+      "target_id": "disease_Crohn_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.51
+    },
+    {
+      "source_id": "disease_Crohn_Disease",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.98
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_Crohn_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.98
+    },
+    {
+      "source_id": "disease_Crohn_Disease",
+      "target_id": "symptom_blood_in_stool",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.71
+    },
+    {
+      "source_id": "symptom_blood_in_stool",
+      "target_id": "disease_Crohn_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.71
+    },
+    {
+      "source_id": "disease_Hepatitis_B",
+      "target_id": "symptom_jaundice",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.68
+    },
+    {
+      "source_id": "symptom_jaundice",
+      "target_id": "disease_Hepatitis_B",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.68
+    },
+    {
+      "source_id": "disease_Hepatitis_B",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.82
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_Hepatitis_B",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.82
+    },
+    {
+      "source_id": "disease_Hepatitis_B",
+      "target_id": "symptom_abdominal_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.34
+    },
+    {
+      "source_id": "symptom_abdominal_pain",
+      "target_id": "disease_Hepatitis_B",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.34
+    },
+    {
+      "source_id": "disease_Hepatitis_B",
+      "target_id": "symptom_nausea",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.71
+    },
+    {
+      "source_id": "symptom_nausea",
+      "target_id": "disease_Hepatitis_B",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.71
+    },
+    {
+      "source_id": "disease_Hepatitis_B",
+      "target_id": "symptom_dark_urine",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.65
+    },
+    {
+      "source_id": "symptom_dark_urine",
+      "target_id": "disease_Hepatitis_B",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.65
+    },
+    {
+      "source_id": "disease_Gallstones",
+      "target_id": "symptom_abdominal_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.9
+    },
+    {
+      "source_id": "symptom_abdominal_pain",
+      "target_id": "disease_Gallstones",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.9
+    },
+    {
+      "source_id": "disease_Gallstones",
+      "target_id": "symptom_jaundice",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.41
+    },
+    {
+      "source_id": "symptom_jaundice",
+      "target_id": "disease_Gallstones",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.41
+    },
+    {
+      "source_id": "disease_Gallstones",
+      "target_id": "symptom_nausea",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.97
+    },
+    {
+      "source_id": "symptom_nausea",
+      "target_id": "disease_Gallstones",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.97
+    },
+    {
+      "source_id": "disease_Gallstones",
+      "target_id": "symptom_fever",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.36
+    },
+    {
+      "source_id": "symptom_fever",
+      "target_id": "disease_Gallstones",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.36
+    },
+    {
+      "source_id": "disease_Gallstones",
+      "target_id": "symptom_back_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.43
+    },
+    {
+      "source_id": "symptom_back_pain",
+      "target_id": "disease_Gallstones",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.43
+    },
+    {
+      "source_id": "disease_Osteoarthritis",
+      "target_id": "symptom_joint_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.72
+    },
+    {
+      "source_id": "symptom_joint_pain",
+      "target_id": "disease_Osteoarthritis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.72
+    },
+    {
+      "source_id": "disease_Osteoarthritis",
+      "target_id": "symptom_stiffness",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.77
+    },
+    {
+      "source_id": "symptom_stiffness",
+      "target_id": "disease_Osteoarthritis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.77
+    },
+    {
+      "source_id": "disease_Osteoarthritis",
+      "target_id": "symptom_swelling",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.46
+    },
+    {
+      "source_id": "symptom_swelling",
+      "target_id": "disease_Osteoarthritis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.46
+    },
+    {
+      "source_id": "disease_Osteoarthritis",
+      "target_id": "symptom_decreased_flexibility",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.38
+    },
+    {
+      "source_id": "symptom_decreased_flexibility",
+      "target_id": "disease_Osteoarthritis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.38
+    },
+    {
+      "source_id": "disease_Osteoarthritis",
+      "target_id": "symptom_grinding_sensation",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.92
+    },
+    {
+      "source_id": "symptom_grinding_sensation",
+      "target_id": "disease_Osteoarthritis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.92
+    },
+    {
+      "source_id": "disease_Rheumatoid_Arthritis",
+      "target_id": "symptom_joint_swelling",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.47
+    },
+    {
+      "source_id": "symptom_joint_swelling",
+      "target_id": "disease_Rheumatoid_Arthritis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.47
+    },
+    {
+      "source_id": "disease_Rheumatoid_Arthritis",
+      "target_id": "symptom_joint_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.72
+    },
+    {
+      "source_id": "symptom_joint_pain",
+      "target_id": "disease_Rheumatoid_Arthritis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.72
+    },
+    {
+      "source_id": "disease_Rheumatoid_Arthritis",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.73
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_Rheumatoid_Arthritis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.73
+    },
+    {
+      "source_id": "disease_Rheumatoid_Arthritis",
+      "target_id": "symptom_fever",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.59
+    },
+    {
+      "source_id": "symptom_fever",
+      "target_id": "disease_Rheumatoid_Arthritis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.59
+    },
+    {
+      "source_id": "disease_Rheumatoid_Arthritis",
+      "target_id": "symptom_joint_deformity",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.71
+    },
+    {
+      "source_id": "symptom_joint_deformity",
+      "target_id": "disease_Rheumatoid_Arthritis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.71
+    },
+    {
+      "source_id": "disease_Osteoporosis",
+      "target_id": "symptom_bone_fractures",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.67
+    },
+    {
+      "source_id": "symptom_bone_fractures",
+      "target_id": "disease_Osteoporosis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.67
+    },
+    {
+      "source_id": "disease_Osteoporosis",
+      "target_id": "symptom_back_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.95
+    },
+    {
+      "source_id": "symptom_back_pain",
+      "target_id": "disease_Osteoporosis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.95
+    },
+    {
+      "source_id": "disease_Osteoporosis",
+      "target_id": "symptom_stooped_posture",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.44
+    },
+    {
+      "source_id": "symptom_stooped_posture",
+      "target_id": "disease_Osteoporosis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.44
+    },
+    {
+      "source_id": "disease_Osteoporosis",
+      "target_id": "symptom_loss_of_height",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.8
+    },
+    {
+      "source_id": "symptom_loss_of_height",
+      "target_id": "disease_Osteoporosis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.8
+    },
+    {
+      "source_id": "disease_Osteoporosis",
+      "target_id": "symptom_bone_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.47
+    },
+    {
+      "source_id": "symptom_bone_pain",
+      "target_id": "disease_Osteoporosis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.47
+    },
+    {
+      "source_id": "disease_Herniated_Disc",
+      "target_id": "symptom_back_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.58
+    },
+    {
+      "source_id": "symptom_back_pain",
+      "target_id": "disease_Herniated_Disc",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.58
+    },
+    {
+      "source_id": "disease_Herniated_Disc",
+      "target_id": "symptom_leg_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.77
+    },
+    {
+      "source_id": "symptom_leg_pain",
+      "target_id": "disease_Herniated_Disc",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.77
+    },
+    {
+      "source_id": "disease_Herniated_Disc",
+      "target_id": "symptom_numbness",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.51
+    },
+    {
+      "source_id": "symptom_numbness",
+      "target_id": "disease_Herniated_Disc",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.51
+    },
+    {
+      "source_id": "disease_Herniated_Disc",
+      "target_id": "symptom_muscle_weakness",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.52
+    },
+    {
+      "source_id": "symptom_muscle_weakness",
+      "target_id": "disease_Herniated_Disc",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.52
+    },
+    {
+      "source_id": "disease_Herniated_Disc",
+      "target_id": "symptom_tingling",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.83
+    },
+    {
+      "source_id": "symptom_tingling",
+      "target_id": "disease_Herniated_Disc",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.83
+    },
+    {
+      "source_id": "disease_Fracture",
+      "target_id": "symptom_severe_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.35
+    },
+    {
+      "source_id": "symptom_severe_pain",
+      "target_id": "disease_Fracture",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.35
+    },
+    {
+      "source_id": "disease_Fracture",
+      "target_id": "symptom_swelling",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.62
+    },
+    {
+      "source_id": "symptom_swelling",
+      "target_id": "disease_Fracture",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.62
+    },
+    {
+      "source_id": "disease_Fracture",
+      "target_id": "symptom_deformity",
+      "edge_type": "disease_to_symptom",
+      "weight": 1.0
+    },
+    {
+      "source_id": "symptom_deformity",
+      "target_id": "disease_Fracture",
+      "edge_type": "disease_to_symptom",
+      "weight": 1.0
+    },
+    {
+      "source_id": "disease_Fracture",
+      "target_id": "symptom_inability_to_move",
+      "edge_type": "disease_to_symptom",
+      "weight": 1.0
+    },
+    {
+      "source_id": "symptom_inability_to_move",
+      "target_id": "disease_Fracture",
+      "edge_type": "disease_to_symptom",
+      "weight": 1.0
+    },
+    {
+      "source_id": "disease_Fracture",
+      "target_id": "symptom_bruising",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.35
+    },
+    {
+      "source_id": "symptom_bruising",
+      "target_id": "disease_Fracture",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.35
+    },
+    {
+      "source_id": "disease_COVID_19",
+      "target_id": "symptom_fever",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.45
+    },
+    {
+      "source_id": "symptom_fever",
+      "target_id": "disease_COVID_19",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_COVID_19",
+      "target_id": "symptom_cough",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.49
+    },
+    {
+      "source_id": "symptom_cough",
+      "target_id": "disease_COVID_19",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.49
+    },
+    {
+      "source_id": "disease_COVID_19",
+      "target_id": "symptom_shortness_of_breath",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.95
+    },
+    {
+      "source_id": "symptom_shortness_of_breath",
+      "target_id": "disease_COVID_19",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.95
+    },
+    {
+      "source_id": "disease_COVID_19",
+      "target_id": "symptom_loss_of_taste",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.92
+    },
+    {
+      "source_id": "symptom_loss_of_taste",
+      "target_id": "disease_COVID_19",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.92
+    },
+    {
+      "source_id": "disease_COVID_19",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.92
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_COVID_19",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.92
+    },
+    {
+      "source_id": "disease_Dengue_Fever",
+      "target_id": "symptom_high_fever",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.56
+    },
+    {
+      "source_id": "symptom_high_fever",
+      "target_id": "disease_Dengue_Fever",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.56
+    },
+    {
+      "source_id": "disease_Dengue_Fever",
+      "target_id": "symptom_severe_headache",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.41
+    },
+    {
+      "source_id": "symptom_severe_headache",
+      "target_id": "disease_Dengue_Fever",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.41
+    },
+    {
+      "source_id": "disease_Dengue_Fever",
+      "target_id": "symptom_joint_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.88
+    },
+    {
+      "source_id": "symptom_joint_pain",
+      "target_id": "disease_Dengue_Fever",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.88
+    },
+    {
+      "source_id": "disease_Dengue_Fever",
+      "target_id": "symptom_rash",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.79
+    },
+    {
+      "source_id": "symptom_rash",
+      "target_id": "disease_Dengue_Fever",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.79
+    },
+    {
+      "source_id": "disease_Dengue_Fever",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.73
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_Dengue_Fever",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.73
+    },
+    {
+      "source_id": "disease_Malaria",
+      "target_id": "symptom_fever",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.99
+    },
+    {
+      "source_id": "symptom_fever",
+      "target_id": "disease_Malaria",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.99
+    },
+    {
+      "source_id": "disease_Malaria",
+      "target_id": "symptom_chills",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.76
+    },
+    {
+      "source_id": "symptom_chills",
+      "target_id": "disease_Malaria",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.76
+    },
+    {
+      "source_id": "disease_Malaria",
+      "target_id": "symptom_sweating",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.31
+    },
+    {
+      "source_id": "symptom_sweating",
+      "target_id": "disease_Malaria",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.31
+    },
+    {
+      "source_id": "disease_Malaria",
+      "target_id": "symptom_headache",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.87
+    },
+    {
+      "source_id": "symptom_headache",
+      "target_id": "disease_Malaria",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.87
+    },
+    {
+      "source_id": "disease_Malaria",
+      "target_id": "symptom_nausea",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.51
+    },
+    {
+      "source_id": "symptom_nausea",
+      "target_id": "disease_Malaria",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.51
+    },
+    {
+      "source_id": "disease_Typhoid",
+      "target_id": "symptom_high_fever",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.76
+    },
+    {
+      "source_id": "symptom_high_fever",
+      "target_id": "disease_Typhoid",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.76
+    },
+    {
+      "source_id": "disease_Typhoid",
+      "target_id": "symptom_abdominal_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.96
+    },
+    {
+      "source_id": "symptom_abdominal_pain",
+      "target_id": "disease_Typhoid",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.96
+    },
+    {
+      "source_id": "disease_Typhoid",
+      "target_id": "symptom_rash",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.39
+    },
+    {
+      "source_id": "symptom_rash",
+      "target_id": "disease_Typhoid",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.39
+    },
+    {
+      "source_id": "disease_Typhoid",
+      "target_id": "symptom_weakness",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.38
+    },
+    {
+      "source_id": "symptom_weakness",
+      "target_id": "disease_Typhoid",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.38
+    },
+    {
+      "source_id": "disease_Typhoid",
+      "target_id": "symptom_headache",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.37
+    },
+    {
+      "source_id": "symptom_headache",
+      "target_id": "disease_Typhoid",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.37
+    },
+    {
+      "source_id": "disease_HIV_AIDS",
+      "target_id": "symptom_fever",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.69
+    },
+    {
+      "source_id": "symptom_fever",
+      "target_id": "disease_HIV_AIDS",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.69
+    },
+    {
+      "source_id": "disease_HIV_AIDS",
+      "target_id": "symptom_weight_loss",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.49
+    },
+    {
+      "source_id": "symptom_weight_loss",
+      "target_id": "disease_HIV_AIDS",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.49
+    },
+    {
+      "source_id": "disease_HIV_AIDS",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.72
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_HIV_AIDS",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.72
+    },
+    {
+      "source_id": "disease_HIV_AIDS",
+      "target_id": "symptom_night_sweats",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.8
+    },
+    {
+      "source_id": "symptom_night_sweats",
+      "target_id": "disease_HIV_AIDS",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.8
+    },
+    {
+      "source_id": "disease_HIV_AIDS",
+      "target_id": "symptom_opportunistic_infections",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.44
+    },
+    {
+      "source_id": "symptom_opportunistic_infections",
+      "target_id": "disease_HIV_AIDS",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.44
+    },
+    {
+      "source_id": "disease_Diabetes_Type_2",
+      "target_id": "symptom_increased_thirst",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.74
+    },
+    {
+      "source_id": "symptom_increased_thirst",
+      "target_id": "disease_Diabetes_Type_2",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.74
+    },
+    {
+      "source_id": "disease_Diabetes_Type_2",
+      "target_id": "symptom_frequent_urination",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.48
+    },
+    {
+      "source_id": "symptom_frequent_urination",
+      "target_id": "disease_Diabetes_Type_2",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.48
+    },
+    {
+      "source_id": "disease_Diabetes_Type_2",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.64
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_Diabetes_Type_2",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.64
+    },
+    {
+      "source_id": "disease_Diabetes_Type_2",
+      "target_id": "symptom_blurred_vision",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.93
+    },
+    {
+      "source_id": "symptom_blurred_vision",
+      "target_id": "disease_Diabetes_Type_2",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.93
+    },
+    {
+      "source_id": "disease_Diabetes_Type_2",
+      "target_id": "symptom_slow_healing",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.89
+    },
+    {
+      "source_id": "symptom_slow_healing",
+      "target_id": "disease_Diabetes_Type_2",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.89
+    },
+    {
+      "source_id": "disease_Hypothyroidism",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.36
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_Hypothyroidism",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.36
+    },
+    {
+      "source_id": "disease_Hypothyroidism",
+      "target_id": "symptom_weight_gain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.6
+    },
+    {
+      "source_id": "symptom_weight_gain",
+      "target_id": "disease_Hypothyroidism",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Hypothyroidism",
+      "target_id": "symptom_cold_sensitivity",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.49
+    },
+    {
+      "source_id": "symptom_cold_sensitivity",
+      "target_id": "disease_Hypothyroidism",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.49
+    },
+    {
+      "source_id": "disease_Hypothyroidism",
+      "target_id": "symptom_constipation",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.3
+    },
+    {
+      "source_id": "symptom_constipation",
+      "target_id": "disease_Hypothyroidism",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.3
+    },
+    {
+      "source_id": "disease_Hypothyroidism",
+      "target_id": "symptom_dry_skin",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.84
+    },
+    {
+      "source_id": "symptom_dry_skin",
+      "target_id": "disease_Hypothyroidism",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.84
+    },
+    {
+      "source_id": "disease_Hyperthyroidism",
+      "target_id": "symptom_weight_loss",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.75
+    },
+    {
+      "source_id": "symptom_weight_loss",
+      "target_id": "disease_Hyperthyroidism",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.75
+    },
+    {
+      "source_id": "disease_Hyperthyroidism",
+      "target_id": "symptom_rapid_heartbeat",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.48
+    },
+    {
+      "source_id": "symptom_rapid_heartbeat",
+      "target_id": "disease_Hyperthyroidism",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.48
+    },
+    {
+      "source_id": "disease_Hyperthyroidism",
+      "target_id": "symptom_tremor",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.82
+    },
+    {
+      "source_id": "symptom_tremor",
+      "target_id": "disease_Hyperthyroidism",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.82
+    },
+    {
+      "source_id": "disease_Hyperthyroidism",
+      "target_id": "symptom_anxiety",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.69
+    },
+    {
+      "source_id": "symptom_anxiety",
+      "target_id": "disease_Hyperthyroidism",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.69
+    },
+    {
+      "source_id": "disease_Hyperthyroidism",
+      "target_id": "symptom_heat_sensitivity",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.6
+    },
+    {
+      "source_id": "symptom_heat_sensitivity",
+      "target_id": "disease_Hyperthyroidism",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Cushing_Syndrome",
+      "target_id": "symptom_weight_gain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.31
+    },
+    {
+      "source_id": "symptom_weight_gain",
+      "target_id": "disease_Cushing_Syndrome",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.31
+    },
+    {
+      "source_id": "disease_Cushing_Syndrome",
+      "target_id": "symptom_moon_face",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.35
+    },
+    {
+      "source_id": "symptom_moon_face",
+      "target_id": "disease_Cushing_Syndrome",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.35
+    },
+    {
+      "source_id": "disease_Cushing_Syndrome",
+      "target_id": "symptom_high_blood_pressure",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.92
+    },
+    {
+      "source_id": "symptom_high_blood_pressure",
+      "target_id": "disease_Cushing_Syndrome",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.92
+    },
+    {
+      "source_id": "disease_Cushing_Syndrome",
+      "target_id": "symptom_easy_bruising",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.93
+    },
+    {
+      "source_id": "symptom_easy_bruising",
+      "target_id": "disease_Cushing_Syndrome",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.93
+    },
+    {
+      "source_id": "disease_Cushing_Syndrome",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.68
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_Cushing_Syndrome",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.68
+    },
+    {
+      "source_id": "disease_Addison_Disease",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.88
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_Addison_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.88
+    },
+    {
+      "source_id": "disease_Addison_Disease",
+      "target_id": "symptom_low_blood_pressure",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.71
+    },
+    {
+      "source_id": "symptom_low_blood_pressure",
+      "target_id": "disease_Addison_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.71
+    },
+    {
+      "source_id": "disease_Addison_Disease",
+      "target_id": "symptom_skin_darkening",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.4
+    },
+    {
+      "source_id": "symptom_skin_darkening",
+      "target_id": "disease_Addison_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.4
+    },
+    {
+      "source_id": "disease_Addison_Disease",
+      "target_id": "symptom_weight_loss",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.39
+    },
+    {
+      "source_id": "symptom_weight_loss",
+      "target_id": "disease_Addison_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.39
+    },
+    {
+      "source_id": "disease_Addison_Disease",
+      "target_id": "symptom_salt_craving",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.52
+    },
+    {
+      "source_id": "symptom_salt_craving",
+      "target_id": "disease_Addison_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.52
+    },
+    {
+      "source_id": "disease_Chronic_Kidney_Disease",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.93
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_Chronic_Kidney_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.93
+    },
+    {
+      "source_id": "disease_Chronic_Kidney_Disease",
+      "target_id": "symptom_swelling",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.86
+    },
+    {
+      "source_id": "symptom_swelling",
+      "target_id": "disease_Chronic_Kidney_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.86
+    },
+    {
+      "source_id": "disease_Chronic_Kidney_Disease",
+      "target_id": "symptom_urinary_changes",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.9
+    },
+    {
+      "source_id": "symptom_urinary_changes",
+      "target_id": "disease_Chronic_Kidney_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.9
+    },
+    {
+      "source_id": "disease_Chronic_Kidney_Disease",
+      "target_id": "symptom_back_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.93
+    },
+    {
+      "source_id": "symptom_back_pain",
+      "target_id": "disease_Chronic_Kidney_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.93
+    },
+    {
+      "source_id": "disease_Chronic_Kidney_Disease",
+      "target_id": "symptom_nausea",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.45
+    },
+    {
+      "source_id": "symptom_nausea",
+      "target_id": "disease_Chronic_Kidney_Disease",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Kidney_Stones",
+      "target_id": "symptom_severe_back_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.47
+    },
+    {
+      "source_id": "symptom_severe_back_pain",
+      "target_id": "disease_Kidney_Stones",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.47
+    },
+    {
+      "source_id": "disease_Kidney_Stones",
+      "target_id": "symptom_blood_in_urine",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.37
+    },
+    {
+      "source_id": "symptom_blood_in_urine",
+      "target_id": "disease_Kidney_Stones",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.37
+    },
+    {
+      "source_id": "disease_Kidney_Stones",
+      "target_id": "symptom_nausea",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.85
+    },
+    {
+      "source_id": "symptom_nausea",
+      "target_id": "disease_Kidney_Stones",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.85
+    },
+    {
+      "source_id": "disease_Kidney_Stones",
+      "target_id": "symptom_frequent_urination",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.92
+    },
+    {
+      "source_id": "symptom_frequent_urination",
+      "target_id": "disease_Kidney_Stones",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.92
+    },
+    {
+      "source_id": "disease_Kidney_Stones",
+      "target_id": "symptom_fever",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.58
+    },
+    {
+      "source_id": "symptom_fever",
+      "target_id": "disease_Kidney_Stones",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.58
+    },
+    {
+      "source_id": "disease_Glomerulonephritis",
+      "target_id": "symptom_blood_in_urine",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.73
+    },
+    {
+      "source_id": "symptom_blood_in_urine",
+      "target_id": "disease_Glomerulonephritis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.73
+    },
+    {
+      "source_id": "disease_Glomerulonephritis",
+      "target_id": "symptom_swelling",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.41
+    },
+    {
+      "source_id": "symptom_swelling",
+      "target_id": "disease_Glomerulonephritis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.41
+    },
+    {
+      "source_id": "disease_Glomerulonephritis",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.95
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_Glomerulonephritis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.95
+    },
+    {
+      "source_id": "disease_Glomerulonephritis",
+      "target_id": "symptom_high_blood_pressure",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.91
+    },
+    {
+      "source_id": "symptom_high_blood_pressure",
+      "target_id": "disease_Glomerulonephritis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.91
+    },
+    {
+      "source_id": "disease_Glomerulonephritis",
+      "target_id": "symptom_decreased_urine",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.98
+    },
+    {
+      "source_id": "symptom_decreased_urine",
+      "target_id": "disease_Glomerulonephritis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.98
+    },
+    {
+      "source_id": "disease_UTI",
+      "target_id": "symptom_burning_urination",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.87
+    },
+    {
+      "source_id": "symptom_burning_urination",
+      "target_id": "disease_UTI",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.87
+    },
+    {
+      "source_id": "disease_UTI",
+      "target_id": "symptom_frequent_urination",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.92
+    },
+    {
+      "source_id": "symptom_frequent_urination",
+      "target_id": "disease_UTI",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.92
+    },
+    {
+      "source_id": "disease_UTI",
+      "target_id": "symptom_blood_in_urine",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.32
+    },
+    {
+      "source_id": "symptom_blood_in_urine",
+      "target_id": "disease_UTI",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.32
+    },
+    {
+      "source_id": "disease_UTI",
+      "target_id": "symptom_pelvic_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.82
+    },
+    {
+      "source_id": "symptom_pelvic_pain",
+      "target_id": "disease_UTI",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.82
+    },
+    {
+      "source_id": "disease_UTI",
+      "target_id": "symptom_fever",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.53
+    },
+    {
+      "source_id": "symptom_fever",
+      "target_id": "disease_UTI",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.53
+    },
+    {
+      "source_id": "disease_Lupus",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.95
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_Lupus",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.95
+    },
+    {
+      "source_id": "disease_Lupus",
+      "target_id": "symptom_joint_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.86
+    },
+    {
+      "source_id": "symptom_joint_pain",
+      "target_id": "disease_Lupus",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.86
+    },
+    {
+      "source_id": "disease_Lupus",
+      "target_id": "symptom_rash",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.9
+    },
+    {
+      "source_id": "symptom_rash",
+      "target_id": "disease_Lupus",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.9
+    },
+    {
+      "source_id": "disease_Lupus",
+      "target_id": "symptom_fever",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.87
+    },
+    {
+      "source_id": "symptom_fever",
+      "target_id": "disease_Lupus",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.87
+    },
+    {
+      "source_id": "disease_Lupus",
+      "target_id": "symptom_photosensitivity",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.49
+    },
+    {
+      "source_id": "symptom_photosensitivity",
+      "target_id": "disease_Lupus",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.49
+    },
+    {
+      "source_id": "disease_Fibromyalgia",
+      "target_id": "symptom_widespread_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.85
+    },
+    {
+      "source_id": "symptom_widespread_pain",
+      "target_id": "disease_Fibromyalgia",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.85
+    },
+    {
+      "source_id": "disease_Fibromyalgia",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.38
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_Fibromyalgia",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.38
+    },
+    {
+      "source_id": "disease_Fibromyalgia",
+      "target_id": "symptom_sleep_problems",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.91
+    },
+    {
+      "source_id": "symptom_sleep_problems",
+      "target_id": "disease_Fibromyalgia",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.91
+    },
+    {
+      "source_id": "disease_Fibromyalgia",
+      "target_id": "symptom_mood_issues",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.9
+    },
+    {
+      "source_id": "symptom_mood_issues",
+      "target_id": "disease_Fibromyalgia",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.9
+    },
+    {
+      "source_id": "disease_Fibromyalgia",
+      "target_id": "symptom_cognitive_difficulties",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.46
+    },
+    {
+      "source_id": "symptom_cognitive_difficulties",
+      "target_id": "disease_Fibromyalgia",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.46
+    },
+    {
+      "source_id": "disease_Gout",
+      "target_id": "symptom_severe_joint_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.87
+    },
+    {
+      "source_id": "symptom_severe_joint_pain",
+      "target_id": "disease_Gout",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.87
+    },
+    {
+      "source_id": "disease_Gout",
+      "target_id": "symptom_swelling",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.62
+    },
+    {
+      "source_id": "symptom_swelling",
+      "target_id": "disease_Gout",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.62
+    },
+    {
+      "source_id": "disease_Gout",
+      "target_id": "symptom_redness",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.51
+    },
+    {
+      "source_id": "symptom_redness",
+      "target_id": "disease_Gout",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.51
+    },
+    {
+      "source_id": "disease_Gout",
+      "target_id": "symptom_heat_in_joint",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.86
+    },
+    {
+      "source_id": "symptom_heat_in_joint",
+      "target_id": "disease_Gout",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.86
+    },
+    {
+      "source_id": "disease_Gout",
+      "target_id": "symptom_tophi",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.46
+    },
+    {
+      "source_id": "symptom_tophi",
+      "target_id": "disease_Gout",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.46
+    },
+    {
+      "source_id": "disease_Psoriatic_Arthritis",
+      "target_id": "symptom_joint_pain",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.32
+    },
+    {
+      "source_id": "symptom_joint_pain",
+      "target_id": "disease_Psoriatic_Arthritis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.32
+    },
+    {
+      "source_id": "disease_Psoriatic_Arthritis",
+      "target_id": "symptom_skin_lesions",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.44
+    },
+    {
+      "source_id": "symptom_skin_lesions",
+      "target_id": "disease_Psoriatic_Arthritis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.44
+    },
+    {
+      "source_id": "disease_Psoriatic_Arthritis",
+      "target_id": "symptom_swelling",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.53
+    },
+    {
+      "source_id": "symptom_swelling",
+      "target_id": "disease_Psoriatic_Arthritis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.53
+    },
+    {
+      "source_id": "disease_Psoriatic_Arthritis",
+      "target_id": "symptom_stiffness",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.91
+    },
+    {
+      "source_id": "symptom_stiffness",
+      "target_id": "disease_Psoriatic_Arthritis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.91
+    },
+    {
+      "source_id": "disease_Psoriatic_Arthritis",
+      "target_id": "symptom_nail_changes",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.98
+    },
+    {
+      "source_id": "symptom_nail_changes",
+      "target_id": "disease_Psoriatic_Arthritis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.98
+    },
+    {
+      "source_id": "disease_Vasculitis",
+      "target_id": "symptom_fever",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.5
+    },
+    {
+      "source_id": "symptom_fever",
+      "target_id": "disease_Vasculitis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.5
+    },
+    {
+      "source_id": "disease_Vasculitis",
+      "target_id": "symptom_fatigue",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.75
+    },
+    {
+      "source_id": "symptom_fatigue",
+      "target_id": "disease_Vasculitis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.75
+    },
+    {
+      "source_id": "disease_Vasculitis",
+      "target_id": "symptom_weight_loss",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.58
+    },
+    {
+      "source_id": "symptom_weight_loss",
+      "target_id": "disease_Vasculitis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.58
+    },
+    {
+      "source_id": "disease_Vasculitis",
+      "target_id": "symptom_skin_rashes",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.99
+    },
+    {
+      "source_id": "symptom_skin_rashes",
+      "target_id": "disease_Vasculitis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.99
+    },
+    {
+      "source_id": "disease_Vasculitis",
+      "target_id": "symptom_nerve_problems",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.68
+    },
+    {
+      "source_id": "symptom_nerve_problems",
+      "target_id": "disease_Vasculitis",
+      "edge_type": "disease_to_symptom",
+      "weight": 0.68
+    },
+    {
+      "source_id": "disease_Hypertension",
+      "target_id": "drug_Lisinopril",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Hypertension",
+      "target_id": "drug_Amlodipine",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Hypertension",
+      "target_id": "drug_Metoprolol",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Hypertension",
+      "target_id": "drug_Losartan",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Arrhythmia",
+      "target_id": "drug_Amiodarone",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Arrhythmia",
+      "target_id": "drug_Diltiazem",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Arrhythmia",
+      "target_id": "drug_Sotalol",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Coronary_Artery_Disease",
+      "target_id": "drug_Aspirin",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Coronary_Artery_Disease",
+      "target_id": "drug_Atorvastatin",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Coronary_Artery_Disease",
+      "target_id": "drug_Metoprolol",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Coronary_Artery_Disease",
+      "target_id": "drug_Nitroglycerin",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Heart_Failure",
+      "target_id": "drug_Furosemide",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Heart_Failure",
+      "target_id": "drug_Carvedilol",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Heart_Failure",
+      "target_id": "drug_Enalapril",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Heart_Failure",
+      "target_id": "drug_Spironolactone",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Diabetes_Type_2",
+      "target_id": "drug_Metformin",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Diabetes_Type_2",
+      "target_id": "drug_Glipizide",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Diabetes_Type_2",
+      "target_id": "drug_Sitagliptin",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Diabetes_Type_2",
+      "target_id": "drug_Empagliflozin",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_COPD",
+      "target_id": "drug_Albuterol",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_COPD",
+      "target_id": "drug_Tiotropium",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_COPD",
+      "target_id": "drug_Fluticasone",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_COPD",
+      "target_id": "drug_Prednisone",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Asthma",
+      "target_id": "drug_Albuterol",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Asthma",
+      "target_id": "drug_Fluticasone",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Asthma",
+      "target_id": "drug_Montelukast",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Asthma",
+      "target_id": "drug_Budesonide",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Pneumonia",
+      "target_id": "drug_Amoxicillin",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Pneumonia",
+      "target_id": "drug_Azithromycin",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Pneumonia",
+      "target_id": "drug_Levofloxacin",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Lung_Cancer",
+      "target_id": "drug_Cisplatin",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Lung_Cancer",
+      "target_id": "drug_Pembrolizumab",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Lung_Cancer",
+      "target_id": "drug_Erlotinib",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Migraine",
+      "target_id": "drug_Sumatriptan",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Migraine",
+      "target_id": "drug_Propranolol",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Migraine",
+      "target_id": "drug_Topiramate",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Migraine",
+      "target_id": "drug_Amitriptyline",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Epilepsy",
+      "target_id": "drug_Levetiracetam",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Epilepsy",
+      "target_id": "drug_Carbamazepine",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Epilepsy",
+      "target_id": "drug_Phenytoin",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Epilepsy",
+      "target_id": "drug_Valproic_Acid",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Osteoarthritis",
+      "target_id": "drug_Acetaminophen",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Osteoarthritis",
+      "target_id": "drug_Ibuprofen",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Osteoarthritis",
+      "target_id": "drug_Celecoxib",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Osteoarthritis",
+      "target_id": "drug_Glucosamine",
+      "edge_type": "disease_to_drug",
+      "weight": 0.7
+    },
+    {
+      "source_id": "disease_Hypertension",
+      "target_id": "disease_Arrhythmia",
+      "edge_type": "disease_to_disease",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Hypertension",
+      "target_id": "disease_Coronary_Artery_Disease",
+      "edge_type": "disease_to_disease",
+      "weight": 0.75
+    },
+    {
+      "source_id": "disease_Hypertension",
+      "target_id": "disease_Heart_Failure",
+      "edge_type": "disease_to_disease",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Hypertension",
+      "target_id": "disease_Atrial_Fibrillation",
+      "edge_type": "disease_to_disease",
+      "weight": 0.75
+    },
+    {
+      "source_id": "disease_Hypertension",
+      "target_id": "disease_Myocarditis",
+      "edge_type": "disease_to_disease",
+      "weight": 0.75
+    },
+    {
+      "source_id": "disease_Arrhythmia",
+      "target_id": "disease_Coronary_Artery_Disease",
+      "edge_type": "disease_to_disease",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Arrhythmia",
+      "target_id": "disease_Heart_Failure",
+      "edge_type": "disease_to_disease",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Arrhythmia",
+      "target_id": "disease_Atrial_Fibrillation",
+      "edge_type": "disease_to_disease",
+      "weight": 0.75
+    },
+    {
+      "source_id": "disease_Arrhythmia",
+      "target_id": "disease_Myocarditis",
+      "edge_type": "disease_to_disease",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Coronary_Artery_Disease",
+      "target_id": "disease_Heart_Failure",
+      "edge_type": "disease_to_disease",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Coronary_Artery_Disease",
+      "target_id": "disease_Atrial_Fibrillation",
+      "edge_type": "disease_to_disease",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Coronary_Artery_Disease",
+      "target_id": "disease_Myocarditis",
+      "edge_type": "disease_to_disease",
+      "weight": 0.75
+    },
+    {
+      "source_id": "disease_Heart_Failure",
+      "target_id": "disease_Atrial_Fibrillation",
+      "edge_type": "disease_to_disease",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Heart_Failure",
+      "target_id": "disease_Myocarditis",
+      "edge_type": "disease_to_disease",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Atrial_Fibrillation",
+      "target_id": "disease_Myocarditis",
+      "edge_type": "disease_to_disease",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Epilepsy",
+      "target_id": "disease_Stroke",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Epilepsy",
+      "target_id": "disease_Alzheimer_Disease",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Stroke",
+      "target_id": "disease_Alzheimer_Disease",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Lung_Cancer",
+      "target_id": "disease_Colorectal_Cancer",
+      "edge_type": "disease_to_disease",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Lung_Cancer",
+      "target_id": "disease_Leukemia",
+      "edge_type": "disease_to_disease",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Colorectal_Cancer",
+      "target_id": "disease_Leukemia",
+      "edge_type": "disease_to_disease",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_COPD",
+      "target_id": "disease_Asthma",
+      "edge_type": "disease_to_disease",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_COPD",
+      "target_id": "disease_Pneumonia",
+      "edge_type": "disease_to_disease",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_COPD",
+      "target_id": "disease_Tuberculosis",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Asthma",
+      "target_id": "disease_Pneumonia",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Pneumonia",
+      "target_id": "disease_Pulmonary_Embolism",
+      "edge_type": "disease_to_disease",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Peptic_Ulcer",
+      "target_id": "disease_Hepatitis_B",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Peptic_Ulcer",
+      "target_id": "disease_Gallstones",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Crohn_Disease",
+      "target_id": "disease_Hepatitis_B",
+      "edge_type": "disease_to_disease",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Crohn_Disease",
+      "target_id": "disease_Gallstones",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Hepatitis_B",
+      "target_id": "disease_Gallstones",
+      "edge_type": "disease_to_disease",
+      "weight": 0.75
+    },
+    {
+      "source_id": "disease_Osteoarthritis",
+      "target_id": "disease_Rheumatoid_Arthritis",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Osteoarthritis",
+      "target_id": "disease_Fracture",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Osteoporosis",
+      "target_id": "disease_Herniated_Disc",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_COVID_19",
+      "target_id": "disease_Dengue_Fever",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_COVID_19",
+      "target_id": "disease_Malaria",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_COVID_19",
+      "target_id": "disease_HIV_AIDS",
+      "edge_type": "disease_to_disease",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Dengue_Fever",
+      "target_id": "disease_Typhoid",
+      "edge_type": "disease_to_disease",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Dengue_Fever",
+      "target_id": "disease_HIV_AIDS",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Malaria",
+      "target_id": "disease_Typhoid",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Malaria",
+      "target_id": "disease_HIV_AIDS",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Diabetes_Type_2",
+      "target_id": "disease_Hypothyroidism",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Diabetes_Type_2",
+      "target_id": "disease_Cushing_Syndrome",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Diabetes_Type_2",
+      "target_id": "disease_Addison_Disease",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Hypothyroidism",
+      "target_id": "disease_Cushing_Syndrome",
+      "edge_type": "disease_to_disease",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Hypothyroidism",
+      "target_id": "disease_Addison_Disease",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Hyperthyroidism",
+      "target_id": "disease_Addison_Disease",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Cushing_Syndrome",
+      "target_id": "disease_Addison_Disease",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Chronic_Kidney_Disease",
+      "target_id": "disease_Kidney_Stones",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Chronic_Kidney_Disease",
+      "target_id": "disease_Glomerulonephritis",
+      "edge_type": "disease_to_disease",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Kidney_Stones",
+      "target_id": "disease_Glomerulonephritis",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Kidney_Stones",
+      "target_id": "disease_UTI",
+      "edge_type": "disease_to_disease",
+      "weight": 0.75
+    },
+    {
+      "source_id": "disease_Glomerulonephritis",
+      "target_id": "disease_UTI",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Lupus",
+      "target_id": "disease_Fibromyalgia",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Lupus",
+      "target_id": "disease_Psoriatic_Arthritis",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Lupus",
+      "target_id": "disease_Vasculitis",
+      "edge_type": "disease_to_disease",
+      "weight": 0.6
+    },
+    {
+      "source_id": "disease_Fibromyalgia",
+      "target_id": "disease_Vasculitis",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Gout",
+      "target_id": "disease_Psoriatic_Arthritis",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Arrhythmia",
+      "target_id": "disease_Epilepsy",
+      "edge_type": "disease_to_disease",
+      "weight": 0.45
+    },
+    {
+      "source_id": "disease_Leukemia",
+      "target_id": "disease_Alzheimer_Disease",
+      "edge_type": "disease_to_disease",
+      "weight": 0.33
+    },
+    {
+      "source_id": "disease_Leukemia",
+      "target_id": "disease_Coronary_Artery_Disease",
+      "edge_type": "disease_to_disease",
+      "weight": 0.14
+    },
+    {
+      "source_id": "disease_Osteoarthritis",
+      "target_id": "disease_GERD",
+      "edge_type": "disease_to_disease",
+      "weight": 0.39
+    },
+    {
+      "source_id": "disease_Pulmonary_Embolism",
+      "target_id": "disease_Osteoarthritis",
+      "edge_type": "disease_to_disease",
+      "weight": 0.34
+    },
+    {
+      "source_id": "disease_COVID_19",
+      "target_id": "disease_Epilepsy",
+      "edge_type": "disease_to_disease",
+      "weight": 0.25
+    },
+    {
+      "source_id": "disease_HIV_AIDS",
+      "target_id": "disease_Lung_Cancer",
+      "edge_type": "disease_to_disease",
+      "weight": 0.2
+    },
+    {
+      "source_id": "disease_UTI",
+      "target_id": "disease_Osteoarthritis",
+      "edge_type": "disease_to_disease",
+      "weight": 0.1
+    },
+    {
+      "source_id": "disease_Malaria",
+      "target_id": "disease_Kidney_Stones",
+      "edge_type": "disease_to_disease",
+      "weight": 0.39
+    },
+    {
+      "source_id": "disease_Chronic_Kidney_Disease",
+      "target_id": "disease_Lung_Cancer",
+      "edge_type": "disease_to_disease",
+      "weight": 0.25
+    },
+    {
+      "source_id": "disease_Atrial_Fibrillation",
+      "target_id": "disease_Chronic_Kidney_Disease",
+      "edge_type": "disease_to_disease",
+      "weight": 0.47
+    },
+    {
+      "source_id": "disease_Hyperthyroidism",
+      "target_id": "disease_Pulmonary_Embolism",
+      "edge_type": "disease_to_disease",
+      "weight": 0.37
+    },
+    {
+      "source_id": "disease_Epilepsy",
+      "target_id": "disease_Lupus",
+      "edge_type": "disease_to_disease",
+      "weight": 0.46
+    },
+    {
+      "source_id": "disease_COVID_19",
+      "target_id": "disease_Pneumonia",
+      "edge_type": "disease_to_disease",
+      "weight": 0.37
+    },
+    {
+      "source_id": "disease_Pulmonary_Embolism",
+      "target_id": "disease_Hepatitis_B",
+      "edge_type": "disease_to_disease",
+      "weight": 0.38
+    },
+    {
+      "source_id": "disease_Typhoid",
+      "target_id": "disease_Parkinson_Disease",
+      "edge_type": "disease_to_disease",
+      "weight": 0.18
+    },
+    {
+      "source_id": "disease_Chronic_Kidney_Disease",
+      "target_id": "disease_Crohn_Disease",
+      "edge_type": "disease_to_disease",
+      "weight": 0.37
+    },
+    {
+      "source_id": "disease_Alzheimer_Disease",
+      "target_id": "disease_Hyperthyroidism",
+      "edge_type": "disease_to_disease",
+      "weight": 0.33
+    },
+    {
+      "source_id": "disease_Hepatitis_B",
+      "target_id": "disease_Typhoid",
+      "edge_type": "disease_to_disease",
+      "weight": 0.43
+    },
+    {
+      "source_id": "disease_Breast_Cancer",
+      "target_id": "disease_Osteoarthritis",
+      "edge_type": "disease_to_disease",
+      "weight": 0.41
+    },
+    {
+      "source_id": "disease_Pulmonary_Embolism",
+      "target_id": "disease_Osteoporosis",
+      "edge_type": "disease_to_disease",
+      "weight": 0.28
+    },
+    {
+      "source_id": "disease_Kidney_Stones",
+      "target_id": "disease_Breast_Cancer",
+      "edge_type": "disease_to_disease",
+      "weight": 0.3
+    },
+    {
+      "source_id": "disease_Fibromyalgia",
+      "target_id": "disease_Stroke",
+      "edge_type": "disease_to_disease",
+      "weight": 0.36
+    },
+    {
+      "source_id": "disease_Asthma",
+      "target_id": "disease_COVID_19",
+      "edge_type": "disease_to_disease",
+      "weight": 0.37
+    },
+    {
+      "source_id": "disease_Hyperthyroidism",
+      "target_id": "disease_Tuberculosis",
+      "edge_type": "disease_to_disease",
+      "weight": 0.14
+    },
+    {
+      "source_id": "disease_Gout",
+      "target_id": "disease_Prostate_Cancer",
+      "edge_type": "disease_to_disease",
+      "weight": 0.37
+    },
+    {
+      "source_id": "disease_Multiple_Sclerosis",
+      "target_id": "disease_Arrhythmia",
+      "edge_type": "disease_to_disease",
+      "weight": 0.12
+    },
+    {
+      "source_id": "disease_Herniated_Disc",
+      "target_id": "disease_Hyperthyroidism",
+      "edge_type": "disease_to_disease",
+      "weight": 0.44
+    },
+    {
+      "source_id": "disease_Atrial_Fibrillation",
+      "target_id": "disease_Osteoporosis",
+      "edge_type": "disease_to_disease",
+      "weight": 0.27
+    },
+    {
+      "source_id": "disease_Cushing_Syndrome",
+      "target_id": "disease_HIV_AIDS",
+      "edge_type": "disease_to_disease",
+      "weight": 0.18
+    },
+    {
+      "source_id": "disease_Glomerulonephritis",
+      "target_id": "disease_Crohn_Disease",
+      "edge_type": "disease_to_disease",
+      "weight": 0.3
+    },
+    {
+      "source_id": "disease_Prostate_Cancer",
+      "target_id": "disease_Multiple_Sclerosis",
+      "edge_type": "disease_to_disease",
+      "weight": 0.36
+    },
+    {
+      "source_id": "disease_Hypertension",
+      "target_id": "disease_Gout",
+      "edge_type": "disease_to_disease",
+      "weight": 0.44
+    },
+    {
+      "source_id": "disease_Migraine",
+      "target_id": "disease_Psoriatic_Arthritis",
+      "edge_type": "disease_to_disease",
+      "weight": 0.27
+    },
+    {
+      "source_id": "disease_Alzheimer_Disease",
+      "target_id": "disease_Glomerulonephritis",
+      "edge_type": "disease_to_disease",
+      "weight": 0.31
+    },
+    {
+      "source_id": "disease_Heart_Failure",
+      "target_id": "disease_Typhoid",
+      "edge_type": "disease_to_disease",
+      "weight": 0.2
+    },
+    {
+      "source_id": "disease_Epilepsy",
+      "target_id": "disease_Osteoporosis",
+      "edge_type": "disease_to_disease",
+      "weight": 0.15
+    },
+    {
+      "source_id": "disease_Osteoporosis",
+      "target_id": "disease_Chronic_Kidney_Disease",
+      "edge_type": "disease_to_disease",
+      "weight": 0.31
+    },
+    {
+      "source_id": "disease_Typhoid",
+      "target_id": "disease_Hypothyroidism",
+      "edge_type": "disease_to_disease",
+      "weight": 0.23
+    },
+    {
+      "source_id": "disease_Gout",
+      "target_id": "disease_Rheumatoid_Arthritis",
+      "edge_type": "disease_to_disease",
+      "weight": 0.35
+    },
+    {
+      "source_id": "disease_Lupus",
+      "target_id": "disease_COVID_19",
+      "edge_type": "disease_to_disease",
+      "weight": 0.27
+    },
+    {
+      "source_id": "disease_Typhoid",
+      "target_id": "disease_Rheumatoid_Arthritis",
+      "edge_type": "disease_to_disease",
+      "weight": 0.46
+    },
+    {
+      "source_id": "disease_Fibromyalgia",
+      "target_id": "disease_Herniated_Disc",
+      "edge_type": "disease_to_disease",
+      "weight": 0.28
+    },
+    {
+      "source_id": "disease_Cushing_Syndrome",
+      "target_id": "disease_COPD",
+      "edge_type": "disease_to_disease",
+      "weight": 0.41
+    },
+    {
+      "source_id": "symptom_joint_deformity",
+      "target_id": "symptom_breast_lump",
+      "edge_type": "symptom_to_symptom",
+      "weight": 0.21
+    },
+    {
+      "source_id": "symptom_difficulty_swallowing",
+      "target_id": "symptom_face_drooping",
+      "edge_type": "symptom_to_symptom",
+      "weight": 0.19
+    },
+    {
+      "source_id": "symptom_weakness",
+      "target_id": "symptom_skin_lesions",
+      "edge_type": "symptom_to_symptom",
+      "weight": 0.46
+    },
+    {
+      "source_id": "symptom_cold_sensitivity",
+      "target_id": "symptom_numbness",
+      "edge_type": "symptom_to_symptom",
+      "weight": 0.16
+    },
+    {
+      "source_id": "symptom_decreased_flexibility",
+      "target_id": "symptom_indigestion",
+      "edge_type": "symptom_to_symptom",
+      "weight": 0.38
+    },
+    {
+      "source_id": "symptom_speech_changes",
+      "target_id": "symptom_sudden_shortness_of_breath",
+      "edge_type": "symptom_to_symptom",
+      "weight": 0.26
+    },
+    {
+      "source_id": "symptom_erectile_dysfunction",
+      "target_id": "symptom_sudden_shortness_of_breath",
+      "edge_type": "symptom_to_symptom",
+      "weight": 0.12
+    },
+    {
+      "source_id": "symptom_tingling",
+      "target_id": "symptom_stooped_posture",
+      "edge_type": "symptom_to_symptom",
+      "weight": 0.46
+    },
+    {
+      "source_id": "symptom_tophi",
+      "target_id": "symptom_heat_sensitivity",
+      "edge_type": "symptom_to_symptom",
+      "weight": 0.29
+    },
+    {
+      "source_id": "symptom_urinary_changes",
+      "target_id": "symptom_urinary_problems",
+      "edge_type": "symptom_to_symptom",
+      "weight": 0.4
+    },
+    {
+      "source_id": "symptom_tingling",
+      "target_id": "symptom_visual_disturbances",
+      "edge_type": "symptom_to_symptom",
+      "weight": 0.3
+    },
+    {
+      "source_id": "symptom_arm_weakness",
+      "target_id": "symptom_stiffness",
+      "edge_type": "symptom_to_symptom",
+      "weight": 0.29
+    },
+    {
+      "source_id": "symptom_stooped_posture",
+      "target_id": "symptom_jaundice",
+      "edge_type": "symptom_to_symptom",
+      "weight": 0.37
+    },
+    {
+      "source_id": "symptom_cough",
+      "target_id": "symptom_headache",
+      "edge_type": "symptom_to_symptom",
+      "weight": 0.44
+    },
+    {
+      "source_id": "symptom_rectal_bleeding",
+      "target_id": "symptom_severe_back_pain",
+      "edge_type": "symptom_to_symptom",
+      "weight": 0.46
+    },
+    {
+      "source_id": "symptom_severe_back_pain",
+      "target_id": "symptom_vision_loss",
+      "edge_type": "symptom_to_symptom",
+      "weight": 0.36
+    },
+    {
+      "source_id": "symptom_salt_craving",
+      "target_id": "symptom_nerve_problems",
+      "edge_type": "symptom_to_symptom",
+      "weight": 0.17
+    },
+    {
+      "source_id": "symptom_persistent_cough",
+      "target_id": "symptom_heat_sensitivity",
+      "edge_type": "symptom_to_symptom",
+      "weight": 0.23
+    },
+    {
+      "source_id": "symptom_high_fever",
+      "target_id": "symptom_memory_loss",
+      "edge_type": "symptom_to_symptom",
+      "weight": 0.24
+    },
+    {
+      "source_id": "symptom_heat_sensitivity",
+      "target_id": "symptom_slow_healing",
+      "edge_type": "symptom_to_symptom",
+      "weight": 0.4
+    }
+  ]
+}

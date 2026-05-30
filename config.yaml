@@ -1,0 +1,171 @@
+# ============================================================
+# Hybrid Document-Graph Store: Medical Knowledge Base
+# Project Configuration
+# ============================================================
+
+project:
+  name: "Hybrid Document-Graph Store: Medical Knowledge Base"
+  version: "1.0.0"
+  description: >
+    A distributed hybrid system combining Document Store (Patient Symptoms)
+    and Graph Store (Disease Correlations) with graph-distance filtering,
+    METIS partitioning, and join-cost analysis.
+
+# ============================================================
+# Dataset Configuration
+# ============================================================
+dataset:
+  documents:
+    name: "Patient_Symptoms"
+    count: 500
+    schema:
+      - patient_id: string
+      - age: integer
+      - gender: string
+      - chief_complaint: string      # Primary symptom text
+      - symptoms: string              # Full symptom description
+      - medical_history: string      # Patient history
+      - current_medications: string
+      - initial_diagnosis: string
+      - severity: integer            # 1-5 scale
+      - department: string           # Medical field
+      - admission_date: string
+
+  graph:
+    name: "Disease_Correlations"
+    nodes:
+      count: 200
+      types:
+        - disease
+        - symptom
+        - medical_field
+        - drug
+    edges:
+      count: 800
+      types:
+        - disease_to_symptom
+        - disease_to_disease
+        - symptom_to_symptom
+        - disease_to_field
+        - disease_to_drug
+    medical_fields:
+      - Cardiology
+      - Neurology
+      - Oncology
+      - Pulmonology
+      - Gastroenterology
+      - Orthopedics
+      - Infectious_Disease
+      - Endocrinology
+      - Nephrology
+      - Rheumatology
+
+# ============================================================
+# Document Engine Configuration (Whoosh)
+# ============================================================
+document_engine:
+  index_path: "data/processed/documents_index"
+  analyzer: "StandardAnalyzer"
+  max_results: 50
+  scoring: "BM25F"
+  fields:
+    searchable:
+      - chief_complaint
+      - symptoms
+      - medical_history
+      - initial_diagnosis
+    filterable:
+      - department
+      - severity
+      - gender
+    stored:
+      - patient_id
+      - age
+      - admission_date
+
+# ============================================================
+# Graph Engine Configuration (NetworkX + METIS)
+# ============================================================
+graph_engine:
+  storage_path: "data/processed/graph_data.gpickle"
+  metis_partition_path: "data/processed/partitions.txt"
+
+  partitioning:
+    method: "metis"           # METIS recursive bisection
+    n_parts: 4               # Number of partitions
+    edge_cut_mode: true       # Edge-cut (vs vertex-cut)
+
+  traversal:
+    default_max_depth: 3
+    algorithms:
+      - bfs                 # Breadth-First Search
+      - dfs                 # Depth-First Search
+      - shortest_path       # Dijkstra/A*
+
+  graph_distance:
+    max_distance: 3           # Max hops from medical field
+    importance_weights:
+      direct: 1.0            # Field node itself
+      depth_1: 0.8           # 1 hop away
+      depth_2: 0.5           # 2 hops away
+      depth_3: 0.2           # 3 hops away
+
+# ============================================================
+# Hybrid Query Engine Configuration
+# ============================================================
+hybrid_engine:
+  join_cost_analysis: true
+  scoring_weights:
+    text_relevance: 0.5      # BM25F score weight
+    graph_importance: 0.5    # Graph distance weight
+
+  join_strategies:
+    - filter_after_join      # Join then filter by distance
+    - index_nested_loop      # For small graph results
+    - hash_join              # For large graph results
+
+  performance:
+    cache_enabled: true
+    cache_ttl: 300           # seconds
+
+# ============================================================
+# Join Cost Analysis Thresholds
+# ============================================================
+join_cost:
+  thresholds:
+    low: 100                 # operations
+    medium: 1000
+    high: 10000
+
+  metrics:
+    - document_scan_cost
+    - graph_traversal_cost
+    - join_operation_cost
+    - network_transfer_cost
+    - total_latency_ms
+
+# ============================================================
+# Visualization
+# ============================================================
+visualization:
+  graph_layout: "force"
+  max_display_nodes: 100
+  color_scheme:
+    disease: "#e74c3c"
+    symptom: "#3498db"
+    medical_field: "#2ecc71"
+    drug: "#9b59b6"
+    partition_colors:
+      - "#FF6B6B"
+      - "#4ECDC4"
+      - "#45B7D1"
+      - "#96CEB4"
+
+# ============================================================
+# API Server
+# ============================================================
+server:
+  host: "0.0.0.0"
+  port: 5000
+  debug: true
+  cors_enabled: true

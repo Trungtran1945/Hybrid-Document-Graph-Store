@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hybrid Document-Graph Store: Medical Knowledge Base</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-heart-pulse text-danger"></i>
+                Hybrid Doc-Graph Store
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link active" href="/">
+                    <i class="bi bi-search"></i> Query
+                </a>
+                <a class="nav-link" href="/graph">
+                    <i class="bi bi-diagram-3"></i> Graph
+                </a>
+                <a class="nav-link" href="/analysis">
+                    <i class="bi bi-graph-up"></i> Analysis
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="hero-section text-center">
+                    <h1 class="display-5 fw-bold text-gradient">
+                        <i class="bi bi-folder2-open text-primary"></i> Hybrid Document-Graph Store
+                    </h1>
+                    <p class="lead text-muted">
+                        Patient Symptoms (Document Engine) + Disease Correlations (Graph Engine)
+                    </p>
+                    <div class="d-flex justify-content-center gap-3 flex-wrap">
+                        <span class="badge bg-primary">
+                            <i class="bi bi-file-text"></i> Whoosh BM25F
+                        </span>
+                        <span class="badge bg-success">
+                            <i class="bi bi-diagram-3"></i> NetworkX + METIS
+                        </span>
+                        <span class="badge bg-warning text-dark">
+                            <i class="bi bi-link-45deg"></i> Join Cost Analysis
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Query Panel -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-dark">
+                        <h5 class="mb-0"><i class="bi bi-funnel text-primary"></i> Hybrid Query Configuration</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Query Text -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Search Query</label>
+                            <textarea id="queryText" class="form-control" rows="3"
+                                placeholder="e.g., chest pain, shortness of breath, fever, headache..."></textarea>
+                            <div class="form-text">Full-text search on patient symptoms</div>
+                        </div>
+
+                        <!-- Target Field -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Target Medical Field</label>
+                            <select id="targetField" class="form-select">
+                                <option value="Cardiology">Cardiology</option>
+                                <option value="Neurology">Neurology</option>
+                                <option value="Oncology">Oncology</option>
+                                <option value="Pulmonology">Pulmonology</option>
+                                <option value="Gastroenterology">Gastroenterology</option>
+                                <option value="Orthopedics">Orthopedics</option>
+                                <option value="Infectious_Disease">Infectious Disease</option>
+                                <option value="Endocrinology">Endocrinology</option>
+                                <option value="Nephrology">Nephrology</option>
+                                <option value="Rheumatology">Rheumatology</option>
+                            </select>
+                            <div class="form-text">Graph distance computed from this field</div>
+                        </div>
+
+                        <!-- Graph Distance -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Max Graph Distance: <span id="distanceValue">3</span></label>
+                            <input type="range" class="form-range" id="maxDistance" min="1" max="4" value="3">
+                            <div class="form-text">Filter results by graph proximity to field</div>
+                        </div>
+
+                        <!-- Traversal Algorithm -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Traversal Algorithm</label>
+                            <select id="traversalAlgorithm" class="form-select">
+                                <option value="bfs">BFS (Breadth-First Search)</option>
+                                <option value="dfs">DFS (Depth-First Search)</option>
+                                <option value="shortest_path">Shortest Path (Dijkstra)</option>
+                            </select>
+                        </div>
+
+                        <!-- Weights -->
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label fw-semibold small">Text Weight</label>
+                                <input type="number" class="form-control" id="textWeight" value="0.5" min="0" max="1" step="0.1">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-semibold small">Graph Weight</label>
+                                <input type="number" class="form-control" id="graphWeight" value="0.5" min="0" max="1" step="0.1">
+                            </div>
+                        </div>
+
+                        <!-- Filters -->
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label fw-semibold small">Min Severity</label>
+                                <select id="minSeverity" class="form-select form-select-sm">
+                                    <option value="">Any</option>
+                                    <option value="1">1 - Mild</option>
+                                    <option value="2">2 - Low</option>
+                                    <option value="3">3 - Moderate</option>
+                                    <option value="4">4 - High</option>
+                                    <option value="5">5 - Critical</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-semibold small">Max Results</label>
+                                <select id="maxResults" class="form-select form-select-sm">
+                                    <option value="10">10</option>
+                                    <option value="20" selected>20</option>
+                                    <option value="50">50</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button id="executeQuery" class="btn btn-primary w-100">
+                            <i class="bi bi-play-fill"></i> Execute Hybrid Query
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Panel -->
+            <div class="col-lg-8">
+                <!-- Stats Bar -->
+                <div class="row g-3 mb-3">
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card stat-card-primary">
+                            <div class="stat-value" id="statResults">-</div>
+                            <div class="stat-label">Results</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card stat-card-success">
+                            <div class="stat-value" id="statTime">-</div>
+                            <div class="stat-label">Time (ms)</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card stat-card-warning">
+                            <div class="stat-value" id="statPartitions">-</div>
+                            <div class="stat-label">Partitions</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card stat-card-danger">
+                            <div class="stat-value" id="statCost">-</div>
+                            <div class="stat-label">Cost Tier</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Table -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-dark d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="bi bi-list-ul text-success"></i> Query Results</h5>
+                        <div class="d-flex gap-2 align-items-center">
+                            <span class="badge bg-secondary" id="resultsCount">0 results</span>
+                            <button class="btn btn-sm btn-outline-light" id="downloadResults">
+                                <i class="bi bi-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                            <table class="table table-dark table-hover table-sm mb-0">
+                                <thead class="sticky-top bg-dark">
+                                    <tr>
+                                        <th style="width:40px">#</th>
+                                        <th>Patient ID</th>
+                                        <th>Chief Complaint</th>
+                                        <th>Department</th>
+                                        <th>Severity</th>
+                                        <th>Graph Dist.</th>
+                                        <th>Text Score</th>
+                                        <th>Graph Score</th>
+                                        <th>Combined</th>
+                                        <th>Partition</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="resultsBody">
+                                    <tr>
+                                        <td colspan="10" class="text-center text-muted py-5">
+                                            <i class="bi bi-arrow-left-circle fs-1 d-block mb-2"></i>
+                                            Configure your query and click "Execute Hybrid Query"
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Join Cost Panel -->
+                <div class="card shadow-sm mt-3" id="joinCostPanel" style="display: none;">
+                    <div class="card-header bg-dark">
+                        <h5 class="mb-0"><i class="bi bi-cash-stack text-warning"></i> Join Cost Analysis</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3" id="joinCostMetrics">
+                            <!-- Populated by JS -->
+                        </div>
+                        <div class="mt-3" id="joinCostSummary"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sample Queries -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-dark">
+                        <h5 class="mb-0"><i class="bi bi-lightning text-warning"></i> Sample Queries</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap gap-2">
+                            <button class="btn btn-sm btn-outline-primary sample-query"
+                                data-query="chest pain and shortness of breath" data-field="Cardiology">
+                                Cardiac: chest pain
+                            </button>
+                            <button class="btn btn-sm btn-outline-primary sample-query"
+                                data-query="severe headache sensitivity to light nausea" data-field="Neurology">
+                                Neuro: migraine
+                            </button>
+                            <button class="btn btn-sm btn-outline-primary sample-query"
+                                data-query="persistent cough coughing blood weight loss fatigue" data-field="Oncology">
+                                Oncology: lung cancer
+                            </button>
+                            <button class="btn btn-sm btn-outline-primary sample-query"
+                                data-query="fever cough shortness of breath loss of taste fatigue" data-field="Pulmonology">
+                                Pulmo: COVID/pneumonia
+                            </button>
+                            <button class="btn btn-sm btn-outline-primary sample-query"
+                                data-query="joint pain swelling stiffness decreased flexibility" data-field="Orthopedics">
+                                Ortho: osteoarthritis
+                            </button>
+                            <button class="btn btn-sm btn-outline-primary sample-query"
+                                data-query="increased thirst frequent urination fatigue blurred vision" data-field="Endocrinology">
+                                Endo: diabetes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
