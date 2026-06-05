@@ -1,6 +1,6 @@
 """
-Flask API Server for Hybrid Document-Graph Store.
-Provides REST endpoints for hybrid querying and analysis.
+Máy Chủ API (Flask) cho Hệ Thống Lưu Trữ Tài Liệu–Đồ Thị Kết Hợp (Hybrid Document-Graph Store).
+Cung cấp các điểm cuối (endpoint) REST cho truy vấn kết hợp và phân tích.
 """
 import os
 import sys
@@ -13,7 +13,7 @@ from typing import Dict, Any
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 
-# Add src to path
+# Thêm thư mục gốc vào đường dẫn (path) để import module
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from src.core.config import config
@@ -25,7 +25,7 @@ from src.engines.hybrid_engine import HybridQueryEngine
 
 
 # ============================================================
-# Flask Application Setup
+# Thiết Lập Ứng Dụng Flask
 # ============================================================
 
 app = Flask(
@@ -36,13 +36,17 @@ app = Flask(
 app.config["JSON_SORT_KEYS"] = False
 CORS(app)
 
-# Global engine instances (lazy initialization)
+# Các đối tượng engine toàn cục (khởi tạo khi cần - lazy initialization)
 _hybrid_engine: HybridQueryEngine = None
 _initialized: bool = False
 
 
 def get_engine() -> HybridQueryEngine:
-    """Get or initialize the hybrid engine."""
+    """Lấy hoặc khởi tạo HybridQueryEngine (lazy initialization).
+    
+    Kiểm tra trạng thái _initialized, nếu chưa khởi tạo thì gọi initialize_system().
+    Trả về engine toàn cục dùng cho tất cả API routes.
+    """
     global _hybrid_engine, _initialized
     if not _initialized:
         initialize_system()
@@ -50,7 +54,16 @@ def get_engine() -> HybridQueryEngine:
 
 
 def initialize_system() -> None:
-    """Initialize the hybrid document-graph store."""
+    """Khởi tạo toàn bộ hệ thống Hybrid Document-Graph Store.
+    
+    Luồng hoạt động:
+    Bước 1: Kiểm tra dữ liệu raw (patient_symptoms.json, disease_graph.json), 
+            nếu chưa có thì sinh dữ liệu mẫu (generate_all_data).
+    Bước 2: Đọc dữ liệu bệnh nhân và đồ thị từ JSON, chuyển thành model objects.
+    Bước 3: Khởi tạo DocumentEngine (Whoosh) và GraphEngine (NetworkX).
+    Bước 4: Tạo HybridQueryEngine kết hợp cả hai engine.
+    Bước 5: Index documents nếu chưa có.
+    """
     global _hybrid_engine, _initialized
     if _initialized:
         return
@@ -59,7 +72,7 @@ def initialize_system() -> None:
     print("INITIALIZING HYBRID DOCUMENT-GRAPH STORE")
     print("=" * 60)
 
-    # Check for existing data
+    # Kiểm tra dữ liệu đã tồn tại chưa
     data_path = Path(__file__).parent.parent.parent / "data" / "raw"
     patient_file = data_path / "patient_symptoms.json"
     graph_file = data_path / "disease_graph.json"
@@ -68,7 +81,7 @@ def initialize_system() -> None:
         print("[API] Generating synthetic medical data...")
         generate_all_data()
 
-    # Load patient data
+    # Đọc dữ liệu bệnh nhân
     with open(patient_file, "r", encoding="utf-8") as f:
         patient_data = json.load(f)
 
@@ -91,7 +104,7 @@ def initialize_system() -> None:
         for p in patient_data
     ]
 
-    # Load graph data
+    # Đọc dữ liệu đồ thị (graph)
     with open(graph_file, "r", encoding="utf-8") as f:
         graph_data = json.load(f)
 
@@ -116,7 +129,7 @@ def initialize_system() -> None:
         for e in graph_data["edges"]
     ]
 
-    # Initialize engines
+    # Khởi tạo các engine
     print("[API] Initializing Document Engine (Whoosh BM25F)...")
     doc_engine = DocumentEngine(recreate=False)
 
@@ -126,7 +139,7 @@ def initialize_system() -> None:
     _hybrid_engine = HybridQueryEngine(doc_engine, graph_engine)
     _hybrid_engine.load_data(patients, nodes, edges)
 
-    # Re-index if needed
+    # Đánh chỉ mục lại (re-index) nếu cần
     try:
         stats = doc_engine.get_index_stats()
         if stats["document_count"] == 0:
@@ -143,12 +156,15 @@ def initialize_system() -> None:
 
 
 # ============================================================
-# API Routes - Pages
+# Các Điểm Cuối (Routes) API - Trang Giao Diện
 # ============================================================
 
 @app.route("/")
 def index():
-    """Main application page — serves the full-featured single-page app."""
+    """Trang chính của ứng dụng — phục vụ giao diện SPA (Single Page App).
+    
+    Ưu tiên đọc index.html từ thư mục gốc, fallback về template mặc định.
+    """
     root_index = Path(__file__).parent.parent.parent / "index.html"
     if root_index.exists():
         return root_index.read_text(encoding="utf-8")
@@ -157,7 +173,10 @@ def index():
 
 @app.route("/graph")
 def graph_page():
-    """Graph visualization page — redirects to main app (all-in-one UI)."""
+    """Trang trực quan hóa đồ thị bệnh — chuyển hướng về ứng dụng chính (UI all-in-one).
+    
+    Hiển thị giao diện canvas vẽ đồ thị NetworkX với các node disease/symptom/drug.
+    """
     root_index = Path(__file__).parent.parent.parent / "index.html"
     if root_index.exists():
         return root_index.read_text(encoding="utf-8")
@@ -166,7 +185,10 @@ def graph_page():
 
 @app.route("/analysis")
 def analysis_page():
-    """Join cost analysis page — redirects to main app (all-in-one UI)."""
+    """Trang phân tích chi phí Join — chuyển hướng về ứng dụng chính (UI all-in-one).
+    
+    So sánh các chiến lược join: filter_after_join, index_nested_loop, hash_join.
+    """
     root_index = Path(__file__).parent.parent.parent / "index.html"
     if root_index.exists():
         return root_index.read_text(encoding="utf-8")
@@ -174,12 +196,16 @@ def analysis_page():
 
 
 # ============================================================
-# API Routes - Health & Info
+# Các Điểm Cuối (Routes) API - Kiểm Tra Sức Khỏe & Thông Tin
 # ============================================================
 
 @app.route("/api/health")
 def health_check():
-    """Health check endpoint."""
+    """Endpoint kiểm tra sức khỏe hệ thống.
+    
+    Trả về trạng thái healthy kèm timestamp và thông tin phiên bản.
+    Dùng cho monitoring và load balancer.
+    """
     return jsonify({
         "status": "healthy",
         "timestamp": datetime.now().isoformat(),
@@ -190,7 +216,12 @@ def health_check():
 
 @app.route("/api/info")
 def system_info():
-    """Get system information."""
+    """Lấy thông tin tổng quan về hệ thống.
+    
+    Bao gồm: trạng thái Document Engine (Whoosh BM25F), 
+    Graph Engine (NetworkX + METIS), danh sách chuyên khoa,
+    và số lượng partition hiện tại.
+    """
     engine = get_engine()
     doc_stats = engine.doc_engine.get_index_stats()
     graph_stats = engine.graph_engine.get_graph_statistics()
@@ -218,13 +249,20 @@ def system_info():
 
 
 # ============================================================
-# API Routes - Hybrid Query
+# Các Điểm Cuối (Routes) API - Truy Vấn Lai (Hybrid Query)
 # ============================================================
 
 @app.route("/api/query", methods=["POST"])
 def execute_hybrid_query():
-    """
-    Execute a hybrid document-graph query.
+    """Thực thi truy vấn kết hợp Document + Graph (Hybrid Query).
+
+    Luồng hoạt động:
+    Bước 1: Parse request body thành HybridQuery object (query_text,
+            target_field, max_graph_distance, weights, traversal_algorithm...)
+    Bước 2: Gọi engine.execute_query(query) để thực hiện truy vấn hybrid.
+    Bước 3: Serialize kết quả bao gồm: patient info, text_score, graph_importance,
+            combined_score, graph_distance, partition_id.
+    Bước 4: Trả về JSON kèm join_cost và execution_time_ms.
 
     Request body:
     {
@@ -254,7 +292,7 @@ def execute_hybrid_query():
     min_severity = data.get("min_severity")
     department_filter = data.get("department_filter")
 
-    # Map traversal algorithm
+    # Ánh xạ tên thuật toán (algorithm) duyệt đồ thị sang kiểu enum
     algo_map = {
         "bfs": TraversalAlgorithm.BFS,
         "dfs": TraversalAlgorithm.DFS,
@@ -277,7 +315,7 @@ def execute_hybrid_query():
     engine = get_engine()
     result = engine.execute_query(query)
 
-    # Serialize results
+    # Chuyển đổi kết quả thành dạng có thể gửi dưới dạng JSON
     results_serialized = []
     for r in result.results:
         results_serialized.append({
@@ -309,14 +347,19 @@ def execute_hybrid_query():
 
 
 # ============================================================
-# API Routes - Join Cost Analysis
+# Các Điểm Cuối (Routes) API - Phân Tích Chi Phí Kết Nối (Join Cost)
 # ============================================================
 
 @app.route("/api/analyze/join-cost", methods=["POST"])
 def analyze_join_cost():
-    """
-    Analyze join cost for a hybrid query.
-    Compares different join strategies.
+    """Phân tích chi phí Join cho truy vấn hybrid.
+
+    So sánh 3 chiến lược join:
+    - filter_after_join: Join trước, lọc theo graph distance sau.
+    - index_nested_loop: Với mỗi graph node, truy vấn document index.
+    - hash_join: Xây hash table trên diagnosis name, probe từ traversal result.
+
+    Trả về cost metrics và khuyến nghị chiến lược tối ưu.
     """
     data = request.get_json()
     query_text = data.get("query_text", "chest pain")
@@ -337,19 +380,27 @@ def analyze_join_cost():
 
 @app.route("/api/analyze/field-coverage")
 def get_field_coverage():
-    """Get coverage statistics for each medical field."""
+    """Lấy thống kê coverage cho từng chuyên khoa y tế.
+
+    Mỗi chuyên khoa bao gồm: số lượng bệnh, triệu chứng, bệnh nhân.
+    Dùng để đánh giá mức độ bao phủ dữ liệu của hệ thống.
+    """
     engine = get_engine()
     coverage = engine.get_field_coverage()
     return jsonify(coverage)
 
 
 # ============================================================
-# API Routes - Graph Data
+# Các Điểm Cuối (Routes) API - Dữ Liệu Đồ Thị (Graph)
 # ============================================================
 
 @app.route("/api/graph/export")
 def export_graph_json():
-    """Export graph data for visualization."""
+    """Xuất dữ liệu đồ thị dạng JSON cho frontend visualization.
+    
+    Gọi graph_engine.export_to_json() để serialize nodes, links, partitions.
+    Dùng cho canvas vẽ đồ thị (D3.js / Cytoscape).
+    """
     engine = get_engine()
     output_path = config.processed_dir / "graph_export.json"
     engine.graph_engine.export_to_json(output_path)
@@ -362,16 +413,21 @@ def export_graph_json():
 
 @app.route("/api/graph/debug")
 def debug_graph():
-    """Debug endpoint to check graph data structure."""
+    """Endpoint debug để kiểm tra cấu trúc dữ liệu đồ thị.
+
+    Trả về: tổng node/edge, edge_counts theo type,
+    sample_edges (5 cạnh đầu) và sample_nodes (5 node đầu).
+    Hỗ trợ phát triển và troubleshooting.
+    """
     engine = get_engine()
 
-    # Get edge counts by type
+    # Đếm số cạnh (edge) theo từng loại (type)
     edge_counts = {}
     for u, v, data in engine.graph_engine.graph.edges(data=True):
         et = data.get("edge_type", "unknown")
         edge_counts[et] = edge_counts.get(et, 0) + 1
 
-    # Get some sample edges
+    # Lấy một vài cạnh (edge) mẫu
     sample_edges = []
     for i, (u, v, data) in enumerate(engine.graph_engine.graph.edges(data=True)):
         if i < 5:
@@ -382,7 +438,7 @@ def debug_graph():
                 "weight": data.get("weight")
             })
 
-    # Get some sample nodes
+    # Lấy một vài nút (node) mẫu
     sample_nodes = []
     for i, node_id in enumerate(list(engine.graph_engine.graph.nodes())[:5]):
         meta = engine.graph_engine.nodes_metadata.get(node_id)
@@ -404,7 +460,12 @@ def debug_graph():
 
 @app.route("/api/graph/statistics")
 def graph_statistics():
-    """Get comprehensive graph statistics."""
+    """Lấy thống kê toàn diện về đồ thị bệnh.
+
+    Bao gồm: node_count, edge_count, avg_degree, density,
+    degree_stats, node_type_distribution, edge_type_distribution,
+    top_central_nodes, partition_statistics.
+    """
     engine = get_engine()
     stats = engine.graph_engine.get_graph_statistics()
     return jsonify(stats)
@@ -412,7 +473,11 @@ def graph_statistics():
 
 @app.route("/api/graph/partitions")
 def get_partitions():
-    """Get partition information."""
+    """Lấy thông tin phân vùng (partition) của đồ thị.
+
+    Mỗi partition có: partition_id, node_count, internal_edges, cut_edges.
+    Kèm edge_cut_ratio và thông tin phương pháp phân vùng (METIS).
+    """
     engine = get_engine()
     partitions = []
 
@@ -434,8 +499,10 @@ def get_partitions():
 
 @app.route("/api/graph/traverse", methods=["POST"])
 def traverse_graph():
-    """
-    Perform graph traversal from a medical field.
+    """Duyệt đồ thị từ một chuyên khoa y tế (medical field).
+
+    Hỗ trợ BFS và DFS với độ sâu tối đa (max_depth).
+    Trả về visited_nodes, depth_distribution, partition_coverage.
 
     Request body:
     {
@@ -478,7 +545,12 @@ def traverse_graph():
 
 @app.route("/api/graph/distance", methods=["GET"])
 def get_graph_distance():
-    """Get graph distance from a disease to a medical field."""
+    """Tính khoảng cách đồ thị từ một bệnh đến một chuyên khoa.
+
+    Sử dụng shortest_path_length của NetworkX.
+    Trả về distance (hops), importance score, và distance_label.
+    Nếu không tìm thấy đường đi, trả về 404.
+    """
     disease = request.args.get("disease", "")
     field = request.args.get("field", "Cardiology")
 
@@ -510,9 +582,13 @@ def get_graph_distance():
 
 @app.route("/api/graph/correlation-matrix")
 def get_correlation_matrix():
-    """
-    Get disease-disease correlation matrix for heatmap visualization.
-    Returns correlation strengths between all diseases.
+    """Xây dựng ma trận tương quan bệnh-bệnh cho heatmap visualization.
+
+    Luồng hoạt động:
+    Bước 1: Lấy tất cả disease nodes và field tương ứng.
+    Bước 2: Xây adjacency matrix dựa trên shared symptoms và direct connections.
+    Bước 3: Tính field-level correlation matrix cho chord diagram.
+    Bước 4: Trả về diseases, matrix, fields, field_matrix, field_diseases.
     """
     engine = get_engine()
     graph = engine.graph_engine.graph
@@ -521,7 +597,7 @@ def get_correlation_matrix():
     if graph is None:
         return jsonify({"error": "Graph not loaded"}), 500
 
-    # Get all disease nodes
+    # Lấy tất cả các nút (node) bệnh
     disease_nodes = []
     for node_id, meta in nodes_meta.items():
         if meta.node_type.value == "disease":
@@ -531,43 +607,43 @@ def get_correlation_matrix():
                 "field": None,
                 "partition": engine.graph_engine.partition_map.get(node_id, 0)
             })
-            # Find the field this disease belongs to
+            # Tìm chuyên khoa (field) mà bệnh này thuộc về
             for neighbor in graph.neighbors(node_id):
                 if neighbor in nodes_meta and nodes_meta[neighbor].node_type.value == "medical_field":
                     disease_nodes[-1]["field"] = nodes_meta[neighbor].label
                     break
 
-    # Build adjacency matrix for diseases
+    # Xây dựng ma trận kề (adjacency matrix) cho các bệnh
     disease_ids = [d["id"] for d in disease_nodes]
     n = len(disease_ids)
     disease_idx = {d_id: i for i, d_id in enumerate(disease_ids)}
 
-    # Initialize matrix with 0s
+    # Khởi tạo ma trận với giá trị 0
     matrix = [[0.0 for _ in range(n)] for _ in range(n)]
 
-    # Fill matrix based on shared symptoms and direct connections
+    # Điền ma trận dựa trên triệu chứng chung và kết nối trực tiếp
     for i, d1 in enumerate(disease_ids):
         for j, d2 in enumerate(disease_ids):
             if i == j:
                 matrix[i][j] = 1.0
             elif i < j:
-                # Count shared neighbors (symptoms)
+                # Đếm số lượng các node lân cận chung (cùng triệu chứng)
                 neighbors1 = set(graph.neighbors(d1))
                 neighbors2 = set(graph.neighbors(d2))
                 shared = neighbors1 & neighbors2
                 shared_symptoms = [n for n in shared if n in nodes_meta and nodes_meta[n].node_type.value == "symptom"]
 
-                # Direct edge weight
+                # Trọng số (weight) của cạnh (edge) trực tiếp
                 direct_weight = 0.0
                 if graph.has_edge(d1, d2):
                     direct_weight = graph[d1][d2].get("weight", 1.0)
 
-                # Calculate correlation score
+                # Tính điểm tương quan (correlation score)
                 correlation = min(1.0, (len(shared_symptoms) * 0.3 + direct_weight * 0.7) / 2.0)
                 matrix[i][j] = correlation
                 matrix[j][i] = correlation
 
-    # Calculate field-level correlations for chord diagram
+    # Tính tương quan giữa các chuyên khoa (field-level) cho biểu đồ hình cung (chord diagram)
     field_diseases = {}
     for d in disease_nodes:
         field = d["field"] or "Other"
@@ -575,14 +651,14 @@ def get_correlation_matrix():
             field_diseases[field] = []
         field_diseases[field].append(d["id"])
 
-    # Build cross-field correlation matrix
+    # Xây dựng ma trận tương quan giữa các chuyên khoa (cross-field)
     fields = sorted(field_diseases.keys())
     field_matrix = {}
     for f1 in fields:
         field_matrix[f1] = {}
         for f2 in fields:
             if f1 == f2:
-                # Within field: average intra-connections
+                # Trong cùng chuyên khoa: tính trung bình các kết nối nội bộ (intra-connections)
                 internal_corr = []
                 for d1 in field_diseases[f1]:
                     for d2 in field_diseases[f1]:
@@ -591,7 +667,7 @@ def get_correlation_matrix():
                             internal_corr.append(matrix[i][j])
                 field_matrix[f1][f2] = round(sum(internal_corr) / len(internal_corr), 3) if internal_corr else 0
             else:
-                # Cross-field: average cross-connections
+                # Khác chuyên khoa: tính trung bình các kết nối chéo (cross-connections)
                 cross_corr = []
                 for d1 in field_diseases[f1]:
                     for d2 in field_diseases[f2]:
@@ -609,12 +685,17 @@ def get_correlation_matrix():
 
 
 # ============================================================
-# API Routes - Document Search
+# Các Điểm Cuối (Routes) API - Tìm Kiếm Tài Liệu (Document)
 # ============================================================
 
 @app.route("/api/documents/search", methods=["GET"])
 def search_documents():
-    """Search documents without graph filtering."""
+    """Tìm kiếm documents thuần túy (không có graph filtering).
+    
+    Chỉ dùng DocumentEngine để BM25F search, bỏ qua graph traversal.
+    Hỗ trợ filter theo department và severity.
+    Trả về danh sách (document dict, score).
+    """
     query_text = request.args.get("q", "")
     max_results = int(request.args.get("max", 20))
     department = request.args.get("department", None)
@@ -642,7 +723,11 @@ def search_documents():
 
 @app.route("/api/documents/<patient_id>")
 def get_document(patient_id: str):
-    """Get a specific patient document."""
+    """Lấy thông tin chi tiết một bệnh nhân theo patient_id.
+    
+    Gọi doc_engine.get_document_by_id() để tra cứu từ Whoosh index.
+    Trả về 404 nếu không tìm thấy.
+    """
     engine = get_engine()
     doc = engine.doc_engine.get_document_by_id(patient_id)
 
@@ -653,25 +738,35 @@ def get_document(patient_id: str):
 
 
 # ============================================================
-# Error Handlers
+# Bộ Xử Lý Lỗi (Error Handlers)
 # ============================================================
 
 @app.errorhandler(404)
 def not_found(e):
+    """Xử lý lỗi 404 — endpoint không tồn tại."""
     return jsonify({"error": "Not found"}), 404
 
 
 @app.errorhandler(500)
 def internal_error(e):
+    """Xử lý lỗi 500 — lỗi máy chủ nội bộ."""
     return jsonify({"error": "Internal server error"}), 500
 
 
 # ============================================================
-# Main Entry Point
+# Điểm Vào Chính (Entry Point)
 # ============================================================
 
 def run_server(host: str = None, port: int = None):
-    """Run the Flask development server."""
+    """Khởi động Flask development server.
+
+    Luồng hoạt động:
+    Bước 1: Đọc cấu hình host/port/debug từ config.yaml.
+    Bước 2: In banner khởi động kèm URL.
+    Bước 3: Gọi app.run() để start server Flask.
+    
+    Lưu ý: Hệ thống sẽ khởi tạo engine lazy khi có request đầu tiên.
+    """
     host = host or config.get("server", "host", default="0.0.0.0")
     port = port or config.get("server", "port", default=5000)
     debug = config.get("server", "debug", default=True)

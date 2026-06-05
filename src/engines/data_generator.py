@@ -1,6 +1,6 @@
 """
-Synthetic Medical Data Generator for Hybrid Document-Graph Store.
-Generates Patient_Symptoms (documents) and Disease_Correlations (graph).
+Bộ sinh dữ liệu y tế giả lập (synthetic) cho Hệ Thống Lưu Trữ Tài Liệu–Đồ Thị Kết Hợp (Hybrid Document-Graph Store).
+Sinh ra các hồ sơ Triệu Chứng Bệnh Nhân (Patient_Symptoms - dạng tài liệu) và các Tương Quan Bệnh Tật (Disease_Correlations - dạng đồ thị).
 """
 import random
 import json
@@ -18,7 +18,7 @@ fake = Faker()
 
 
 # ============================================================
-# Medical Knowledge Data
+# Dữ Liệu Kiến Thức Y Tế (Medical Knowledge Data)
 # ============================================================
 
 MEDICAL_FIELDS = [
@@ -101,7 +101,7 @@ DISEASES = {
     ],
 }
 
-# Drug mappings
+# Ánh xạ thuốc (drug) cho từng bệnh
 DRUGS = {
     "Hypertension": ["Lisinopril", "Amlodipine", "Metoprolol", "Losartan"],
     "Arrhythmia": ["Amiodarone", "Diltiazem", "Sotalol"],
@@ -119,11 +119,16 @@ DRUGS = {
 
 
 # ============================================================
-# Patient Symptom Generator
+# Bộ Sinh Triệu Chứng Bệnh Nhân (Patient Symptom Generator)
 # ============================================================
 
 class PatientDataGenerator:
-    """Generates synthetic patient symptom documents."""
+    """Sinh dữ liệu bệnh nhân tổng hợp (synthetic) cho Document Store.
+    
+    Tạo ra các PatientSymptom documents với thông tin:
+    nhân khẩu học, triệu chứng, tiền sử bệnh, thuốc, chẩn đoán.
+    Dữ liệu dựa trên các bệnh và triệu chứng có thật trong MEDICAL_FIELDS.
+    """
 
     GENDERS = ["Male", "Female", "Other"]
     ADMISSION_REASONS = [
@@ -132,18 +137,31 @@ class PatientDataGenerator:
     ]
 
     def __init__(self, seed: int = 42):
+        """Khởi tạo generator với seed cố định để tái tạo dữ liệu.
+        
+        Gán seed cho cả random và Faker để đảm bảo reproducibility.
+        """
         self.seed = seed
         random.seed(seed)
         fake.seed_instance(seed)
 
     def generate_patients(self, count: int = 500) -> List[PatientSymptom]:
-        """Generate a list of synthetic patient symptom documents."""
+        """Sinh danh sách bệnh nhân tổng hợp với triệu chứng ngẫu nhiên.
+        
+        Luồng hoạt động:
+        Bước 1: Lấy danh sách bệnh theo chuyên khoa.
+        Bước 2: Với mỗi bệnh nhân, chọn ngẫu nhiên chuyên khoa và bệnh.
+        Bước 3: Sinh chief_complaint, symptoms, history, medications.
+        Bước 4: Gán nhân khẩu học (tuổi, giới tính) ngẫu nhiên.
+        Bước 5: Gán severity theo phân phối có trọng số (ưu tiên mức 3).
+        Bước 6: Trả về danh sách PatientSymptom.
+        """
         patients = []
         diseases_list = self._get_diseases_by_field()
         departments = MEDICAL_FIELDS.copy()
 
         for i in range(count):
-            # Pick a random disease and field
+            # Chọn ngẫu nhiên chuyên khoa và bệnh
             field = random.choice(departments)
             diseases = diseases_list.get(field, [])
             if not diseases:
@@ -155,18 +173,18 @@ class PatientDataGenerator:
             disease_name = random.choice(list(diseases.keys()))
             symptoms_list = diseases[disease_name]
 
-            # Generate symptoms text
+            # Sinh văn bản triệu chứng
             chief_complaint = self._generate_chief_complaint(symptoms_list)
             full_symptoms = self._generate_full_symptoms(symptoms_list)
             history = self._generate_history(disease_name, symptoms_list)
             meds = self._generate_medications(disease_name)
             diagnosis = disease_name
 
-            # Patient demographics
+            # Nhân khẩu học
             age = random.randint(18, 85)
             gender = random.choice(self.GENDERS)
 
-            # Admission date in last 2 years
+            # Ngày nhập viện trong vòng 2 năm
             days_ago = random.randint(0, 730)
             admission_date = (datetime.now() - timedelta(days=days_ago)).strftime("%Y-%m-%d")
 
@@ -194,6 +212,11 @@ class PatientDataGenerator:
         return patients
 
     def _get_diseases_by_field(self) -> Dict[str, Dict[str, List[str]]]:
+        """Xây dựng mapping chuyên khoa -> {tên bệnh -> triệu chứng}.
+        
+        Chuyển đổi DISEASES (list of tuples) thành dict lồng nhau
+        để tra cứu nhanh.
+        """
         diseases = {}
         for field, disease_list in DISEASES.items():
             if field not in diseases:
@@ -203,6 +226,11 @@ class PatientDataGenerator:
         return diseases
 
     def _generate_chief_complaint(self, symptoms: List[str]) -> str:
+        """Sinh câu than phiền chính (chief complaint) của bệnh nhân.
+        
+        Chọn ngẫu nhiên một triệu chứng chính, kèm thời gian và mức độ.
+        VD: "Chest pain for 3 days, described as severe"
+        """
         primary = random.choice(symptoms)
         duration = random.choice([
             "for 3 days", "for a week", "for 2 weeks", "since yesterday",
@@ -214,6 +242,10 @@ class PatientDataGenerator:
         return f"{primary.capitalize()} {duration}, described as {severity_desc}"
 
     def _generate_full_symptoms(self, symptoms: List[str]) -> str:
+        """Sinh mô tả đầy đủ các triệu chứng của bệnh nhân.
+        
+        Chọn 2-4 triệu chứng ngẫu nhiên, mỗi triệu chứng kèm mức độ và thời gian.
+        """
         n = random.randint(2, min(4, len(symptoms)))
         selected = random.sample(symptoms, n)
         descriptions = []
@@ -224,6 +256,10 @@ class PatientDataGenerator:
         return "; ".join(descriptions)
 
     def _generate_history(self, disease: str, symptoms: List[str]) -> str:
+        """Sinh tiền sử bệnh án tổng hợp.
+        
+        Bao gồm: bệnh nền (1-3 bệnh), tiền sử gia đình, lối sống.
+        """
         conditions = random.sample([
             "Type 2 Diabetes", "Hypertension", "Hypercholesterolemia",
             "Asthma", "GERD", "Anxiety", "Depression", "Hypothyroidism",
@@ -242,6 +278,11 @@ class PatientDataGenerator:
         return f"Past conditions: {', '.join(conditions)}. {family_history}. {lifestyle}."
 
     def _generate_medications(self, disease: str) -> str:
+        """Sinh danh sách thuốc điều trị dựa trên bệnh.
+        
+        Tra DRUGS dictionary, chọn 1-3 loại thuốc ngẫu nhiên với liều lượng.
+        Fallback: chỉ acetaminophen nếu bệnh không có trong DRUGS.
+        """
         if disease in DRUGS:
             meds = random.sample(DRUGS[disease], min(random.randint(1, 3), len(DRUGS[disease])))
             dosages = [f"{med} {random.choice(['10mg', '20mg', '50mg', '100mg'])} daily" for med in meds]
@@ -249,7 +290,11 @@ class PatientDataGenerator:
         return "Occasional acetaminophen for pain. No regular medications."
 
     def save_documents(self, patients: List[PatientSymptom], output_path: Path) -> None:
-        """Save patients to JSON file."""
+        """Lưu danh sách bệnh nhân ra file JSON.
+        
+        Tạo thư mục nếu chưa tồn tại, serialize các PatientSymptom
+        thành dict và ghi ra JSON với indent=2.
+        """
         output_path.parent.mkdir(parents=True, exist_ok=True)
         data = [p.to_dict() for p in patients]
         with open(output_path, "w", encoding="utf-8") as f:
@@ -258,18 +303,27 @@ class PatientDataGenerator:
 
 
 # ============================================================
-# Graph Data Generator
+# Bộ Sinh Dữ Liệu Đồ Thị (Graph Data Generator)
 # ============================================================
 
 class GraphDataGenerator:
-    """Generates synthetic disease correlation graph."""
+    """Sinh dữ liệu đồ thị tương quan bệnh tật tổng hợp.
+    
+    Tạo các node (disease, symptom, medical_field, drug) và
+    các cạnh (quan hệ) giữa chúng dựa trên DISEASES và DRUGS data.
+    Kết quả dùng cho Graph Engine (NetworkX + METIS).
+    """
 
     def __init__(self, seed: int = 42):
+        """Khởi tạo generator với seed cố định."""
         self.seed = seed
         random.seed(seed)
 
     def _edge_exists(self, edges: List[GraphEdge], n1: str, n2: str) -> bool:
-        """Check if an edge already exists between two nodes."""
+        """Kiểm tra xem cạnh đã tồn tại giữa hai node chưa.
+        
+        Duyệt qua danh sách edges, so sánh không thứ tự (n1,n2) và (n2,n1).
+        """
         for e in edges:
             if (e.source_id == n1 and e.target_id == n2) or \
                (e.source_id == n2 and e.target_id == n1):
@@ -277,12 +331,23 @@ class GraphDataGenerator:
         return False
 
     def generate_graph(self) -> tuple[List[GraphNode], List[GraphEdge]]:
-        """Generate disease correlation graph nodes and edges."""
+        """Sinh đồ thị bệnh gồm nodes và edges.
+        
+        Luồng hoạt động:
+        Bước 1: Tạo medical field nodes (chuyên khoa).
+        Bước 2: Tạo disease nodes và nối vào field tương ứng.
+        Bước 3: Tạo symptom nodes và nối vào disease.
+        Bước 4: Tạo drug nodes và nối vào disease.
+        Bước 5: Tạo intra-field disease-disease edges (cùng chuyên khoa).
+        Bước 6: Tạo inter-field disease-disease edges (comorbidity).
+        Bước 7: Tạo symptom-symptom edges (triệu chứng liên quan).
+        Bước 8: Tính degree cho mỗi node.
+        """
         nodes = []
         edges = []
         node_ids = set()
 
-        # 1. Create medical field nodes
+        # 1. Tạo medical field nodes
         field_nodes = {}
         for i, field in enumerate(MEDICAL_FIELDS):
             node_id = f"field_{field}"
@@ -317,7 +382,7 @@ class GraphDataGenerator:
                 nodes.append(node)
                 node_ids.add(node_id)
 
-                # Connect disease to field
+                # Nối bệnh (disease) vào chuyên khoa (field)
                 edge = GraphEdge(
                     source_id=node_id,
                     target_id=field_nodes[field],
@@ -353,7 +418,7 @@ class GraphDataGenerator:
             nodes.append(node)
             node_ids.add(node_id)
 
-        # Connect symptoms to diseases
+        # Nối các triệu chứng (symptom) vào bệnh (disease)
         for field, disease_list in DISEASES.items():
             for disease_name, symptoms in disease_list:
                 disease_node_id = disease_nodes[disease_name]
@@ -393,7 +458,7 @@ class GraphDataGenerator:
             nodes.append(node)
             node_ids.add(node_id)
 
-        # Connect drugs to diseases
+        # Nối các thuốc (drug) vào bệnh (disease)
         for disease_name, drugs_list in DRUGS.items():
             if disease_name not in disease_nodes:
                 continue
@@ -417,7 +482,7 @@ class GraphDataGenerator:
                     field_to_diseases[field].append((disease_name, disease_node_id))
                     break
 
-        # For each field, add edges between diseases that share symptoms
+        # Với mỗi chuyên khoa, thêm cạnh (edge) giữa các bệnh có triệu chứng chung
         for field, diseases_in_field in field_to_diseases.items():
             disease_symptom_map = {}
             for disease_name, _ in diseases_in_field:
@@ -427,13 +492,13 @@ class GraphDataGenerator:
                         disease_symptom_map[disease_name] = set(symptoms)
                         break
 
-            # Connect diseases that share at least 1 symptom
+            # Nối các bệnh có chung ít nhất 1 triệu chứng
             for i, (d1, n1) in enumerate(diseases_in_field):
                 for j, (d2, n2) in enumerate(diseases_in_field):
                     if i < j:
                         shared = disease_symptom_map.get(d1, set()) & disease_symptom_map.get(d2, set())
                         if shared:
-                            # Higher weight for more shared symptoms
+                            # Trọng số (weight) cao hơn nếu có nhiều triệu chứng chung
                             weight = round(0.3 + len(shared) * 0.15, 2)
                             weight = min(weight, 1.0)
                             edges.append(GraphEdge(
@@ -451,7 +516,7 @@ class GraphDataGenerator:
             if d1 != d2:
                 n1 = disease_nodes[d1]
                 n2 = disease_nodes[d2]
-                # Check if already connected
+                # Kiểm tra xem đã có cạnh (edge) nối giữa hai bệnh chưa
                 if not self._edge_exists(edges, n1, n2):
                     weight = round(random.uniform(0.1, 0.5), 2)
                     edges.append(GraphEdge(
@@ -476,7 +541,7 @@ class GraphDataGenerator:
                     weight=round(random.uniform(0.1, 0.5), 2)
                 ))
 
-        # Calculate degrees
+        # Tính bậc (degree) cho mỗi nút (node)
         node_degree = {}
         for edge in edges:
             node_degree[edge.source_id] = node_degree.get(edge.source_id, 0) + 1
@@ -489,7 +554,11 @@ class GraphDataGenerator:
         return nodes, edges
 
     def save_graph(self, nodes: List[GraphNode], edges: List[GraphEdge], output_path: Path) -> None:
-        """Save graph data to JSON file."""
+        """Lưu đồ thị ra file JSON.
+        
+        Serialize nodes (node_id, node_type, label, properties, degree)
+        và edges (source_id, target_id, edge_type, weight) thành JSON.
+        """
         output_path.parent.mkdir(parents=True, exist_ok=True)
         data = {
             "nodes": [
@@ -518,25 +587,35 @@ class GraphDataGenerator:
 
 
 # ============================================================
-# Main Data Generation Entry Point
+# Điểm Vào Chính Cho Sinh Dữ Liệu (Main Data Generation Entry Point)
 # ============================================================
 
 def generate_all_data():
-    """Generate all synthetic medical data."""
+    """Sinh toàn bộ dữ liệu y tế tổng hợp cho hệ thống.
+
+    Luồng hoạt động:
+    Bước 1: Sinh 500 Patient_Symptoms documents (PatientDataGenerator).
+    Bước 2: Lưu patient_symptoms.json vào data/raw/.
+    Bước 3: Sinh Disease_Correlations graph (GraphDataGenerator).
+    Bước 4: Lưu disease_graph.json vào data/raw/.
+    Bước 5: In báo cáo tổng kết (số documents, nodes, edges).
+    
+    Dữ liệu này là đầu vào cho DocumentEngine và GraphEngine.
+    """
     base_dir = Path(__file__).parent.parent.parent
 
     print("=" * 60)
     print("GENERATING MEDICAL KNOWLEDGE BASE DATA")
     print("=" * 60)
 
-    # Generate patient documents
+    # Sinh các hồ sơ bệnh nhân (patient documents)
     print("\n[1/2] Generating Patient_Symptoms documents...")
     patient_gen = PatientDataGenerator(seed=42)
     patients = patient_gen.generate_patients(count=500)
     patient_path = base_dir / "data" / "raw" / "patient_symptoms.json"
     patient_gen.save_documents(patients, patient_path)
 
-    # Generate disease graph
+    # Sinh đồ thị bệnh tật (disease graph)
     print("\n[2/2] Generating Disease_Correlations graph...")
     graph_gen = GraphDataGenerator(seed=42)
     nodes, edges = graph_gen.generate_graph()

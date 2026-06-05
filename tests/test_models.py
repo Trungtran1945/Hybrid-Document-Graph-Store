@@ -11,7 +11,10 @@ from src.core.models import (
 
 
 class TestNodeType:
+    """Kiểm tra enum NodeType — các loại node trong đồ thị bệnh."""
+
     def test_values(self):
+        """Kiểm tra giá trị của từng NodeType enum."""
         assert NodeType.DISEASE.value == "disease"
         assert NodeType.SYMPTOM.value == "symptom"
         assert NodeType.MEDICAL_FIELD.value == "medical_field"
@@ -19,7 +22,10 @@ class TestNodeType:
 
 
 class TestEdgeType:
+    """Kiểm tra enum EdgeType — các loại quan hệ trong đồ thị."""
+
     def test_values(self):
+        """Kiểm tra giá trị của từng EdgeType enum."""
         assert EdgeType.DISEASE_TO_SYMPTOM.value == "disease_to_symptom"
         assert EdgeType.DISEASE_TO_DISEASE.value == "disease_to_disease"
         assert EdgeType.SYMPTOM_TO_SYMPTOM.value == "symptom_to_symptom"
@@ -28,7 +34,10 @@ class TestEdgeType:
 
 
 class TestPatientSymptom:
+    """Kiểm tra dataclass PatientSymptom — hồ sơ triệu chứng bệnh nhân."""
+
     def test_create(self):
+        """Kiểm tra tạo PatientSymptom với đầy đủ thông tin."""
         p = PatientSymptom(
             patient_id="P00001", age=45, gender="Male",
             chief_complaint="chest pain for 3 days",
@@ -45,7 +54,10 @@ class TestPatientSymptom:
 
 
 class TestGraphNode:
+    """Kiểm tra dataclass GraphNode — node trong đồ thị bệnh."""
+
     def test_create(self):
+        """Kiểm tra tạo GraphNode với thuộc tính đầy đủ."""
         n = GraphNode(
             node_id="disease_Hypertension",
             node_type=NodeType.DISEASE,
@@ -59,6 +71,7 @@ class TestGraphNode:
         assert n.degree == 5
 
     def test_hash(self):
+        """Kiểm tra hash và so sánh bằng của GraphNode (dựa trên node_id)."""
         n1 = GraphNode(node_id="d1", node_type=NodeType.DISEASE, label="D1")
         n2 = GraphNode(node_id="d1", node_type=NodeType.DISEASE, label="D1")
         assert hash(n1) == hash(n2)
@@ -66,7 +79,10 @@ class TestGraphNode:
 
 
 class TestGraphEdge:
+    """Kiểm tra dataclass GraphEdge — cạnh trong đồ thị bệnh."""
+
     def test_create(self):
+        """Kiểm tra tạo GraphEdge với source, target, type, weight."""
         e = GraphEdge(
             source_id="disease_Hypertension",
             target_id="symptom_headache",
@@ -78,7 +94,10 @@ class TestGraphEdge:
 
 
 class TestHybridQuery:
+    """Kiểm tra dataclass HybridQuery — truy vấn kết hợp Document + Graph."""
+
     def test_defaults(self):
+        """Kiểm tra giá trị mặc định của HybridQuery."""
         q = HybridQuery(query_text="chest pain", target_field="Cardiology")
         assert q.query_text == "chest pain"
         assert q.max_graph_distance == 3
@@ -87,6 +106,7 @@ class TestHybridQuery:
         assert q.traversal_algorithm == TraversalAlgorithm.BFS
 
     def test_custom(self):
+        """Kiểm tra HybridQuery với tham số tùy chỉnh."""
         q = HybridQuery(
             query_text="fever", target_field="Infectious_Disease",
             max_graph_distance=2, text_weight=0.7, graph_weight=0.3,
@@ -98,7 +118,10 @@ class TestHybridQuery:
 
 
 class TestJoinCostMetrics:
+    """Kiểm tra dataclass JoinCostMetrics — theo dõi chi phí Join."""
+
     def test_cost_tier_low(self):
+        """Kiểm tra cost_tier = LOW khi tổng chi phí < 100."""
         m = JoinCostMetrics(
             document_scan_count=5, document_scan_cost=10,
             graph_traversal_nodes=10, graph_traversal_cost=20,
@@ -109,6 +132,7 @@ class TestJoinCostMetrics:
         assert m.cost_tier == "LOW"
 
     def test_cost_tier_high(self):
+        """Kiểm tra cost_tier = HIGH khi tổng chi phí >= 1000."""
         m = JoinCostMetrics(
             document_scan_count=500, document_scan_cost=500,
             graph_traversal_nodes=200, graph_traversal_cost=600,
@@ -119,6 +143,7 @@ class TestJoinCostMetrics:
         assert m.cost_tier == "HIGH"
 
     def test_to_dict(self):
+        """Kiểm tra to_dict() trả về đúng định dạng với cost_tier và cost_summary."""
         m = JoinCostMetrics(
             document_scan_count=10, document_scan_cost=5.0,
             graph_traversal_nodes=20, graph_traversal_cost=15.0,
@@ -132,7 +157,10 @@ class TestJoinCostMetrics:
 
 
 class TestDocumentResult:
+    """Kiểm tra dataclass DocumentResult — kết quả tìm kiếm hybrid."""
+
     def test_create(self):
+        """Kiểm tra tạo DocumentResult với patient, scores, distance."""
         p = PatientSymptom(
             patient_id="P00001", age=30, gender="Female",
             chief_complaint="fever", symptoms="fever (high)",

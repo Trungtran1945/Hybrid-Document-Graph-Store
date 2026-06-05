@@ -1,6 +1,6 @@
 """
-Hybrid Query Engine - Combines Document and Graph engines.
-Implements the join between text-search relevance and graph-distance importance.
+Bộ Máy Truy Vấn Lai (Hybrid Query Engine) - Kết hợp Document Engine và Graph Engine.
+Cài đặt phép kết nối (join) giữa điểm phù hợp tìm kiếm văn bản (text-search relevance) và tầm quan trọng khoảng cách đồ thị (graph-distance importance).
 """
 import time
 import json
@@ -22,10 +22,13 @@ from .graph_engine import GraphEngine
 
 class HybridQueryEngine:
     """
-    Hybrid Query Engine that combines:
-    1. Document Engine (BM25F text search)
-    2. Graph Engine (METIS-partitioned, BFS/DFS traversal)
-    With join cost analysis and combined scoring.
+    Hybrid Query Engine — kết hợp Document Engine và Graph Engine.
+    
+    Các chức năng chính:
+    1. Document Engine (BM25F text search) với Whoosh
+    2. Graph Engine (METIS-partitioned, BFS/DFS traversal) với NetworkX
+    3. Join cost analysis với 3 chiến lược: filter_after_join, index_nested_loop, hash_join
+    4. Combined scoring: text_score * text_weight + graph_importance * graph_weight
     """
 
     def __init__(
@@ -33,6 +36,11 @@ class HybridQueryEngine:
         document_engine: Optional[DocumentEngine] = None,
         graph_engine: Optional[GraphEngine] = None,
     ):
+        """Khởi tạo Hybrid Engine với DocumentEngine và GraphEngine.
+        
+        Nếu không truyền vào, tạo mới mặc định.
+        Khởi tạo trọng số graph distance từ config.
+        """
         self.doc_engine = document_engine or DocumentEngine()
         self.graph_engine = graph_engine or GraphEngine()
         self.patients_map: Dict[str, PatientSymptom] = {}
@@ -54,11 +62,19 @@ class HybridQueryEngine:
         nodes: List[GraphNode],
         edges: List[Any]
     ) -> None:
-        """Load and initialize both engines with data."""
-        # Build patient map
+        """Tải và khởi tạo cả hai engine với dữ liệu.
+        
+        Luồng hoạt động:
+        Bước 1: Xây patients_map (patient_id -> PatientSymptom).
+        Bước 2: Xây disease_to_field mapping cho hybrid join.
+        Bước 3: Xây dựng NetworkX graph từ nodes và edges.
+        Bước 4: Phân vùng đồ thị bằng METIS.
+        Bước 5: Index documents vào Whoosh.
+        """
+        # Xây patient map
         self.patients_map = {p.patient_id: p for p in patients}
 
-        # Build disease-to-field mapping
+        # Xây disease-to-field mapping
         from ..core.models import EdgeType
         self.disease_to_field = {}
         for node in nodes:
@@ -66,46 +82,55 @@ class HybridQueryEngine:
                 field = node.properties.get("medical_field", "")
                 self.disease_to_field[node.node_id] = field
 
-        # Build graph
+        # Xây graph
         from ..core.models import GraphEdge as GE
         graph_edges = [e if isinstance(e, GE) else None for e in edges]
         graph_edges = [e for e in edges if e is not None]
         self.graph_engine.build_graph(nodes, graph_edges)
 
-        # METIS partitioning
+        # Phân vùng METIS
         n_parts = config.get("graph_engine", "partitioning", "n_parts", default=4)
         self.graph_engine.partition_with_metis(n_parts=n_parts)
 
-        # Index documents
+        # Đánh chỉ mục (index) cho các tài liệu (documents)
         self.doc_engine.index_documents(patients)
 
     # ============================================================
-    # Hybrid Query Execution
+    # Thực Thi Truy Vấn Lai (Hybrid Query Execution)
     # ============================================================
 
     def execute_query(self, query: HybridQuery) -> HybridQueryResult:
-        """
-        Execute a hybrid query combining text search and graph traversal.
-        Returns results with combined scoring and join cost metrics.
+        """Thực thi truy vấn hybrid kết hợp text search và graph traversal.
+
+        Luồng hoạt động:
+        Bước 1 (Document Search): Tìm kiếm BM25F trên Whoosh index.
+            - Lấy gấp 3 lần max_results để có dư cho lọc graph sau.
+        Bước 2 (Graph Traversal): Duyệt đồ thị từ medical field target.
+            - BFS/DFS từ field_node_id với max_graph_distance.
+        Bước 3 (Join & Score): Kết hợp kết quả hai engine.
+            - Với mỗi document hit, tính graph_distance và combined_score.
+        Bước 4 (Cost Metrics): Tính join cost và thống kê.
+        
+        Trả về HybridQueryResult.
         """
         start_time = time.time()
 
-        # Step 1: Text search on Document Engine
+        # Bước 1: Text search trên Document Engine
         doc_start = time.time()
         doc_hits = self.doc_engine.search(
             query_text=query.query_text,
-            max_results=query.max_results * 3,  # Get more, filter later
+            max_results=query.max_results * 3,  # Lấy nhiều hơn, lọc sau
             department=query.department_filter,
             min_severity=query.min_severity,
         )
         doc_scan_time = (time.time() - doc_start) * 1000
 
-        # Step 2: Graph traversal from medical field
+        # Bước 2: Graph traversal từ medical field
         graph_start = time.time()
         traversal_result = self._traverse_graph(query)
         graph_traversal_time = (time.time() - graph_start) * 1000
 
-        # Step 3: Join - compute graph distance for each document
+        # Bước 3: Join - tính graph distance cho mỗi document
         join_start = time.time()
         results = self._join_and_score(
             doc_hits=doc_hits,
@@ -114,7 +139,7 @@ class HybridQueryEngine:
         )
         join_time = (time.time() - join_start) * 1000
 
-        # Step 4: Build join cost metrics
+        # Bước 4: Xây join cost metrics
         total_time = (time.time() - start_time) * 1000
         join_cost = self._compute_join_cost(
             doc_hits_count=len(doc_hits),
@@ -126,7 +151,7 @@ class HybridQueryEngine:
             results_count=len(results),
         )
 
-        # Get partitions accessed
+        # Lấy danh sách partitions đã truy cập
         partitions_accessed = list(traversal_result.partition_coverage.keys())
 
         result = HybridQueryResult(
@@ -142,19 +167,24 @@ class HybridQueryEngine:
         return result
 
     def _traverse_graph(self, query: HybridQuery) -> TraversalResult:
-        """Perform graph traversal based on the query's algorithm."""
+        """Thực hiện duyệt đồ thị dựa trên thuật toán của query.
+        
+        Xác định field_node_id từ query.target_field.
+        Hỗ trợ 3 thuật toán: BFS (mặc định), DFS, SHORTEST_PATH.
+        Nếu field không tồn tại, trả về TraversalResult rỗng.
+        """
         field_node_id = f"field_{query.target_field}"
 
-        # Find the field node
+        # Tìm field node
         if field_node_id not in self.graph_engine.graph:
-            # Try label matching
+            # Thử matching theo label
             for node_id, node in self.graph_engine.nodes_metadata.items():
                 if node.label == query.target_field and node.node_type == NodeType.MEDICAL_FIELD:
                     field_node_id = node_id
                     break
 
         if field_node_id not in self.graph_engine.graph:
-            # Return empty result if field not found
+            # Trả về rỗng nếu không tìm thấy field
             return TraversalResult(
                 visited_nodes=[],
                 paths={},
@@ -163,19 +193,19 @@ class HybridQueryEngine:
                 partition_coverage={}
             )
 
-        # Execute traversal based on algorithm
+        # Thực thi traversal theo thuật toán
         if query.traversal_algorithm == TraversalAlgorithm.DFS:
             return self.graph_engine.traverse_dfs(
                 start_node=field_node_id,
                 max_depth=query.max_graph_distance,
             )
         elif query.traversal_algorithm == TraversalAlgorithm.SHORTEST_PATH:
-            # For shortest path, get all paths from field to all diseases
+            # Với shortest path, lấy tất cả paths từ field đến diseases
             return self.graph_engine.traverse_bfs(
                 start_node=field_node_id,
                 max_depth=query.max_graph_distance,
             )
-        else:  # BFS (default)
+        else:  # BFS (mặc định)
             return self.graph_engine.traverse_bfs(
                 start_node=field_node_id,
                 max_depth=query.max_graph_distance,
@@ -187,14 +217,25 @@ class HybridQueryEngine:
         traversal_result: TraversalResult,
         query: HybridQuery,
     ) -> List[DocumentResult]:
-        """
-        Join document results with graph distances and compute combined scores.
-        This is the core join operation between Document and Graph engines.
+        """Join kết quả documents với graph distances và tính combined score.
+        
+        Đây là core join operation giữa Document Engine và Graph Engine.
+        
+        Luồng hoạt động:
+        Bước 1: Xây distance lookup từ traversal result.
+            - Disease nodes: lấy distance trực tiếp.
+            - Symptom nodes: map sang disease neighbors (distance + 1).
+        Bước 2: Với mỗi document hit:
+            - Tra diagnosis name trong node_distances.
+            - Nếu distance > max_graph_distance -> skip (filter).
+            - Tính graph_importance từ distance.
+            - Tính combined_score = text_weight * norm(text_score) + graph_weight * graph_importance.
+        Bước 3: Sắp xếp theo combined_score giảm dần, lấy top max_results.
         """
         if not doc_hits:
             return []
 
-        # Build distance lookup from traversal result
+        # Xây distance lookup từ traversal result
         node_distances: Dict[str, int] = {}
         for node_id, distance in traversal_result.distances.items():
             if node_id in self.graph_engine.nodes_metadata:
@@ -202,35 +243,34 @@ class HybridQueryEngine:
                 if node.node_type == NodeType.DISEASE:
                     node_distances[node.label] = distance
                 elif node.node_type == NodeType.SYMPTOM:
-                    # Map symptom to its connected diseases
+                    # Map symptom sang diseases kết nối
                     for neighbor in self.graph_engine.graph.neighbors(node_id):
                         if neighbor in self.graph_engine.nodes_metadata:
                             neighbor_node = self.graph_engine.nodes_metadata[neighbor]
                             if neighbor_node.node_type == NodeType.DISEASE:
-                                # Set distance to disease = symptom_distance + 1
                                 disease_dist = distance + 1
                                 if neighbor_node.label not in node_distances or \
                                    node_distances[neighbor_node.label] > disease_dist:
                                     node_distances[neighbor_node.label] = disease_dist
 
-        # Score each document
+        # Tính điểm cho mỗi document
         scored_results = []
         for doc, text_score in doc_hits:
             diagnosis = doc.get("initial_diagnosis", "")
             distance = node_distances.get(diagnosis, None)
 
-            # Filter by max graph distance
+            # Lọc theo max graph distance
             if distance is not None and distance > query.max_graph_distance:
                 continue
 
-            # Compute graph importance based on distance
+            # Tính graph importance dựa trên distance
             if distance is not None:
                 graph_importance = self._distance_to_importance(distance)
             else:
-                # If disease not found in graph, assign minimum importance
+                # Nếu bệnh không có trong graph, gán importance tối thiểu
                 graph_importance = 0.1
 
-            # Compute distance label
+            # Tính distance label
             if distance is not None:
                 if distance == 0:
                     distance_label = "Direct (Field Node)"
@@ -243,13 +283,13 @@ class HybridQueryEngine:
             else:
                 distance_label = "Not in Graph"
 
-            # Combined score
+            # Điểm kết hợp (combined score) giữa văn bản và đồ thị
             combined = (
                 query.text_weight * self._normalize_text_score(text_score) +
                 query.graph_weight * graph_importance
             )
 
-            # Get patient object
+            # Lấy patient object
             patient_id = doc.get("patient_id")
             patient = self.patients_map.get(patient_id)
 
@@ -267,13 +307,21 @@ class HybridQueryEngine:
                 )
                 scored_results.append(result)
 
-        # Sort by combined score
+        # Sắp xếp theo combined score
         scored_results.sort(key=lambda x: x.combined_score, reverse=True)
 
         return scored_results[:query.max_results]
 
     def _distance_to_importance(self, distance: int) -> float:
-        """Convert graph distance to importance score."""
+        """Chuyển đổi graph distance thành importance score (0-1).
+        
+        Quy tắc:
+        - distance=0 (field node): 1.0
+        - distance=1 (direct connection): 0.8
+        - distance=2: 0.5
+        - distance=3: 0.2
+        - distance>3: 0.1 (minimum)
+        """
         weights = self.graph_distance_weights
         if distance == 0:
             return weights.get("direct", 1.0)
@@ -286,12 +334,19 @@ class HybridQueryEngine:
         return 0.1
 
     def _normalize_text_score(self, score: float) -> float:
-        """Normalize text score to 0-1 range."""
-        # BM25 scores are typically in range 0-100
+        """Chuẩn hóa BM25 score về khoảng 0-1.
+        
+        BM25 scores thường trong khoảng 0-100,
+        chia cho 20 để đưa về ~0-5, dùng min() để giới hạn ở 1.0.
+        """
         return min(score / 20.0, 1.0)
 
     def _find_node_id_for_disease(self, disease_name: str) -> Optional[str]:
-        """Find the graph node ID for a disease name."""
+        """Tìm graph node ID từ tên bệnh.
+        
+        Duyệt nodes_metadata, match label và node_type == DISEASE.
+        Trả về node_id hoặc None nếu không tìm thấy.
+        """
         for node_id, node in self.graph_engine.nodes_metadata.items():
             if node.label == disease_name and node.node_type == NodeType.DISEASE:
                 return node_id
@@ -307,14 +362,20 @@ class HybridQueryEngine:
         traversal_result: TraversalResult,
         results_count: int,
     ) -> JoinCostMetrics:
-        """Compute comprehensive join cost metrics."""
+        """Tính toán chi phí Join giữa Document và Graph engines.
+        
+        Mô phỏng chi phí trong distributed database:
+        - Document scan cost: O(log n + k) với index lookup
+        - Graph traversal cost: O(V + E) với BFS/DFS
+        - Join operation cost: O(N + M) với hash join
+        - Network transfer cost: dựa trên partition_access và edge_cut_ratio
+        """
+        # Chi phí quét tài liệu (document scan) - ước lượng
+        # Trong hệ thống phân tán (distributed systems): quét toàn bộ (full scan) tốn O(n), quét chỉ mục (index scan) tốn O(log n + k)
+        doc_scan_cost = doc_hits_count * 0.1 + 10 * 0.1  # Chi phí tra cứu chỉ mục (index lookup cost)
 
-        # Document scan cost (approximate)
-        # In distributed systems: full scan = O(n), index scan = O(log n + k)
-        doc_scan_cost = doc_hits_count * 0.1 + 10 * 0.1  # Index lookup cost
-
-        # Graph traversal cost
-        # BFS/DFS: O(V + E) where V = visited nodes, E = traversed edges
+        # Chi phí duyệt đồ thị (graph traversal)
+        # BFS/DFS: O(V + E) với V = số nút đã thăm (visited nodes), E = số cạnh đã duyệt (traversed edges)
         visited_nodes = len(traversal_result.visited_nodes)
         traversed_edges = sum(
             len(self.graph_engine.graph.neighbors(n.node_id))
@@ -323,14 +384,14 @@ class HybridQueryEngine:
         )
         graph_traversal_cost = visited_nodes * 1.0 + traversed_edges * 0.5
 
-        # Join operation cost
-        # Hash join: O(N) for building hash table + O(M) for probing
+        # Chi phí thao tác kết nối (join operation)
+        # Kết nối bằng bảng băm (Hash join): O(N) xây bảng băm (hash table) + O(M) dò tìm (probing)
         join_operation_cost = doc_hits_count * 0.05 + visited_nodes * 0.05
 
-        # Network transfer cost (simulated for partitioned access)
+        # Chi phí network transfer (mô phỏng cho partitioned access)
         partition_access = len(traversal_result.partition_coverage)
         edge_cut = self.graph_engine.compute_edge_cut_ratio()
-        network_cost = partition_access * 50.0 * edge_cut  # Simulated
+        network_cost = partition_access * 50.0 * edge_cut  # Mô phỏng
 
         return JoinCostMetrics(
             document_scan_count=doc_hits_count,
@@ -346,7 +407,10 @@ class HybridQueryEngine:
         )
 
     def _get_graph_stats_for_query(self, traversal_result: TraversalResult) -> Dict[str, Any]:
-        """Get graph statistics relevant to the current query."""
+        """Lấy thống kê đồ thị liên quan đến truy vấn hiện tại.
+        
+        Bao gồm: số nodes đã thăm, phân bố độ sâu, partition coverage, edge-cut ratio.
+        """
         return {
             "nodes_visited": len(traversal_result.visited_nodes),
             "depth_distribution": traversal_result.depth_distribution,
@@ -355,19 +419,25 @@ class HybridQueryEngine:
         }
 
     # ============================================================
-    # Join Strategy Comparison
+    # So Sánh Chiến Lược Kết Nối (Join Strategy Comparison)
     # ============================================================
 
     def evaluate_join_strategies(
         self,
         query: HybridQuery
     ) -> Dict[str, Any]:
-        """
-        Evaluate different join strategies and compare their costs.
+        """Đánh giá và so sánh 3 chiến lược Join khác nhau.
+        
+        Các chiến lược:
+        1. filter_after_join: Join trước, lọc theo graph distance sau (giống Nested Loop Join).
+        2. index_nested_loop: Với mỗi disease node, probe document index riêng.
+        3. hash_join: Xây hash table trên diagnosis, probe từ traversal result.
+        
+        Trả về execution_time_ms, results_count, join_cost cho mỗi strategy.
         """
         strategies = {}
 
-        # Strategy 1: Filter After Join (NLJ-like)
+        # Strategy 1: Filter After Join (giống NLJ)
         start = time.time()
         result_filter_after = self._join_filter_after(query)
         strategies["filter_after_join"] = {
@@ -376,7 +446,7 @@ class HybridQueryEngine:
             "join_cost": result_filter_after.join_cost.to_dict(),
         }
 
-        # Strategy 2: Index Nested Loop (for small graph results)
+        # Strategy 2: Index Nested Loop (cho graph results nhỏ)
         start = time.time()
         result_inl = self._join_index_nested_loop(query)
         strategies["index_nested_loop"] = {
@@ -385,7 +455,7 @@ class HybridQueryEngine:
             "join_cost": result_inl.join_cost.to_dict(),
         }
 
-        # Strategy 3: Hash Join (for large results)
+        # Strategy 3: Hash Join (cho results lớn)
         start = time.time()
         result_hash = self._join_hash_join(query)
         strategies["hash_join"] = {
@@ -397,15 +467,27 @@ class HybridQueryEngine:
         return strategies
 
     def _join_filter_after(self, query: HybridQuery) -> HybridQueryResult:
-        """Join strategy: Join first, then filter by graph distance."""
+        """Chiến lược Join: Join trước (tất cả documents), lọc theo graph distance sau.
+        
+        Tương tự Nested Loop Join trong relational databases.
+        Đơn giản nhưng có thể tốn kém nếu có nhiều documents không liên quan.
+        """
         return self.execute_query(query)
 
     def _join_index_nested_loop(self, query: HybridQuery) -> HybridQueryResult:
-        """Join strategy: For each graph node, probe document index."""
-        # Get traversal result
+        """Chiến lược Join: Với mỗi graph node, probe document index riêng.
+        
+        Luồng hoạt động:
+        Bước 1: Duyệt đồ thị để lấy visited disease nodes.
+        Bước 2: Với mỗi disease node, search documents theo tên bệnh.
+        Bước 3: Tính combined score và gộp kết quả.
+        
+        Hiệu quả khi traversal result nhỏ (ít disease nodes).
+        """
+        # Lấy traversal result
         traversal_result = self._traverse_graph(query)
 
-        # For each visited disease, search documents
+        # Với mỗi disease visited, search documents
         all_results = []
         for node in traversal_result.visited_nodes:
             if node.node_type == NodeType.DISEASE:
@@ -457,8 +539,17 @@ class HybridQueryEngine:
         )
 
     def _join_hash_join(self, query: HybridQuery) -> HybridQueryResult:
-        """Join strategy: Hash join on disease name."""
-        # Build hash table from documents
+        """Chiến lược Join: Hash join trên disease name.
+        
+        Luồng hoạt động:
+        Bước 1: Document search lấy tất cả hits.
+        Bước 2: Xây hash table: diagnosis -> [(doc, score), ...].
+        Bước 3: Duyệt đồ thị, probe hash table theo disease label.
+        
+        Hiệu quả khi có nhiều documents và graph traversal vừa phải.
+        Hash join là O(N + M) với N = documents, M = graph nodes.
+        """
+        # Xây hash table từ documents
         doc_hits = self.doc_engine.search(
             query_text=query.query_text,
             max_results=query.max_results * 3,
@@ -466,7 +557,7 @@ class HybridQueryEngine:
             min_severity=query.min_severity,
         )
 
-        # Build hash on diagnosis
+        # Xây hash trên diagnosis
         diagnosis_hash: Dict[str, List[Tuple[Dict, float]]] = {}
         for doc, score in doc_hits:
             diagnosis = doc.get("initial_diagnosis", "")
@@ -474,7 +565,7 @@ class HybridQueryEngine:
                 diagnosis_hash[diagnosis] = []
             diagnosis_hash[diagnosis].append((doc, score))
 
-        # Traverse graph and probe hash
+        # Duyệt đồ thị và probe hash
         traversal_result = self._traverse_graph(query)
         all_results = []
 
@@ -523,11 +614,17 @@ class HybridQueryEngine:
         )
 
     # ============================================================
-    # Analysis Queries
+    # Truy Vấn Phân Tích (Analysis Queries)
     # ============================================================
 
     def analyze_join_cost(self, query: HybridQuery) -> Dict[str, Any]:
-        """Comprehensive join cost analysis for a query."""
+        """Phân tích chi phí Join toàn diện cho một truy vấn.
+        
+        Luồng hoạt động:
+        Bước 1: Thực thi query mặc định (filter_after_join).
+        Bước 2: Đánh giá 3 chiến lược Join khác nhau.
+        Bước 3: So sánh và khuyến nghị chiến lược tốt nhất.
+        """
         result = self.execute_query(query)
         strategies = self.evaluate_join_strategies(query)
 
@@ -550,12 +647,24 @@ class HybridQueryEngine:
         }
 
     def _recommend_strategy(self, strategies: Dict[str, Any]) -> str:
-        """Recommend the best join strategy based on cost analysis."""
+        """Khuyến nghị chiến lược Join tốt nhất dựa trên execution_time_ms.
+        
+        Chọn strategy có thời gian thực thi nhỏ nhất.
+        """
         best = min(strategies.items(), key=lambda x: x[1]["execution_time_ms"])
         return f"Recommended: {best[0]} (fastest: {best[1]['execution_time_ms']:.2f}ms)"
 
     def get_field_coverage(self) -> Dict[str, Dict[str, Any]]:
-        """Get coverage statistics for each medical field."""
+        """Lấy thống kê coverage cho từng chuyên khoa y tế.
+        
+        Mỗi chuyên khoa trả về:
+        - disease_count: số bệnh trong đồ thị
+        - symptom_count: số triệu chứng trong đồ thị
+        - patient_count: số bệnh nhân trong documents
+        - diseases: tên 5 bệnh đầu tiên
+        
+        Dùng nx.shortest_path_length để xác định triệu chứng thuộc field nào.
+        """
         coverage = {}
         for field in [
             "Cardiology", "Neurology", "Oncology", "Pulmonology",
@@ -579,7 +688,7 @@ class HybridQueryEngine:
                         except:
                             pass
 
-            # Count patients in this field
+            # Đếm bệnh nhân trong field này
             patient_count = sum(
                 1 for p in self.patients_map.values()
                 if p.department == field

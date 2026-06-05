@@ -1,7 +1,7 @@
 """
-Graph Engine for the Hybrid Document-Graph Store.
-Provides graph operations with NetworkX, METIS partitioning,
-and distributed traversal algorithms (BFS, DFS, Shortest Path).
+Bộ Máy Đồ Thị (Graph Engine) cho Hệ Thống Lưu Trữ Tài Liệu–Đồ Thị Kết Hợp (Hybrid Document-Graph Store).
+Cung cấp các thao tác trên đồ thị với NetworkX, phân vùng (partitioning) bằng METIS,
+và các thuật toán duyệt (traversal) phân tán: BFS, DFS, Đường Đi Ngắn Nhất (Shortest Path).
 """
 import time
 import random
@@ -24,11 +24,22 @@ from ..core.models import (
 
 class GraphEngine:
     """
-    Graph Engine using NetworkX with METIS partitioning support.
-    Supports BFS, DFS, and Shortest Path traversal.
+    Graph Engine sử dụng NetworkX với hỗ trợ phân vùng METIS.
+    Hỗ trợ các thuật toán duyệt: BFS, DFS, Shortest Path.
+    
+    Đây là engine thứ hai của hệ thống hybrid, chịu trách nhiệm
+    lưu trữ và truy vấn đồ thị tương quan bệnh tật.
     """
 
     def __init__(self, graph_path: Optional[str] = None):
+        """Khởi tạo Graph Engine với đường dẫn lưu graph.
+        
+        Các thuộc tính chính:
+        - graph: NetworkX Graph object
+        - nodes_metadata: Dict[node_id] -> GraphNode metadata
+        - partition_map: Dict[node_id] -> partition_id
+        - partitions: Dict[partition_id] -> GraphPartition
+        """
         self.graph_path = Path(graph_path) if graph_path else config.processed_dir / "graph_data.gpickle"
         self.graph: Optional[nx.Graph] = None
         self.nodes_metadata: Dict[str, GraphNode] = {}
@@ -38,16 +49,24 @@ class GraphEngine:
         self.metis_partitions: Optional[Dict[str, int]] = None
 
     # ============================================================
-    # Graph Loading & Building
+    # Nạp & Xây Dựng Đồ Thị
     # ============================================================
 
     def build_graph(self, nodes: List[GraphNode], edges: List[GraphEdge]) -> nx.Graph:
-        """Build NetworkX graph from node and edge lists."""
+        """Xây dựng NetworkX graph từ danh sách nodes và edges.
+        
+        Luồng hoạt động:
+        Bước 1: Tạo NetworkX Graph rỗng.
+        Bước 2: Thêm nodes với attributes (node_type, label, partition_id).
+        Bước 3: Thêm edges với attributes (edge_type, weight).
+            - Nếu cạnh đã tồn tại, cập nhật weight = max(weight hiện tại, weight mới).
+        Bước 4: Gán partition mặc định là 0 cho tất cả nodes.
+        """
         self.graph = nx.Graph()
         self.nodes_metadata = {}
         self.edges_metadata = {}
 
-        # Add nodes
+        # Thêm nodes
         for node in nodes:
             self.graph.add_node(
                 node.node_id,
@@ -58,10 +77,10 @@ class GraphEngine:
             )
             self.nodes_metadata[node.node_id] = node
 
-        # Add edges with weights
+        # Thêm edges với weights
         for edge in edges:
             if self.graph.has_edge(edge.source_id, edge.target_id):
-                # Update weight if edge exists
+                # Cập nhật weight nếu cạnh đã tồn tại
                 existing = self.graph[edge.source_id][edge.target_id]
                 existing["weight"] = max(existing.get("weight", 1.0), edge.weight)
             else:
@@ -74,7 +93,7 @@ class GraphEngine:
             key = (min(edge.source_id, edge.target_id), max(edge.source_id, edge.target_id))
             self.edges_metadata[key] = edge
 
-        # Set default partition to 0 for all nodes
+        # Gán partition mặc định 0 cho tất cả nodes
         for node_id in self.graph.nodes():
             self.partition_map[node_id] = 0
             if node_id in self.nodes_metadata:
@@ -85,7 +104,12 @@ class GraphEngine:
         return self.graph
 
     def save_graph(self) -> None:
-        """Save graph to file for persistence."""
+        """Lưu đồ thị ra file (pickle) để tái sử dụng sau này.
+        
+        Serialize: graph_data (node_link_data), partition_map,
+        nodes_metadata (dict of GraphNode attributes).
+        Dùng pickle để lưu trữ nhị phân.
+        """
         self.graph_path.parent.mkdir(parents=True, exist_ok=True)
         data = {
             "graph_data": nx.node_link_data(self.graph),
@@ -108,7 +132,16 @@ class GraphEngine:
         print(f"[GraphEngine] Saved graph to {self.graph_path}")
 
     def load_graph(self) -> bool:
-        """Load graph from file."""
+        """Tải đồ thị từ file (pickle).
+        
+        Luồng hoạt động:
+        Bước 1: Kiểm tra file tồn tại.
+        Bước 2: Deserialize pickle, khôi phục graph, partition_map.
+        Bước 3: Khôi phục nodes_metadata từ dict sang GraphNode objects.
+        Bước 4: Cập nhật partition_id cho graph node attributes.
+        
+        Trả về True nếu tải thành công, False nếu file không tồn tại.
+        """
         if not self.graph_path.exists():
             print(f"[GraphEngine] No saved graph found at {self.graph_path}")
             return False
@@ -131,7 +164,7 @@ class GraphEngine:
                 centrality=meta.get("centrality", 0.0),
             )
 
-        # Update graph node attributes
+        # Cập nhật graph node attributes
         for node_id in self.graph.nodes():
             if node_id in self.nodes_metadata:
                 self.graph.nodes[node_id]["partition_id"] = self.nodes_metadata[node_id].partition_id
@@ -141,25 +174,32 @@ class GraphEngine:
         return True
 
     # ============================================================
-    # METIS Graph Partitioning
+    # Phân Vùng Đồ Thị METIS (METIS Graph Partitioning)
     # ============================================================
 
     def partition_with_metis(self, n_parts: int = 4) -> Dict[str, int]:
-        """
-        Partition the graph using METIS-style recursive bisection.
-        Simulates METIS behavior using spectral/split-based partitioning.
+        """Phân vùng đồ thị bằng METIS-style recursive bisection.
+        
+        Luồng hoạt động:
+        Bước 1: Chuyển đổi đồ thị sang format adjacency list cho METIS.
+        Bước 2: Thử import thư viện metis và chạy phân vùng.
+        Bước 3: Nếu METIS không khả dụng hoặc thất bại, dùng alternative partitioning.
+        Bước 4: Cập nhật partition_map và nodes_metadata.
+        Bước 5: Tính toán thống kê partition (internal_edges, cut_edges).
+        
+        METIS là thuật toán graph partitioning phổ biến, tối ưu edge-cut.
         """
         if self.graph is None:
             raise ValueError("Graph not loaded or built")
 
         print(f"[GraphEngine] Performing METIS-style partitioning into {n_parts} parts...")
 
-        # Convert to METIS format
+        # Chuyển sang METIS format
         n = self.graph.number_of_nodes()
         node_list = list(self.graph.nodes())
         node_to_idx = {node: i for i, node in enumerate(node_list)}
 
-        # Build adjacency for METIS
+        # Xây adjacency list cho METIS
         adj_list = [[] for _ in range(n)]
         for u, v in self.graph.edges():
             adj_list[node_to_idx[u]].append(node_to_idx[v] + 1)
@@ -168,12 +208,12 @@ class GraphEngine:
         try:
             import metis
 
-            # Create METIS graph
+            # Tạo METIS graph
             G = metis.Graph()
             for i, neighbors in enumerate(adj_list):
                 G.add_vertex(i, neighbors)
 
-            # Run METIS partitioning
+            # Chạy METIS partitioning
             _, parts = metis.part_graph(G, n_parts)
 
             self.metis_partitions = {}
@@ -186,7 +226,7 @@ class GraphEngine:
 
             print(f"[GraphEngine] METIS partitioning complete: {n_parts} partitions")
 
-            # Validate METIS output: check that nodes are actually distributed
+            # Validate: kiểm tra nodes được phân bổ đều
             unique_parts = set(self.partition_map.values())
             if len(unique_parts) < 2:
                 print(f"[GraphEngine] WARNING: METIS returned only {len(unique_parts)} partition(s), falling back...")
@@ -202,12 +242,18 @@ class GraphEngine:
             print(f"[GraphEngine] METIS failed ({e}), using alternative partitioning...")
             self._partition_alternative(n_parts)
 
-        # Calculate partition statistics
+        # Tính thống kê partition
         self._compute_partition_stats(n_parts)
         return self.metis_partitions or self.partition_map
 
     def _partition_alternative(self, n_parts: int) -> None:
-        """Alternative partitioning using degree-based stratified approach."""
+        """Phân vùng thay thế khi METIS không khả dụng.
+        
+        Sử dụng degree-based stratified assignment:
+        - Trộn ngẫu nhiên tất cả nodes.
+        - Gán partition_id = index % n_parts (round-robin).
+        - Đảm bảo cân bằng số lượng nodes mỗi partition.
+        """
         nodes_by_type = {}
         for node_id, node in self.nodes_metadata.items():
             nt = node.node_type.value
@@ -218,7 +264,7 @@ class GraphEngine:
         all_nodes = list(self.graph.nodes())
         random.shuffle(all_nodes)
 
-        # Balanced assignment
+        # Gán cân bằng (round-robin)
         for i, node_id in enumerate(all_nodes):
             partition_id = i % n_parts
             self.partition_map[node_id] = partition_id
@@ -228,7 +274,14 @@ class GraphEngine:
         self.metis_partitions = self.partition_map.copy()
 
     def _compute_partition_stats(self, n_parts: int) -> None:
-        """Compute statistics for each partition."""
+        """Tính toán thống kê cho mỗi partition.
+        
+        Với mỗi cạnh (u,v):
+        - Nếu p_u == p_v: internal_edges[pu] += 1
+        - Nếu p_u != p_v: cut_edges[pu] += 1, cut_edges[pv] += 1
+        
+        Tạo GraphPartition objects với node_ids, internal_edges, cut_edges.
+        """
         self.partitions = {}
         partition_nodes: Dict[int, List[str]] = {i: [] for i in range(n_parts)}
         partition_internal_edges: Dict[int, int] = {i: 0 for i in range(n_parts)}
@@ -257,7 +310,7 @@ class GraphEngine:
             )
 
     # ============================================================
-    # Graph Traversal Algorithms
+    # Thuật Toán Duyệt Đồ Thị (Graph Traversal Algorithms)
     # ============================================================
 
     def traverse_bfs(
@@ -266,9 +319,17 @@ class GraphEngine:
         max_depth: int = 3,
         node_type_filter: Optional[NodeType] = None
     ) -> TraversalResult:
-        """
-        Breadth-First Search traversal from a starting node.
-        Used to find all nodes within a certain distance from the start.
+        """Duyệt đồ thị theo chiều rộng (BFS) từ một node bắt đầu.
+        
+        Dùng để tìm tất cả nodes trong khoảng cách max_depth từ start_node.
+        Thường dùng để xác định các bệnh/triệu chứng liên quan đến một chuyên khoa.
+        
+        Luồng hoạt động:
+        Bước 1: Khởi tạo queue với start_node, distances[0]=0.
+        Bước 2: Với mỗi node, duyệt neighbors, gán distance = current+1.
+        Bước 3: Dừng khi đạt max_depth hoặc hết queue.
+        Bước 4: Xây paths từ parents map.
+        Bước 5: Lọc theo node_type nếu có.
         """
         start_time = time.time()
 
@@ -303,14 +364,14 @@ class GraphEngine:
                         parents[neighbor] = current
                         depth_distribution[current_dist + 1] = depth_distribution.get(current_dist + 1, 0) + 1
 
-                        # Track partition coverage
+                        # Theo dõi phạm vi bao phủ của các vùng (partition coverage)
                         p = self.partition_map.get(neighbor, 0)
                         partition_coverage[p] = partition_coverage.get(p, 0) + 1
 
                         if current_dist + 1 < max_depth:
                             queue.append(neighbor)
 
-        # Build paths
+        # Xây paths
         paths: Dict[str, List[str]] = {}
         for node_id in visited:
             path = []
@@ -320,7 +381,7 @@ class GraphEngine:
                 current = parents.get(current)
             paths[node_id] = path[::-1]
 
-        # Filter by node type if specified
+        # Lọc theo node type nếu được chỉ định
         visited_nodes = [
             self.nodes_metadata.get(n, GraphNode(n, NodeType.DISEASE, n))
             for n in visited
@@ -345,9 +406,16 @@ class GraphEngine:
         max_depth: int = 3,
         node_type_filter: Optional[NodeType] = None
     ) -> TraversalResult:
-        """
-        Depth-First Search traversal from a starting node.
-        Explores as deep as possible before backtracking.
+        """Duyệt đồ thị theo chiều sâu (DFS) từ một node bắt đầu.
+        
+        Khám phá càng sâu càng tốt trước khi backtracking.
+        Dùng recursive implementation.
+        
+        Luồng hoạt động:
+        Bước 1: Gọi hàm đệ quy dfs_recursive(start_node, depth=0).
+        Bước 2: Tại mỗi node, mark visited, gán distance, duyệt neighbors.
+        Bước 3: Nếu depth > max_depth hoặc node đã visited thì return.
+        Bước 4: Xây paths và trả về TraversalResult.
         """
         start_time = time.time()
 
@@ -367,6 +435,7 @@ class GraphEngine:
         partition_coverage: Dict[int, int] = {}
 
         def dfs_recursive(node: str, depth: int, parent: Optional[str]):
+            """Hàm đệ quy DFS: thăm node, duyệt neighbors chưa thăm."""
             if depth > max_depth or node in visited:
                 return
 
@@ -384,7 +453,7 @@ class GraphEngine:
 
         dfs_recursive(start_node, 0, None)
 
-        # Build paths
+        # Xây paths
         paths: Dict[str, List[str]] = {}
         for node_id in visited:
             path = []
@@ -417,9 +486,11 @@ class GraphEngine:
         source: str,
         target: str
     ) -> Tuple[Optional[List[str]], Optional[float]]:
-        """
-        Find shortest path between two nodes using Dijkstra's algorithm.
-        Returns (path, total_weight).
+        """Tìm đường đi ngắn nhất giữa hai nodes bằng Dijkstra.
+        
+        Sử dụng networkx.dijkstra_path với weight="weight".
+        Trả về (path_list, total_weight).
+        Nếu không có đường đi, trả về (None, None).
         """
         if self.graph is None:
             return None, None
@@ -439,10 +510,14 @@ class GraphEngine:
         field_name: str,
         max_distance: int = 3
     ) -> Dict[str, Tuple[int, List[str]]]:
-        """Get all shortest paths from a medical field node."""
+        """Lấy tất cả đường đi ngắn nhất từ một medical field node.
+        
+        Dùng BFS để tìm tất cả nodes trong max_distance từ field.
+        Trả về dict: {node_id: (distance, path_list)}.
+        """
         field_node_id = f"field_{field_name}"
         if field_node_id not in self.graph:
-            # Try to find by label
+            # Thử tìm theo label
             for node_id, node in self.nodes_metadata.items():
                 if node.label == field_name and node.node_type == NodeType.MEDICAL_FIELD:
                     field_node_id = node_id
@@ -462,24 +537,32 @@ class GraphEngine:
         return paths
 
     # ============================================================
-    # Graph Analysis & Statistics
+    # Phân Tích & Thống Kê Đồ Thị
     # ============================================================
 
     def get_graph_statistics(self) -> Dict[str, Any]:
-        """Get comprehensive graph statistics."""
+        """Lấy thống kê toàn diện về đồ thị.
+        
+        Bao gồm:
+        - Cơ bản: node_count, edge_count, avg_degree, density
+        - Degree: min, max, mean
+        - Phân bố: node_type, edge_type
+        - Centrality: top 10 nodes có degree_centrality cao nhất
+        - Partition: node_count, internal_edges, cut_edges cho mỗi partition
+        """
         if self.graph is None:
             return {}
 
         metrics = {}
         n = self.graph.number_of_nodes()
 
-        # Basic metrics
+        # Các chỉ số (metrics) cơ bản
         metrics["node_count"] = n
         metrics["edge_count"] = self.graph.number_of_edges()
         metrics["avg_degree"] = round(sum(dict(self.graph.degree()).values()) / n, 2) if n > 0 else 0
         metrics["density"] = round(nx.density(self.graph), 4)
 
-        # Degree distribution
+        # Phân bố degree
         degrees = dict(self.graph.degree())
         metrics["degree_stats"] = {
             "min": min(degrees.values()),
@@ -487,7 +570,7 @@ class GraphEngine:
             "mean": round(sum(degrees.values()) / n, 2),
         }
 
-        # Node type distribution
+        # Phân bố node type
         node_types = {}
         for node_id in self.graph.nodes():
             if node_id in self.nodes_metadata:
@@ -497,7 +580,7 @@ class GraphEngine:
             node_types[nt] = node_types.get(nt, 0) + 1
         metrics["node_type_distribution"] = node_types
 
-        # Edge type distribution
+        # Phân bố edge type
         edge_types = {}
         for u, v, data in self.graph.edges(data=True):
             et = data.get("edge_type", "unknown")
@@ -512,7 +595,7 @@ class GraphEngine:
             reverse=True
         )[:10]
 
-        # Partition stats
+        # Thống kê các vùng (partition)
         if self.partitions:
             partition_stats = {}
             for pid, part in self.partitions.items():
@@ -530,7 +613,12 @@ class GraphEngine:
         field_name: str,
         max_distance: int = 3
     ) -> List[Tuple[GraphNode, int]]:
-        """Get all disease nodes within max_distance from a medical field."""
+        """Lấy tất cả disease nodes trong khoảng cách max_distance từ medical field.
+        
+        Dùng get_shortest_paths_from_field() để lấy paths,
+        sau đó lọc chỉ lấy nodes có node_type == DISEASE.
+        Bao gồm cả field node chính (distance=0).
+        """
         paths = self.get_shortest_paths_from_field(field_name, max_distance)
         diseases = []
 
@@ -540,7 +628,7 @@ class GraphEngine:
                 if node.node_type == NodeType.DISEASE:
                     diseases.append((node, distance))
 
-        # Also include the field node itself
+        # Bao gồm cả nút (node) của chuyên khoa (field)
         field_node_id = f"field_{field_name}"
         if field_node_id in self.nodes_metadata:
             diseases.append((self.nodes_metadata[field_node_id], 0))
@@ -548,7 +636,12 @@ class GraphEngine:
         return diseases
 
     def get_graph_distance(self, node_id: str, field_name: str) -> Optional[int]:
-        """Get the shortest path distance from a node to a medical field."""
+        """Tính khoảng cách đồ thị ngắn nhất từ node đến medical field.
+        
+        Sử dụng nx.shortest_path_length với trọng số mặc định.
+        Giới hạn kết quả <= 3 (theo max_graph_distance mặc định).
+        Trả về None nếu không có đường đi.
+        """
         field_node_id = f"field_{field_name}"
         if field_node_id not in self.graph:
             return None
@@ -560,15 +653,22 @@ class GraphEngine:
             return None
 
     # ============================================================
-    # Vertex-Cut Partitioning (for comparison)
+    # Phân Vùng Cắt Đỉnh (Vertex-Cut Partitioning - để so sánh)
     # ============================================================
 
     def vertex_cut_partition(self, n_parts: int = 4) -> Dict[str, List[int]]:
+        """Phân vùng theo vertex-cut: nodes có thể thuộc nhiều partitions.
+        
+        Khác với edge-cut (mỗi node thuộc đúng 1 partition),
+        vertex-cut cho phép replication node cho distributed processing.
+        Hữu ích khi diseases kết nối với nhiều fields.
+        
+        Luồng hoạt động:
+        Bước 1: Xác định field nodes.
+        Bước 2: Với mỗi disease node, tìm partitions mà neighbors thuộc về.
+        Bước 3: Disease node được gán vào tất cả partitions đó.
         """
-        Vertex-cut partitioning: nodes can belong to multiple partitions.
-        Used for hypergraph-like distribution where diseases span multiple fields.
-        """
-        # For medical graph: diseases that connect multiple fields get replicated
+        # Với medical graph: diseases kết nối nhiều fields được replicated
         field_nodes = [
             n for n, meta in self.nodes_metadata.items()
             if meta.node_type == NodeType.MEDICAL_FIELD
@@ -580,7 +680,7 @@ class GraphEngine:
             if meta.node_type != NodeType.DISEASE:
                 continue
 
-            # Find which partitions this disease touches
+            # Tìm partitions mà disease này chạm tới
             covered_partitions = set()
             for neighbor in self.graph.neighbors(disease_node):
                 p = self.partition_map.get(neighbor, 0)
@@ -592,7 +692,13 @@ class GraphEngine:
         return vertex_cuts
 
     def compute_edge_cut_ratio(self) -> float:
-        """Compute the edge-cut ratio (edges crossing partitions / total edges)."""
+        """Tính tỷ lệ cạnh cắt (edge-cut ratio).
+        
+        ECR = số cạnh cắt / tổng số cạnh.
+        Cạnh cắt là cạnh có hai đầu thuộc hai partitions khác nhau.
+        
+        ECR càng thấp càng tốt (ít trao đổi dữ liệu giữa các partitions).
+        """
         if not self.partition_map:
             return 0.0
 
@@ -614,11 +720,17 @@ class GraphEngine:
         return cut_edges / total_edges if total_edges > 0 else 0.0
 
     # ============================================================
-    # Serialization
+    # Tuần Tự Hóa (Serialization) - Xuất Dữ Liệu
     # ============================================================
 
     def export_to_json(self, output_path: Path) -> None:
-        """Export graph data to JSON for visualization."""
+        """Xuất dữ liệu đồ thị ra JSON cho visualization (D3.js / Cytoscape).
+        
+        Format đầu ra:
+        - nodes: [{id, label, type, partition, degree, field}, ...]
+        - links: [{source, target, type, weight}, ...] (D3.js format)
+        - partitions: {pid: {nodes, cut_edges}}
+        """
         data = {
             "nodes": [
                 {

@@ -1,6 +1,6 @@
 """
-Document Engine for the Hybrid Document-Graph Store.
-Provides text indexing and search using Whoosh (BM25F scoring).
+Bộ Máy Tài Liệu (Document Engine) cho Hệ Thống Lưu Trữ Tài Liệu–Đồ Thị Kết Hợp (Hybrid Document-Graph Store).
+Cung cấp chức năng đánh chỉ mục (indexing) và tìm kiếm văn bản bằng Whoosh (tính điểm BM25F).
 """
 import os
 import time
@@ -20,10 +20,18 @@ from ..core.models import PatientSymptom, DocumentResult
 
 
 class DocumentSchema:
-    """Whoosh schema definition for patient symptom documents."""
+    """Định nghĩa Schema Whoosh cho documents triệu chứng bệnh nhân.
+    
+    Xác định các trường và kiểu dữ liệu cho full-text index:
+    - TEXT: chief_complaint, symptoms, medical_history, initial_diagnosis
+    - KEYWORD: department, gender (dùng để filter)
+    - NUMERIC: severity, age
+    - ID: patient_id (unique)
+    """
 
     @staticmethod
     def create_schema() -> Schema:
+        """Tạo schema mặc định với StemmingAnalyzer cho các trường text."""
         return Schema(
             patient_id=ID(stored=True, unique=True),
             chief_complaint=TEXT(stored=True, analyzer=StemmingAnalyzer()),
@@ -40,6 +48,11 @@ class DocumentSchema:
 
     @staticmethod
     def create_schema_from_config() -> Schema:
+        """Tạo schema động dựa trên cấu hình từ config.yaml.
+        
+        Đọc danh sách searchable/filterable fields từ config,
+        tự động chọn kiểu TEXT, KEYWORD hoặc NUMERIC tương ứng.
+        """
         cfg = config.document_engine
         searchable = cfg.get("fields", {}).get("searchable", [])
         filterable = cfg.get("fields", {}).get("filterable", [])
@@ -61,23 +74,35 @@ class DocumentSchema:
 
 class DocumentEngine:
     """
-    Document Engine using Whoosh for full-text search.
-    Implements BM25F scoring for relevance ranking.
+    Document Engine sử dụng Whoosh cho full-text search.
+    Implement BM25F scoring để xếp hạng relevance.
+    Đây là một trong hai engine chính của hệ thống hybrid.
     """
 
     def __init__(self, index_path: Optional[str] = None, recreate: bool = False):
+        """Khởi tạo Document Engine với đường dẫn index.
+        
+        Nếu không có index_path, dùng mặc định từ config.processed_dir.
+        Nếu recreate=True, tạo lại index từ đầu.
+        """
         self.index_path = Path(index_path) if index_path else config.processed_dir / "documents_index"
         self.schema = DocumentSchema.create_schema()
         self.index = None
         self._init_index(recreate)
 
     def _init_index(self, recreate: bool = False) -> None:
-        """Initialize or open the Whoosh index."""
+        """Khởi tạo hoặc mở index Whoosh có sẵn.
+        
+        Luồng hoạt động:
+        Bước 1: Tạo thư mục index nếu chưa tồn tại.
+        Bước 2: Nếu recreate=True, xóa index cũ và tạo mới.
+        Bước 3: Nếu index đã tồn tại, mở bằng open_dir().
+        """
         self.index_path.mkdir(parents=True, exist_ok=True)
 
         if recreate or not index.exists_in(self.index_path):
             if recreate and index.exists_in(self.index_path):
-                # Clear existing index
+                # Xóa index cũ
                 import shutil
                 shutil.rmtree(self.index_path)
                 self.index_path.mkdir(parents=True, exist_ok=True)
@@ -89,7 +114,15 @@ class DocumentEngine:
             print(f"[DocumentEngine] Opened existing index at {self.index_path}")
 
     def index_documents(self, patients: List[PatientSymptom]) -> int:
-        """Index a list of patient symptom documents."""
+        """Đánh index danh sách documents bệnh nhân vào Whoosh.
+        
+        Luồng hoạt động:
+        Bước 1: Tạo writer từ index.
+        Bước 2: Với mỗi PatientSymptom, chuyển thành dict và add_document.
+        Bước 3: Commit writer để lưu index.
+        
+        Trả về số lượng documents đã index.
+        """
         writer = self.index.writer()
         count = 0
 
@@ -122,15 +155,20 @@ class DocumentEngine:
         min_severity: Optional[int] = None,
         gender: Optional[str] = None,
     ) -> List[Tuple[Dict[str, Any], float]]:
-        """
-        Search patient documents by text query.
-        Returns list of (document_dict, score) tuples.
+        """Tìm kiếm documents bệnh nhân theo văn bản truy vấn.
+
+        Luồng hoạt động:
+        Bước 1: Tạo MultifieldParser trên nhiều trường (chief_complaint, symptoms...).
+        Bước 2: Parse query_text thành Whoosh query object.
+        Bước 3: Thực hiện search với BM25F scoring, lấy gấp đôi max_results.
+        Bước 4: Lọc kết quả theo department/severity/gender nếu có.
+        Bước 5: Trả về danh sách (document_dict, score).
         """
         start_time = time.time()
         results = []
 
         with self.index.searcher(weighting=BM25F()) as searcher:
-            # Build query parser on multiple fields
+            # Xây query parser trên nhiều trường văn bản
             parser = MultifieldParser(
                 ["chief_complaint", "symptoms", "medical_history", "initial_diagnosis", "full_text"],
                 schema=self.schema,
@@ -148,7 +186,7 @@ class DocumentEngine:
             for hit in hits:
                 doc = dict(hit)
 
-                # Apply filters
+                # Áp dụng filters
                 if department and doc.get("department", "").lower() != department.lower():
                     continue
                 if min_severity and doc.get("severity", 0) < min_severity:
@@ -173,7 +211,11 @@ class DocumentEngine:
         department: Optional[str] = None,
         min_severity: Optional[int] = None,
     ) -> List[DocumentResult]:
-        """Search and return as DocumentResult objects."""
+        """Tìm kiếm và trả về kết quả dưới dạng DocumentResult objects.
+        
+        Gọi search() để lấy hits, sau đó map patient_id -> PatientSymptom object.
+        Graph_importance mặc định là 0.0 (chưa kết hợp với graph).
+        """
         hits = self.search(query_text, max_results, department, min_severity)
         results = []
         for doc, score in hits:
@@ -189,7 +231,11 @@ class DocumentEngine:
         return results
 
     def get_document_by_id(self, patient_id: str) -> Optional[Dict[str, Any]]:
-        """Retrieve a specific document by patient_id."""
+        """Truy xuất một document theo patient_id.
+        
+        Dùng searcher để tìm kiếm chính xác theo trường patient_id (ID field).
+        Trả về dict của document hoặc None nếu không tìm thấy.
+        """
         with self.index.searcher() as searcher:
             results = searcher.search(self.schema.patient_id == patient_id, limit=1)
             if results:
@@ -197,7 +243,7 @@ class DocumentEngine:
         return None
 
     def get_index_stats(self) -> Dict[str, Any]:
-        """Get statistics about the indexed documents."""
+        """Lấy thống kê về index: số lượng document, đường dẫn, schema fields."""
         with self.index.searcher() as searcher:
             doc_count = searcher.doc_count_all()
             return {
@@ -207,7 +253,12 @@ class DocumentEngine:
             }
 
     def analyze_query(self, query_text: str) -> Dict[str, Any]:
-        """Analyze a query and return token information."""
+        """Phân tích truy vấn và trả về thông tin token.
+        
+        Dùng StemmingAnalyzer để tokenize query_text.
+        Trả về: original_query, danh sách tokens, số lượng token.
+        Hữu ích cho debug query parsing.
+        """
         from whoosh.analysis import StemmingAnalyzer
         analyzer = StemmingAnalyzer()
         tokens = [token.text for token in analyzer(query_text)]
@@ -218,7 +269,11 @@ class DocumentEngine:
         }
 
     def rebuild_index(self, patients: List[PatientSymptom]) -> int:
-        """Completely rebuild the index from scratch."""
+        """Xây dựng lại index từ đầu (recreate).
+        
+        Đóng index cũ nếu đang mở, gọi _init_index(recreate=True),
+        sau đó index_documents lại từ đầu.
+        """
         if self.index:
             self.index.close()
         self._init_index(recreate=True)
@@ -226,13 +281,22 @@ class DocumentEngine:
 
 
 # ============================================================
-# Document Index Manager
+# Bộ Quản Lý Chỉ Mục Tài Liệu (Document Index Manager)
 # ============================================================
 
 class DocumentIndexManager:
-    """Manages multiple document indices for distributed processing."""
+    """Quản lý nhiều Document indices cho xử lý phân tán.
+    
+    Tạo riêng một Whoosh index cho mỗi partition của đồ thị.
+    Hỗ trợ tìm kiếm trên một partition hoặc toàn bộ partitions
+    với merge kết quả theo BM25F score.
+    """
 
     def __init__(self, base_path: Optional[Path] = None):
+        """Khởi tạo manager với đường dẫn thư mục chứa indices.
+        
+        Mỗi partition sẽ có thư mục index riêng: partition_0, partition_1, ...
+        """
         self.base_path = base_path or config.processed_dir / "indices"
         self.base_path.mkdir(parents=True, exist_ok=True)
         self.indices: Dict[int, DocumentEngine] = {}
@@ -242,7 +306,13 @@ class DocumentIndexManager:
         partition_id: int,
         patients: List[PatientSymptom]
     ) -> DocumentEngine:
-        """Create a document index for a specific partition."""
+        """Tạo document index riêng cho một partition cụ thể.
+        
+        Luồng hoạt động:
+        Bước 1: Tạo DocumentEngine với đường dẫn partition_{partition_id}.
+        Bước 2: Index documents của partition đó.
+        Bước 3: Lưu vào self.indices[partition_id].
+        """
         index_path = self.base_path / f"partition_{partition_id}"
         engine = DocumentEngine(index_path=str(index_path), recreate=True)
         engine.index_documents(patients)
@@ -255,7 +325,10 @@ class DocumentIndexManager:
         query_text: str,
         **kwargs
     ) -> List[Tuple[Dict[str, Any], float]]:
-        """Search within a specific partition."""
+        """Tìm kiếm trong một partition cụ thể.
+        
+        Raises ValueError nếu partition_id chưa được tạo.
+        """
         if partition_id not in self.indices:
             raise ValueError(f"Partition {partition_id} not found")
         return self.indices[partition_id].search(query_text, **kwargs)
@@ -265,13 +338,19 @@ class DocumentIndexManager:
         query_text: str,
         max_results: int = 20
     ) -> List[Tuple[Dict[str, Any], float, int]]:
-        """Search across all partitions and merge results."""
+        """Tìm kiếm trên tất cả partitions và gộp kết quả.
+        
+        Luồng hoạt động:
+        Bước 1: Với mỗi partition, search với max_results phân bổ đều.
+        Bước 2: Gom tất cả kết quả kèm partition_id.
+        Bước 3: Sắp xếp theo score giảm dần, lấy top N.
+        """
         all_results = []
         for partition_id, engine in self.indices.items():
             hits = engine.search(query_text, max_results=max_results // len(self.indices) + 1)
             for doc, score in hits:
                 all_results.append((doc, score, partition_id))
 
-        # Sort by score and take top N
+        # Sắp xếp theo score và lấy top N
         all_results.sort(key=lambda x: x[1], reverse=True)
         return all_results[:max_results]
