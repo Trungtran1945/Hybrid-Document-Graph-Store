@@ -6,6 +6,7 @@ import os
 import sys
 import json
 import time
+import hashlib
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, Any
@@ -140,14 +141,29 @@ def initialize_system() -> None:
     _hybrid_engine.load_data(patients, nodes, edges)
 
     # Đánh chỉ mục lại (re-index) nếu cần
-    try:
-        stats = doc_engine.get_index_stats()
-        if stats["document_count"] == 0:
-            print("[API] Re-indexing documents...")
-            doc_engine.index_documents(patients)
-    except:
-        print("[API] Indexing documents...")
-        doc_engine.index_documents(patients)
+    # So sánh hash của file JSON để phát hiện dữ liệu đã thay đổi
+    index_path = doc_engine.index_path
+    hash_file = Path(str(index_path)) / "_data_hash.txt"
+    current_hash = hashlib.md5(patient_file.read_bytes()).hexdigest()
+
+    need_reindex = True
+    if hash_file.exists():
+        try:
+            stats = doc_engine.get_index_stats()
+            stored_hash = hash_file.read_text().strip()
+            if stored_hash == current_hash and stats["document_count"] == len(patients):
+                need_reindex = False
+        except:
+            pass
+
+    if need_reindex:
+        print("[API] Re-building index (data changed or index missing)...")
+        doc_engine.rebuild_index(patients)
+        hash_file.parent.mkdir(parents=True, exist_ok=True)
+        hash_file.write_text(current_hash)
+        print(f"[API] Index rebuilt: {len(patients)} documents")
+    else:
+        print(f"[API] Index is up-to-date ({stats['document_count']} documents)")
 
     _initialized = True
     print("=" * 60)

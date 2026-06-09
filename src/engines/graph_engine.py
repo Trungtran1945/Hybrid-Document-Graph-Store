@@ -47,6 +47,8 @@ class GraphEngine:
         self.partition_map: Dict[str, int] = {}
         self.partitions: Dict[int, GraphPartition] = {}
         self.metis_partitions: Optional[Dict[str, int]] = None
+        self._balance_factor: float = 0.0
+        self._intra_partition_densities: Dict[int, float] = {}
 
     # ============================================================
     # Nạp & Xây Dựng Đồ Thị
@@ -308,6 +310,20 @@ class GraphEngine:
                 cut_edges=partition_cut_edges[i],
                 nodes=nodes
             )
+
+        # Tính Balance Factor và Intra-Partition Density
+        sizes = [len(p.node_ids) for p in self.partitions.values()]
+        avg_size = sum(sizes) / len(sizes) if sizes else 1
+        self._balance_factor = max(sizes) / avg_size if avg_size > 0 else 0.0
+
+        self._intra_partition_densities = {}
+        for pid, part in self.partitions.items():
+            n_nodes = len(part.node_ids)
+            if n_nodes >= 2:
+                max_edges = n_nodes * (n_nodes - 1) / 2
+                self._intra_partition_densities[pid] = round(part.internal_edges / max_edges, 4) if max_edges > 0 else 0.0
+            else:
+                self._intra_partition_densities[pid] = 0.0
 
     # ============================================================
     # Thuật Toán Duyệt Đồ Thị (Graph Traversal Algorithms)
@@ -603,8 +619,10 @@ class GraphEngine:
                     "nodes": len(part.node_ids),
                     "internal_edges": part.internal_edges,
                     "cut_edges": part.cut_edges,
+                    "intra_partition_density": self._intra_partition_densities.get(pid, 0.0),
                 }
             metrics["partition_statistics"] = partition_stats
+            metrics["balance_factor"] = round(self._balance_factor, 4)
 
         return metrics
 

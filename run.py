@@ -8,7 +8,7 @@ from pathlib import Path
 # Thêm thư mục src vào đường dẫn (path) để import module
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
-from src.api.app import run_server
+from src.api.app import run_server, get_engine
 
 
 if __name__ == "__main__":
@@ -17,6 +17,10 @@ if __name__ == "__main__":
     print("  Hybrid Document-Graph Store: Medical Knowledge Base")
     print("  Patient Symptoms (Document) + Disease Correlations (Graph)")
     print("=" * 60)
+    print()
+    print("  Initializing system...")
+    print()
+    get_engine()  # Eager initialization — logs will appear here
     print()
     print("  Starting Flask API Server...")
     print("  Open http://localhost:5000 in your browser")

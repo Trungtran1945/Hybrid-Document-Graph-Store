@@ -378,7 +378,7 @@ class HybridQueryEngine:
         # BFS/DFS: O(V + E) với V = số nút đã thăm (visited nodes), E = số cạnh đã duyệt (traversed edges)
         visited_nodes = len(traversal_result.visited_nodes)
         traversed_edges = sum(
-            len(self.graph_engine.graph.neighbors(n.node_id))
+            len(list(self.graph_engine.graph.neighbors(n.node_id)))
             for n in traversal_result.visited_nodes
             if n.node_id in self.graph_engine.graph
         )

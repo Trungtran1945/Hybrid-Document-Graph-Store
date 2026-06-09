@@ -65,7 +65,7 @@ dataset:
 # ============================================================
 document_engine:
   index_path: "data/processed/documents_index"
-  analyzer: "StandardAnalyzer"
+  analyzer: "StemmingAnalyzer"
   max_results: 50
   scoring: "BM25F"
   fields:
